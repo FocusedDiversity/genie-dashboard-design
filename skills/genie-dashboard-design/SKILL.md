@@ -1,215 +1,126 @@
 ---
 name: genie-dashboard-design
-description: 'Design and build Databricks AI/BI Genie dashboards through three gates: Plan (context & architecture), Design Review (mockup & approval), Build Prompts (Genie queries). Use when creating new healthcare analytics dashboards, migrating existing dashboards, or iterating on dashboard layouts.'
+description: 'Design and build Databricks AI/BI Genie dashboards through the six HELIX activities: Frame (brief & widget inventory), Design (HTML mockup & decisions), Test (baseline SQL before prompts), Build (Genie prompt catalog), Deploy (verified rollout), Iterate (drift & feedback). Use when creating new analytics dashboards, migrating existing dashboards, or running another cycle on a deployed one.'
 argument-hint: 'Describe your dashboard vision (e.g., "Members & claims dashboard for healthcare analytics")'
 ---
 
-# Genie Dashboard Design Workflow
+# Genie Dashboard Design — HELIX Workflow
 
-A three-gate workflow for designing and building Databricks AI/BI Genie dashboards. Each gate ensures alignment before moving forward.
+A HELIX-methodology workflow for designing and building Databricks AI/BI Genie
+dashboards. Work moves through six activities, each producing versioned
+artifacts in the working repo under `docs/helix/`, each ending in a gate the
+stakeholder approves before the next activity starts.
 
----
-
-## Overview
-
-| Gate | Deliverable | Decision |
-|------|-------------|----------|
-| **1. Plan** | Context analysis, dashboard architecture (pages, sections, layout, style) | Proceed to design? |
-| **2. Design Review** | Wireframe/mockup, design decisions, global filters | Approve design? |
-| **3. Build Prompts** | Databricks AI/BI Genie prompts & instructions, ready to deploy | Deploy dashboard |
-
----
-
-## Gate 1: Planning & Context Analysis
-
-**Goal:** Gather requirements, understand data sources, and propose dashboard architecture.
-
-### Step 1.1 — Gather Context
-
-I will ask you for:
-- **Dashboard purpose**: What business problem does it solve?
-- **Target audience**: Who uses this? (analysts, clinicians, operations, finance, etc.)
-- **Data sources**: Schemas, tables, join keys (e.g., `dev.prod_main_members.eligibility`)
-- **Existing references**: Any dashboards to model after, style guides, brand colors
-- **KPIs & metrics**: Primary metrics to track (e.g., total members, denial rates, claims volume)
-- **Filters & drill-downs**: Global filters (date range, member cohort, payer type) and page-level drill-downs
-
-### Step 1.2 — Analyze & Design
-
-Based on your input, I will propose:
-- **Number of pages** and logical grouping (e.g., Members | Claims | Conditions)
-- **Sections per page** (KPI row, trends, distributions, drill-down tables)
-- **Global filter architecture** (time period, geography, cohort, etc.)
-- **Layout style**: top nav, left sidebar, full-width cards
-- **Visual hierarchy**: Counter KPIs, line/bar charts, heatmaps, tables
-- **Responsive design notes**: Mobile/tablet considerations
-- **Integration points**: Any external data or manual lookups
-
-### Step 1.3 — Communicate Plan
-
-I will present:
-1. **Executive summary** (1–2 paragraphs on the dashboard's purpose and structure)
-2. **Page layout** (list of pages with 2–3 sentences per page)
-3. **Widget inventory** (table: page, row, widget type, metric, data source)
-4. **Global filters** (list with expected cardinality and default values)
-5. **Design reference** (layout pattern, color palette if applicable)
-6. **Data quality notes** (any null/missing data handling, data source reliability)
-
-### Step 1.4 — Get Approval to Proceed
-
-Once you review the plan, confirm **"Proceed to Gate 2"** or request changes.
+This skill ships with a HELIX artifact pack at `workflows/activities/` in the
+plugin root (`${CLAUDE_PLUGIN_ROOT}`). Each activity there has a `GATE.yaml`
+(entry/exit requirements) and artifact folders with `template.md`, `prompt.md`,
+`example.md`, and `meta.yml`. **Follow those files — they are the authority for
+each artifact's structure and rules.** This document is the orchestration map.
 
 ---
 
-## Gate 2: Design Review & Approval
+## The Spiral
 
-**Goal:** Validate layout, filters, and design decisions via wireframe before building prompts.
+| # | Activity | Artifacts produced (`docs/helix/…`) | Gate question |
+|---|----------|-------------------------------------|---------------|
+| 01 | **Frame** | `01-frame/dashboard-brief.md`, `01-frame/widget-inventory.md` | Is this the right dashboard? |
+| 02 | **Design** | `02-design/dashboard-mockup.html`, `02-design/design-decisions.md` | Is this what it should look like? |
+| 03 | **Test** | `03-test/widget-test-plan.md` (baselines **executed**) | Do we know what correct means? |
+| 04 | **Build** | `04-build/prompt-catalog.md` | Are the prompts written to spec? |
+| 05 | **Deploy** | `05-deploy/deployment-guide.md` (verification **recorded**) | Does the live dashboard pass its checks? |
+| 06 | **Iterate** | `06-iterate/iteration-log.md` | What did we learn; spiral again or close? |
 
-### Step 2.1 — Communicate Mockup
+**Traceability spine**: every widget gets a `W-###` id in Frame. The mockup
+tags it (`data-widget-id`), Test verifies it (`T-###`), Build prompts it,
+Deploy records its PASS/FAIL. No orphans in either direction.
 
-I will provide:
-- **ASCII wireframe** (quick layout of each page showing widget positions and types)
-- **Design rationale** (why KPIs are grouped this way, why specific chart types)
-- **Filter flow** (how global filters cascade through pages)
-- **Navigation pattern** (how users move between pages)
-- **Accessibility notes** (color contrast, alt text, keyboard nav considerations)
-
-### Step 2.2 — Design Decisions
-
-I will highlight:
-- **Layout choices**: Why left nav vs. top nav, why full-width vs. grid
-- **Metric aggregation**: How double-counting is avoided (e.g., max per claim_id for charge amounts)
-- **Time series granularity**: Month vs. week vs. day
-- **Drill-down strategy**: Which widgets drill into which detail pages
-- **Data source selection**: Why specific tables (e.g., `medical_claim` vs. view)
-
-### Step 2.3 — Request Approval
-
-Confirm **"Design approved, proceed to Gate 3"** or request revisions (e.g., "swap the bar chart for a heatmap", "add a KPI for denial rate", "move filters here").
+**Test before Build is the point.** Genie writes SQL nondeterministically.
+The test plan's deterministic baseline SQL — written and executed *before any
+prompt exists* — is the contract Genie's output must match. Skipping ahead to
+prompts is the one shortcut this workflow forbids.
 
 ---
 
-## Gate 3: Build Prompts & Deploy
+## Running an Activity
 
-**Goal:** Generate Databricks AI/BI Genie prompts and setup instructions.
+For each activity, in order:
 
-### Step 3.1 — Generate Prompts
+1. **Check the entry gate** — `workflows/activities/<NN-name>/GATE.yaml`
+   `entry_requirements`. If the previous activity's artifacts are missing or
+   unapproved, go back.
+2. **Produce each artifact** using its `prompt.md` (process & rules) and
+   `template.md` (structure), writing output to the location in `meta.yml`
+   (always `docs/helix/<NN-name>/…` in the working repo). Consult `example.md`
+   for the quality bar.
+3. **Self-check the exit gate** — run the automated checks (file existence,
+   grep patterns) yourself; walk the manual checklist honestly.
+4. **Present the gate** to the stakeholder: what was produced, the judgment
+   calls, the open questions. Wait for explicit approval
+   ("Proceed to <next activity>") or revise.
 
-For each widget, I will create a Genie prompt:
-```
-Show [metric] from [table] where [filters]
-grouped by [dimension] as a [chart type]
-titled "[Widget Title]".
-[formatting: currency, percentage, rounding, sorting]
-```
+Activity-specific notes:
 
-Prompts include:
-- **Exact table paths** and join logic
-- **Field names** matching your schema exactly
-- **Aggregation logic** (distinct counts, sums, averages, percentiles)
-- **Null/zero handling** (exclude nulls, interpret 0 as paid, etc.)
-- **Formatting** (currency $M, percentage %, decimals, date format)
+- **Frame**: interview before writing — purpose, audience, data sources (verify
+  tables exist), KPI definitions (pin numerators/denominators), filters.
+  Unknowns become `[NEEDS CLARIFICATION]` markers; the exit gate blocks while
+  any remain.
+- **Design**: the mockup is a browser-viewable HTML file imitating a published
+  Databricks dashboard — dark chrome, Chart.js charts, live scenario-driven
+  filters. Match `example-appointment-analytics.html`. Write
+  `design-decisions.md` as you go, not after. Aggregation rules stated there
+  must be SQL-translatable verbatim.
+- **Test**: write baseline SQL per widget, **run it**, record results and
+  dates. Choose exact/tolerance/invariant rules deliberately. Add
+  dashboard-level checks (filter cascade, counter/table agreement,
+  empty-slice).
+- **Build**: one prompt per widget, style per
+  `skills/genie-dashboard-design/assets/prompt-style-guide.md`, dedupe/null/
+  grain language copied verbatim from design-decisions. Pre-write fallback
+  views for window-logic widgets.
+- **Deploy**: execute the creation steps, then run every T-### against the
+  live dashboard and record outcomes. FAIL → re-prompt rule-first once →
+  fallback view → waiver. Inspect generated SQL for window-logic checks even
+  when the number matches.
+- **Iterate**: append-only log — dated feedback, periodic baseline re-runs
+  (drift), alert-noise review. Cycle ends "next cycle scoped" (returns to
+  Frame) or "closed", never by silence.
 
-### Step 3.2 — Setup Instructions
-
-I will provide:
-- **Prerequisites** (table existence, permissions, warehouse assignment)
-- **Step-by-step dashboard creation** (create pages, add widgets, paste prompts)
-- **Testing checklist** (verify each widget loads, check data)
-- **Troubleshooting guide** (common errors and fixes)
-
-### Step 3.3 — Deliver Artifacts
-
-Final deliverables:
-- **Prompt catalog** (organized by page and widget)
-- **Dashboard setup guide** (copy-paste instructions)
-- **Metadata file** (tables, columns, data quality notes)
-- **Change log** (what's new vs. any prior versions)
-
----
-
-## Example Workflow
-
-**Your request:**
-> "Create a healthcare dashboard for members and claims. Users are data analysts. Data is in Tuva input layer tables."
-
-### Gate 1 Output (Plan)
-```
-Pages:
-  1. Members Overview
-     - KPI: total, active, avg duration, employer groups
-     - Distribution: payer mix, age bands, gender, race
-     - Geography: top states, enrollment trend
-  
-  2. Claims & Utilization
-     - KPI: total claims, billed, paid, denial rate
-     - Trends: monthly billed vs paid
-     - Top diagnoses (by volume, by paid amount)
-  
-Global Filters: date range, payer type, state
-```
-
-### Gate 2 Output (Design)
-```
-Members page wireframe:
-
-  ┌─────────────────────────────────────────┐
-  │ TOTAL MEMBERS    ACTIVE    AVG MONTHS   │
-  │    2.1M           1.8M        18.5       │
-  └─────────────────────────────────────────┘
-  
-  ┌──────────────────────┬──────────────────┐
-  │ Payer Mix (donut)    │ Age Bands (bar)  │
-  │                      │                  │
-  └──────────────────────┴──────────────────┘
-  
-  ┌─────────────────────────────────────────┐
-  │ Members by State (bar, scrollable)      │
-  └─────────────────────────────────────────┘
-```
-
-### Gate 3 Output (Prompts)
-```
-Widget: Members by Payer Type
-
-Prompt:
-  Show a donut chart of member count by payer_type 
-  from dev.tuva_input_layer.eligibility.
-  Title it "Enrollment by Payer Type". 
-  Use distinct person_id count per payer_type.
-```
+The optional HELIX **Discover** activity (validating whether the dashboard is
+worth building) precedes Frame when the opportunity itself is in question; use
+the HELIX methodology repo's Discover artifacts if needed.
 
 ---
 
-## Reference Materials
+## Example Cycle (condensed)
 
-See [existing Genie prompts](./references/genie-dashboard-prompts.md) for a completed example dashboard (Members, Claims & Charges, Clinical Conditions) based on Tuva synthetic data.
+> "Create a healthcare dashboard for members and claims on Tuva input layer tables."
+
+1. **Frame**: brief + inventory (W-101 Total Members … W-203 Monthly Billed vs
+   Paid), payer/date/state filters. Gate: stakeholder approves scope.
+2. **Design**: `dashboard-mockup.html` — two tabs, Databricks chrome, working
+   payer-type filter re-rendering fake-but-plausible data; decisions record the
+   max-per-claim charge rule. Gate: stakeholder clicks through, approves.
+3. **Test**: T-101/T-201/T-202 baseline SQL run on the warehouse; results
+   recorded (2.14M members, $412M billed, 6.8% denial). Gate: correct is now
+   defined.
+4. **Build**: prompt per widget, each ending with its rule sentence; fallback
+   view `v_claim_amounts` pre-written.
+5. **Deploy**: T-201 FAILs (Genie summed claim lines, 2.4x) → re-prompt
+   rule-first → PASS; all outcomes recorded. Gate: live dashboard verified.
+6. **Iterate**: analyst feedback on the denial definition → subtitle fix +
+   parking-lot item → next cycle scoped.
 
 ---
 
 ## Key Principles
 
-1. **Clarity first**: Every prompt must be unambiguous. Include exact table paths, join logic, and data types.
-2. **Avoid double-counting**: Specify whether aggregating by distinct ID, max per claim, or distinct dates.
-3. **Metric definitions are explicit**: "Denial rate = (paid = 0 or null) / total claims", not just "% denied".
-4. **Design for the user**: KPIs first (executives glance), drill-downs second (analysts dig deep).
-5. **Backwards compatible**: If iterating on an existing dashboard, clearly mark what's new/changed.
-
----
-
-## Getting Started
-
-1. **Invoke this skill**: Type `/genie-dashboard-design:genie-dashboard-design` (or `/genie-dashboard-design` if installed as a standalone skill) and describe your dashboard vision.
-2. **Complete Gate 1**: Share context; I'll propose a plan.
-3. **Review & approve**: Confirm the plan, or request changes.
-4. **Gate 2**: I'll share a wireframe and design rationale.
-5. **Gate 3**: I'll generate Genie prompts ready to paste into Databricks.
-
----
-
-## Common Customizations
-
-- **Add a row for drill-down tables**: Include in wireframe (Gate 2) before prompts (Gate 3).
-- **Global filters that cascade**: Define in Gate 1; specify filter logic per widget in Gate 3.
-- **Multiple data sources (e.g., TEST vs PROD)**: Note in Gate 1; use `switch` logic in prompts if needed.
-- **Scheduled refreshes & alerts**: Defer to post-deployment; mention in Gate 3 if desired.
+1. **Artifacts are the memory.** Decisions live in `docs/helix/`, not in chat
+   history or meeting recall. If it mattered, it's written.
+2. **Clarity first.** Exact table paths, explicit aggregation, named null
+   handling — in briefs, decisions, tests, and prompts alike.
+3. **No double-counting.** Grain and dedupe rules are stated once in Design
+   and copied verbatim everywhere they apply.
+4. **Verify, then trust.** A matching number with uninspected SQL is a bug
+   waiting for a data shift.
+5. **The spiral, not the line.** Change requests re-enter at Frame. Editing a
+   deployed prompt without updating its test is how dashboards rot.

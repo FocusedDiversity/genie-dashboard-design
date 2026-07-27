@@ -1,0 +1,81 @@
+# Metadata for Widget Inventory
+
+artifact:
+  name: Widget Inventory
+  id: widget-inventory
+  type: document
+  activity: frame
+
+voice: artifact-signal
+
+description: |
+  The traceability spine of a dashboard cycle. Assigns every widget a stable
+  W-### id and records its page, type, metric, aggregation, source, and
+  filters. The mockup tags widgets with these ids, the test plan verifies
+  them, and the prompt catalog builds them — one row per widget, no orphans
+  in either direction.
+
+output:
+  location: docs/helix/01-frame/widget-inventory.md
+  format: markdown
+  naming: widget-inventory.md
+
+validation:
+  required_sections:
+    - pages
+    - inventory
+    - global_filters
+    - open_questions
+
+  quality_checks:
+    - check: ids_stable
+      description: W-### ids are never renumbered once assigned; retired widgets are struck through, not reused
+      severity: blocking
+
+    - check: aggregation_explicit
+      description: Every row names its aggregation; "count" without distinct/per-id qualification is invalid
+      severity: blocking
+
+    - check: source_full_path
+      description: Every row carries a full three-part table path
+      severity: blocking
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review this inventory for:
+    1. One row per widget, W-### assigned, no duplicates
+    2. Aggregation and dedupe rule explicit per row
+    3. Filters column names which global filters reach the widget
+    4. Page totals reasonable (< 12 widgets per page)
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Inventory for the healthcare members & claims example
+
+workflow:
+  creation_order: 2
+  approval_required: true
+  approvers:
+    - Primary stakeholder
+
+relationships:
+  informs:
+    - dashboard-mockup
+    - widget-test-plan
+    - prompt-catalog
+
+  referenced_by:
+    - deployment-guide
+    - iteration-log
+
+tags:
+  - requirements
+  - traceability
+  - dashboard
+
+version: 1.0.0
+last_updated: 2026-07-27

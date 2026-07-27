@@ -1,0 +1,74 @@
+# Metadata for Genie Prompt Catalog
+
+artifact:
+  name: Genie Prompt Catalog
+  id: prompt-catalog
+  type: document
+  activity: build
+
+voice: artifact-signal
+
+description: |
+  The implementation artifact: one copy-paste-ready Genie prompt per
+  inventory widget, each traceable to its W-### and to the T-### check
+  that verifies it. Prompts follow the prompt style guide — explicit
+  aggregation, full table paths, join logic, null handling, formatting.
+  Includes dataset definitions and fallback SQL views for widgets where
+  Genie fights complex window logic.
+
+output:
+  location: docs/helix/04-build/prompt-catalog.md
+  format: markdown
+  naming: prompt-catalog.md
+
+validation:
+  required_sections:
+    - datasets
+    - prompts_by_page
+    - fallback_views
+    - traceability
+
+  quality_checks:
+    - check: style_guide_compliance
+      description: Every prompt satisfies the prompt style guide (skills/genie-dashboard-design/assets/prompt-style-guide.md)
+      severity: blocking
+
+    - check: rules_verbatim
+      description: Dedupe, null-handling, and grain language from design-decisions appears verbatim in every prompt it governs
+      severity: blocking
+
+    - check: bijective_traceability
+      description: Widgets and prompts map one-to-one — no widget skipped, no prompt without a widget
+      severity: blocking
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review for:
+    1. One prompt per W-###, titled exactly as the inventory
+    2. T-### reference on every prompt
+    3. Full three-part table paths everywhere
+    4. Fallback views provided for window-logic-heavy widgets
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Catalog excerpt for the healthcare members & claims example
+
+workflow:
+  creation_order: 1
+  approval_required: false
+
+relationships:
+  informs:
+    - deployment-guide
+
+tags:
+  - build
+  - genie
+  - prompts
+
+version: 1.0.0
+last_updated: 2026-07-27

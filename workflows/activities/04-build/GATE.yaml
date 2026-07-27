@@ -1,0 +1,39 @@
+activity: build
+number: "04"
+
+entry_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/03-test/widget-test-plan.md
+      description: "Tests define expected results before prompts are written"
+  manual:
+    - "Test exit gate passed; baseline query results recorded"
+
+exit_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/04-build/prompt-catalog.md
+      description: "Genie prompt catalog must exist"
+
+    - check: grep_present
+      pattern: "W-[0-9]+"
+      path: docs/helix/04-build/prompt-catalog.md
+      description: "Every prompt traces to a widget inventory id"
+
+    - check: grep_present
+      pattern: "T-[0-9]+"
+      path: docs/helix/04-build/prompt-catalog.md
+      description: "Every prompt names the check that verifies it"
+
+    - check: grep_present
+      pattern: "[a-z_]+\\.[a-z_]+\\.[a-z_]+"
+      path: docs/helix/04-build/prompt-catalog.md
+      description: "Prompts carry full three-part table paths"
+
+  manual:
+    - "Every prompt follows the prompt style guide: explicit aggregation, join logic, null handling, formatting"
+    - "Dedupe and grain language appears verbatim in every prompt it applies to"
+    - "One prompt per inventory widget; no widget skipped, no prompt without a widget"
+    - "Titles in prompts match widget titles in the inventory exactly"
+
+next_activity: deploy

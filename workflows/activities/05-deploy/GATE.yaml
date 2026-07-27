@@ -1,0 +1,35 @@
+activity: deploy
+number: "05"
+
+entry_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/04-build/prompt-catalog.md
+      description: "Prompt catalog exists to deploy from"
+  manual:
+    - "Build exit gate passed"
+
+exit_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/05-deploy/deployment-guide.md
+      description: "Deployment guide must exist"
+
+    - check: grep_present
+      pattern: "T-[0-9]+"
+      path: docs/helix/05-deploy/deployment-guide.md
+      description: "Verification section records per-check outcomes against the live dashboard"
+
+    - check: grep_present
+      pattern: "(PASS|FAIL|BLOCKED)"
+      path: docs/helix/05-deploy/deployment-guide.md
+      description: "Each verification check has a recorded outcome, not a promise"
+
+  manual:
+    - "Dashboard created in the workspace; every widget loads on the assigned warehouse"
+    - "Every T-### check executed against the LIVE dashboard; generated SQL inspected where the check requires it"
+    - "Failures triaged: re-prompted, moved to fallback views, or accepted with a recorded waiver"
+    - "Permissions and sharing configured; refresh schedule set if required"
+    - "Stakeholder confirmed the deployed dashboard matches the approved mockup"
+
+next_activity: iterate

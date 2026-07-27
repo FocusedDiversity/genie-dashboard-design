@@ -1,0 +1,73 @@
+# Metadata for Design Decisions
+
+artifact:
+  name: Design Decisions
+  id: design-decisions
+  type: document
+  activity: design
+
+voice: artifact-signal
+
+description: |
+  The record of judgment calls behind the mockup: layout, chart types,
+  aggregation and dedupe rules, filter flow, and rejected alternatives.
+  Test derives its checks from the rules stated here; Build must not
+  contradict them. If a rule matters to correctness, it lives here — not
+  in someone's memory of the review meeting.
+
+output:
+  location: docs/helix/02-design/design-decisions.md
+  format: markdown
+  naming: design-decisions.md
+
+validation:
+  required_sections:
+    - layout_choices
+    - chart_type_rationale
+    - aggregation_rules
+    - filter_flow
+    - accessibility
+    - rejected_alternatives
+
+  quality_checks:
+    - check: aggregation_testable
+      description: Every aggregation rule is stated so Test can write a baseline query from it verbatim
+      severity: blocking
+
+    - check: alternatives_real
+      description: Rejected alternatives name real options considered, with the reason — not strawmen
+      severity: warning
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review for:
+    1. Every mockup widget's aggregation covered by a rule
+    2. Filter flow names exempt widgets and why
+    3. Rejected alternatives capture the stakeholder debate
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Decisions record for the healthcare members & claims example
+
+workflow:
+  creation_order: 2
+  approval_required: true
+  approvers:
+    - Primary stakeholder
+
+relationships:
+  informs:
+    - widget-test-plan
+    - prompt-catalog
+
+tags:
+  - design
+  - decisions
+  - dashboard
+
+version: 1.0.0
+last_updated: 2026-07-27

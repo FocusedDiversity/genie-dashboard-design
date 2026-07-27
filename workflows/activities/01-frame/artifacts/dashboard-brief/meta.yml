@@ -1,0 +1,87 @@
+# Metadata for Dashboard Brief
+
+artifact:
+  name: Dashboard Brief
+  id: dashboard-brief
+  type: document
+  activity: frame
+
+voice: artifact-signal
+
+description: |
+  Product-scope authority for one dashboard. Translates the stakeholder ask
+  into audience, data sources, KPI definitions, filter architecture, and
+  success criteria. The dashboard analog of a PRD: every downstream artifact
+  (mockup, tests, prompts) must trace back to a requirement stated here.
+
+output:
+  location: docs/helix/01-frame/dashboard-brief.md
+  format: markdown
+  naming: dashboard-brief.md
+
+validation:
+  required_sections:
+    - summary
+    - problem_and_audience
+    - data_sources
+    - kpis_and_metrics
+    - filters_and_drilldowns
+    - constraints_and_assumptions
+    - success_criteria
+
+  quality_checks:
+    - check: metrics_defined
+      description: Every rate/percentage KPI states numerator and denominator explicitly
+      severity: blocking
+
+    - check: sources_verified
+      description: Every source table is a full three-part path confirmed to exist
+      severity: blocking
+
+    - check: no_prompt_leak
+      description: The brief states WHAT is measured, never Genie prompt wording — that is the prompt-catalog's authority
+      severity: blocking
+
+variables:
+  - name: dashboard_name
+    description: Display name of the dashboard
+    required: true
+  - name: primary_stakeholder
+    description: Person who approves gates for this dashboard
+    required: true
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review this brief for:
+    1. Unambiguous KPI definitions (aggregation named, numerator/denominator explicit)
+    2. Verified full table paths
+    3. Filters with cardinality and defaults
+    4. Success criteria a reviewer could check post-release
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Brief for a healthcare members & claims dashboard on Tuva synthetic data
+
+workflow:
+  creation_order: 1
+  approval_required: true
+  approvers:
+    - Primary stakeholder
+
+relationships:
+  informs:
+    - widget-inventory
+    - design-decisions
+    - widget-test-plan
+
+tags:
+  - requirements
+  - dashboard
+  - genie
+
+version: 1.0.0
+last_updated: 2026-07-27

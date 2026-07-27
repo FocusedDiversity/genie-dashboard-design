@@ -1,0 +1,68 @@
+# Metadata for Iteration Log
+
+artifact:
+  name: Iteration Log
+  id: iteration-log
+  type: document
+  activity: iterate
+
+voice: artifact-signal
+
+description: |
+  The learning record that closes the spiral: change log, dated usage and
+  feedback, accuracy-drift re-checks (baselines re-run vs live widgets),
+  alert-noise review, and the parking lot feeding the next Frame. A
+  dashboard without an iteration log is unowned.
+
+output:
+  location: docs/helix/06-iterate/iteration-log.md
+  format: markdown
+  naming: iteration-log.md
+
+validation:
+  required_sections:
+    - change_log
+    - usage_and_feedback
+    - drift_checks
+    - parking_lot
+    - next_cycle
+
+  quality_checks:
+    - check: feedback_dated
+      description: Feedback entries carry a date and source, not paraphrased memory
+      severity: blocking
+
+    - check: drift_evidence
+      description: Drift section shows re-run T-### results, not an assertion that things look fine
+      severity: blocking
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review for:
+    1. Change log entries tie to W-### / T-### where applicable
+    2. Drift checks re-ran real baselines with dates
+    3. Next cycle explicitly scoped or closed
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Iteration log excerpt for the healthcare example
+
+workflow:
+  creation_order: 1
+  approval_required: false
+
+relationships:
+  informs:
+    - dashboard-brief
+
+tags:
+  - iterate
+  - feedback
+  - drift
+
+version: 1.0.0
+last_updated: 2026-07-27

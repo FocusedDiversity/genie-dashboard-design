@@ -1,0 +1,40 @@
+activity: test
+number: "03"
+
+entry_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/02-design/design-decisions.md
+      description: "Design decisions exist to derive verification from"
+  manual:
+    - "Design exit gate passed; mockup approved"
+
+exit_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/03-test/widget-test-plan.md
+      description: "Widget test plan must exist"
+
+    - check: grep_present
+      pattern: "T-[0-9]+"
+      path: docs/helix/03-test/widget-test-plan.md
+      description: "Every check has a stable T-### identifier"
+
+    - check: grep_present
+      pattern: "W-[0-9]+"
+      path: docs/helix/03-test/widget-test-plan.md
+      description: "Checks trace to widget inventory ids"
+
+    - check: grep_present
+      pattern: "```sql"
+      path: docs/helix/03-test/widget-test-plan.md
+      description: "Baseline queries are concrete runnable SQL, not prose"
+
+  manual:
+    - "Every P0 widget has a baseline SQL query with an expected-result rule (exact match, tolerance, or invariant)"
+    - "Baseline queries executed against the warehouse; results recorded BEFORE any prompt is written"
+    - "Dedupe, null-handling, and grain rules from Design appear as explicit checks, not assumptions"
+    - "Dashboard-level checks defined: filter cascade, counter/table agreement, empty-data behavior"
+    - "Out-of-scope checks named with a reason, not silently omitted"
+
+next_activity: build

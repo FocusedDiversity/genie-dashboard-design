@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointment Completion Analysis — Databricks Dashboard Mockup</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b0e14;
+    --bg-2:#11151d;
+    --panel:#161b24;
+    --panel-2:#1b212b;
+    --border:#262d39;
+    --border-2:#2f3744;
+    --text:#e8ecf2;
+    --text-dim:#9aa4b2;
+    --text-faint:#6b7480;
+    --green:#21b573;
+    --green-dark:#178a57;
+    --amber:#f2a93b;
+    --red:#ef4e3a;
+    --blue:#3d9be0;
+    --blue-light:#8fc8f0;
+    --purple:#9b6dd6;
+    --grid:#222a35;
+    --accent:#ff6b4a;
+    --tab-active:#3d9be0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  body{font-size:13px;line-height:1.4;}
+
+  /* ===== Top app bar ===== */
+  .appbar{display:flex;align-items:center;gap:16px;height:42px;padding:0 16px;background:#0a0d12;border-bottom:1px solid var(--border);}
+  .brand{display:flex;align-items:center;gap:7px;font-weight:600;font-size:14px;color:#fff;}
+  .brand .spark{display:inline-flex;gap:2px;}
+  .brand .spark i{display:block;width:4px;border-radius:1px;background:var(--accent);}
+  .brand .spark i:nth-child(1){height:10px;}
+  .brand .spark i:nth-child(2){height:16px;background:#ff8a5c;}
+  .brand .spark i:nth-child(3){height:13px;background:#ffb38c;}
+  .searchbar{flex:1;max-width:560px;margin:0 auto;display:flex;align-items:center;gap:8px;background:#12161e;border:1px solid var(--border);border-radius:6px;height:26px;padding:0 10px;color:var(--text-faint);font-size:12px;}
+  .searchbar .kbd{margin-left:auto;font-size:10px;color:var(--text-faint);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;}
+  .appbar .right{font-size:12px;color:var(--text-dim);}
+
+  /* ===== Dashboard header ===== */
+  .dash-head{padding:14px 20px 0;background:var(--bg);}
+  .dash-title-row{display:flex;align-items:center;gap:12px;}
+  .dash-title{font-size:20px;font-weight:600;color:#fff;letter-spacing:.2px;}
+  .star{color:var(--text-faint);font-size:15px;}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-dim);border:1px solid var(--border-2);background:var(--panel);border-radius:5px;padding:3px 9px;}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+  .head-actions{margin-left:auto;display:flex;gap:8px;align-items:center;color:var(--text-dim);font-size:12px;}
+  .head-actions .btn{border:1px solid var(--border-2);border-radius:5px;padding:4px 10px;background:var(--panel);}
+
+  /* ===== Tabs ===== */
+  .tabs{display:flex;gap:2px;margin-top:14px;border-bottom:1px solid var(--border);padding:0 4px;overflow-x:auto;}
+  .tab{position:relative;padding:9px 16px;font-size:13px;color:var(--text-dim);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;}
+  .tab:hover{color:var(--text);}
+  .tab.active{color:#fff;border-bottom-color:var(--tab-active);font-weight:500;}
+
+  /* ===== Filter bar ===== */
+  .filters{display:flex;flex-wrap:wrap;gap:18px;padding:14px 20px;background:var(--bg);align-items:center;}
+  .filter{display:flex;flex-direction:column;gap:4px;min-width:150px;}
+  .filter label{font-size:11px;color:var(--text-dim);font-weight:500;}
+  .filter select,.filter input{background:var(--panel);border:1px solid var(--border-2);color:var(--text);border-radius:5px;height:30px;padding:0 9px;font-size:12px;}
+  .filter.wide{flex:1;min-width:260px;}
+
+  /* ===== Grid & panels ===== */
+  .page{padding:4px 20px 40px;display:none;}
+  .page.active{display:block;}
+  .grid{display:grid;gap:14px;margin-bottom:14px;}
+  .g-5{grid-template-columns:repeat(5,1fr);}
+  .g-4{grid-template-columns:repeat(4,1fr);}
+  .g-3{grid-template-columns:repeat(3,1fr);}
+  .g-2{grid-template-columns:repeat(2,1fr);}
+  .g-2-1{grid-template-columns:2fr 1fr;}
+  .g-1-2{grid-template-columns:1fr 2fr;}
+  @media(max-width:1100px){.g-5,.g-4{grid-template-columns:repeat(2,1fr);}.g-3,.g-2,.g-2-1,.g-1-2{grid-template-columns:1fr;}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px 16px;min-width:0;}
+  .card.hl{border-color:var(--tab-active);box-shadow:0 0 0 1px rgba(61,155,224,.25);}
+  .card h3{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+  .card .sub{font-size:11px;color:var(--text-faint);margin-bottom:10px;}
+  .card .chart-wrap{position:relative;width:100%;}
+
+  /* ===== KPI ===== */
+  .kpi{display:flex;flex-direction:column;gap:6px;}
+  .kpi .label{font-size:12px;color:var(--text-dim);}
+  .kpi .value{font-size:30px;font-weight:700;color:#fff;line-height:1;}
+  .kpi .value.green{color:var(--green);}
+  .kpi .value.amber{color:var(--amber);}
+  .kpi .value.red{color:var(--red);}
+  .kpi .value.blue{color:var(--blue);}
+  .kpi .delta{font-size:11px;color:var(--text-faint);}
+  .kpi .delta.up{color:var(--green);}
+  .kpi .delta.down{color:var(--red);}
+
+  /* ===== Tables ===== */
+  table.dt{width:100%;border-collapse:collapse;font-size:12px;}
+  table.dt th{text-align:left;color:var(--text-dim);font-weight:600;padding:8px 10px;background:var(--panel-2);border-bottom:1px solid var(--border-2);position:sticky;top:0;}
+  table.dt td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text);}
+  table.dt tr:hover td{background:var(--panel-2);}
+  table.dt td.num,table.dt th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .table-scroll{max-height:340px;overflow:auto;border:1px solid var(--border);border-radius:6px;}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+  .b-crit{background:rgba(239,78,58,.16);color:#ff7b68;}
+  .b-high{background:rgba(242,169,59,.16);color:#f5b85a;}
+  .b-mod{background:rgba(33,181,115,.16);color:#3fcf8e;}
+  .b-low{background:rgba(143,200,240,.16);color:#a9d4f3;}
+  .good{color:var(--green);font-weight:600;}
+  .bad{color:var(--red);font-weight:600;}
+
+  /* ===== Misc ===== */
+  .note{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:6px;padding:12px 16px;font-size:12px;color:var(--text-dim);}
+  .note h4{color:var(--text);font-size:12px;margin-bottom:6px;}
+  .note ol{margin-left:16px;}
+  .note li{margin:3px 0;}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:11px;color:var(--text-dim);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .legend i{width:10px;height:10px;border-radius:2px;display:inline-block;}
+  .footer{padding:14px 20px;color:var(--text-faint);font-size:11px;border-top:1px solid var(--border);}
+  .mock-tag{display:inline-block;font-size:10px;color:var(--text-faint);border:1px dashed var(--border-2);border-radius:4px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+</style>
+</head>
+<body>
+
+<!-- App bar -->
+<div class="appbar">
+  <div class="brand"><span class="spark"><i></i><i></i><i></i></span> databricks</div>
+  <div class="searchbar">🔍 Search data, notebooks, recents, and more… <span class="kbd">Ctrl + P</span></div>
+  <div class="right">dbrks-ed5uat-ws01 ▾</div>
+</div>
+
+<!-- Dashboard header -->
+<div class="dash-head">
+  <div class="dash-title-row">
+    <span class="dash-title">Appointment Completion Analysis</span>
+    <span class="star">☆</span>
+    <span class="pill"><span class="dot"></span>View published</span>
+    <span class="mock-tag">MOCKUP</span>
+    <div class="head-actions">
+      <span>↻ Updated just now</span>
+      <span class="btn">Schedule</span>
+      <span class="btn">Share</span>
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="t1">Appointment Completion</div>
+    <div class="tab" data-tab="t3">Provider NPV Load Overview</div>
+  </div>
+</div>
+
+<!-- ===================== TAB 1 ===================== -->
+<div class="page active" id="t1">
+  <div class="filters">
+    <div class="filter"><label>Region</label><select><option>All</option><option>Great Lakes</option><option>Midwest</option><option>Northeast</option><option>Atlantic Coast</option><option>Texas West</option></select></div>
+    <div class="filter"><label>Office</label><select><option>All</option><option>Milwaukee</option><option>Dallas</option><option>Houston</option><option>Newark</option></select></div>
+    <div class="filter"><label>Appointment Type</label><select id="apptType"><option value="all">All</option><option value="est">Established Patient Visit</option><option value="npv">New Patient Visit</option><option value="awv">Annual Wellness Visit</option><option value="phv">Post Hospital Visit</option><option value="tel">Telehealth</option></select></div>
+    <div class="filter"><label>Payer Type</label><select><option>All</option><option>VBC</option><option>NON-VBC</option></select></div>
+    <div class="filter"><label>Month</label><select><option>All (Jun 2025 – May 2026)</option><option>2026-05</option><option>2026-04</option><option>2026-03</option></select></div>
+  </div>
+
+  <div class="grid g-4">
+    <div class="card kpi" data-widget-id="W-101"><span class="label" id="k1_compLbl">Overall Completion Rate</span><span class="value green" id="k1_comp">92.4%</span><span class="delta" id="k1_compSub">235,017 scheduled appts</span></div>
+    <div class="card kpi" data-widget-id="W-102"><span class="label">No-Show Rate</span><span class="value red" id="k1_ns">5.3%</span><span class="delta down" id="k1_nsSub">12,456 no-shows</span></div>
+    <div class="card kpi" data-widget-id="W-103"><span class="label">Cancellation Rate</span><span class="value amber" id="k1_cancel">1.8%</span><span class="delta" id="k1_cancelSub">4,230 cancellations</span></div>
+    <div class="card kpi" data-widget-id="W-104"><span class="label" id="k1_scopeLbl">Appointment Type</span><span class="value blue" id="k1_scope" style="font-size:18px">All Types</span><span class="delta" id="k1_scopeSub">5 visit types</span></div>
+  </div>
+
+  <div class="grid g-2">
+    <div class="card" data-widget-id="W-105"><h3>Completion % by Region</h3><div class="sub" id="s1_region">Scheduled appointments — all types</div><div class="chart-wrap" style="height:240px"><canvas id="c1_region"></canvas></div></div>
+    <div class="card" data-widget-id="W-106"><h3>Completion % by Appointment Type</h3><div class="sub" id="s1_type">Telehealth lags significantly</div><div class="chart-wrap" style="height:240px"><canvas id="c1_type"></canvas></div></div>
+  </div>
+
+  <div class="grid g-1-2">
+    <div class="card" data-widget-id="W-107"><h3>Outcome Mix</h3><div class="sub">Completed / No-show / Cancelled</div><div class="chart-wrap" style="height:230px"><canvas id="c1_donut"></canvas></div></div>
+    <div class="card" data-widget-id="W-108"><h3>Monthly Completion & No-Show Trend</h3><div class="sub">Jun 2025 – May 2026 (partial months excluded)</div><div class="chart-wrap" style="height:230px"><canvas id="c1_trend"></canvas></div></div>
+  </div>
+
+  <div class="grid g-2">
+    <div class="card" data-widget-id="W-109"><h3>Top 10 Offices by Completion %</h3><div class="sub">Best performing locations</div><div class="chart-wrap" style="height:300px"><canvas id="c1_topoff"></canvas></div></div>
+    <div class="card" data-widget-id="W-110"><h3>Bottom 10 Offices by Completion %</h3><div class="sub">Intervention candidates</div><div class="chart-wrap" style="height:300px"><canvas id="c1_botoff"></canvas></div></div>
+  </div>
+
+  <div class="card">
+    <h3 data-widget-id="W-111">Region Detail</h3><div class="sub">Scheduled volume, completion, no-show and cancellation</div>
+    <div class="table-scroll">
+      <table class="dt">
+        <thead><tr><th>Region</th><th class="num">Scheduled</th><th class="num">Completion %</th><th class="num">No-Show %</th><th class="num">Cancellation %</th></tr></thead>
+        <tbody id="t1_tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-widget-id="W-112">Upcoming Appointments — Completion Risk (Chase List)</h3><div class="sub">Scheduled patients in the upper risk band (commute &amp; density percentile ≥ 85) — prioritize outreach</div>
+    <div class="filters" style="padding:14px 0 16px">
+      <div class="filter"><label>Region</label><select id="chaseRegion"></select></div>
+      <div class="filter"><label>Office</label><select id="chaseOffice"></select></div>
+      <div class="filter"><label>Provider Name</label><select id="chaseProvider"></select></div>
+    </div>
+    <div class="table-scroll" style="max-height:420px">
+      <table class="dt" style="white-space:nowrap">
+        <thead><tr>
+          <th>Region</th><th>Office</th><th>Provider</th><th>Patient MRN</th><th>First Name</th><th>Last Name</th><th>DOB</th><th class="num">Age</th><th>Appointment DTTM</th><th>Appt. Type</th><th>Sched. Confirmed</th><th>Status</th><th class="num">Commute Time</th><th class="num">Density</th>
+        </tr></thead>
+        <tbody id="t1_chase"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TAB 3 ===================== -->
+<div class="page" id="t3">
+  <div class="filters">
+    <div class="filter"><label>Region</label><select><option>All</option><option>Texas West</option><option>Northeast</option><option>Midwest</option><option>Great Lakes</option><option>Atlantic Coast</option></select></div>
+    <div class="filter"><label>Office</label><select><option>All</option><option>Dallas</option><option>Houston</option><option>Toms River</option><option>Troy</option></select></div>
+    <div class="filter"><label>Threshold</label><select id="npvThreshold"><option value="4" selected>&gt; 4 New Patient Visits / day</option><option value="3">&gt; 3 NPV / day</option><option value="5">&gt; 5 NPV / day</option></select></div>
+  </div>
+
+  <div class="grid g-5">
+    <div class="card kpi" data-widget-id="W-301"><span class="label" id="k_provLbl">Providers Exceeding 4 NPV/Day</span><span class="value amber" id="k_prov">23</span><span class="delta">at least one day</span></div>
+    <div class="card kpi" data-widget-id="W-302"><span class="label">Chronic Overload</span><span class="value red" id="k_chronic">1</span><span class="delta down" id="k_chronicSub">&gt;4 NPV on ≥10% of days</span></div>
+    <div class="card kpi hl" data-widget-id="W-303"><span class="label">Avg Doc TAT — Overloaded</span><span class="value red" id="k_tatOver">41.6h</span><span class="delta down" id="k_tatDelta">▲ 19.2h vs others</span></div>
+    <div class="card kpi" data-widget-id="W-304"><span class="label">Avg Doc TAT — All Others</span><span class="value green" id="k_tatOther">22.4h</span><span class="delta">providers ≤ threshold</span></div>
+    <div class="card kpi" data-widget-id="W-305"><span class="label">TAT Gap</span><span class="value amber" id="k_gap">+86%</span><span class="delta">slower documentation</span></div>
+  </div>
+
+  <div class="grid g-2">
+    <div class="card" data-widget-id="W-306"><h3>Top Providers at Burnout Risk</h3><div class="sub" id="s_top">Days with &gt; 4 New Patient Visits</div><div class="chart-wrap" style="height:300px"><canvas id="c3_top"></canvas></div></div>
+    <div class="card" data-widget-id="W-307"><h3>Monthly Trend of Overloaded Provider-Days</h3><div class="sub" id="s_trend">Days with &gt; 4 NPV per month</div><div class="chart-wrap" style="height:300px"><canvas id="c3_trend"></canvas></div></div>
+  </div>
+
+  <div class="grid g-2">
+    <div class="card hl" data-widget-id="W-308"><h3>NPV Overload vs Documentation TAT</h3><div class="sub" id="s_combo">Days &gt; 4 NPV (bars, left) vs Avg Doc TAT in hours (line, right) — by provider</div><div class="chart-wrap" style="height:300px"><canvas id="c3_combo"></canvas></div></div>
+    <div class="card" data-widget-id="W-309"><h3>Overload Frequency vs Avg Doc TAT</h3><div class="sub" id="s_scatter">Each point = one provider · upward trend = more NPV overload, slower documentation</div><div class="chart-wrap" style="height:300px"><canvas id="c3_scatter"></canvas></div></div>
+  </div>
+
+  <div class="grid g-2-1">
+    <div class="card">
+      <h3 data-widget-id="W-310">Provider Overload Detail</h3><div class="sub">Ranked by frequency of high-NPV days</div>
+      <div class="table-scroll">
+        <table class="dt">
+          <thead><tr><th>Provider</th><th>Region</th><th>Office</th><th class="num" id="th_days">Days &gt;4</th><th class="num">% Days</th><th class="num">Avg NPV</th><th class="num">Max</th><th class="num">Doc TAT (h)</th></tr></thead>
+          <tbody id="t3_tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="note">
+      <h4>Burnout Prevention Recommendations</h4>
+      <ol>
+        <li>Cap New Patient Visits at <b>4 per provider per day</b> to allow adequate documentation time.</li>
+        <li>Flag and review scheduling for providers exceeding the cap, especially chronic cases.</li>
+        <li>Monitor the monthly trend — rising high-NPV days may signal a staffing or redistribution need.</li>
+        <li>Run provider feedback surveys for chronically overloaded providers to assess real burnout symptoms.</li>
+      </ol>
+      <p style="margin-top:10px;color:var(--text-faint);">NPV load also correlates with longer documentation turnaround time (Doc TAT) on high-volume days.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Mockup • Appointment Completion Analysis • Source: Appointments_V4 (235,017 records) • Styled to match Market Performance Management dashboard look &amp; feel. Figures are illustrative, drawn from the provided analysis findings.</div>
+
+<script>
+// ---------- Chart.js global theme ----------
+const C = {green:'#21b573',greenDk:'#178a57',amber:'#f2a93b',red:'#ef4e3a',blue:'#3d9be0',blueLt:'#8fc8f0',purple:'#9b6dd6',grid:'#222a35',text:'#9aa4b2',textLt:'#e8ecf2'};
+Chart.defaults.color = C.text;
+Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.legend.labels.boxWidth = 11;
+Chart.defaults.plugins.legend.labels.boxHeight = 11;
+Chart.defaults.plugins.legend.labels.usePointStyle = false;
+const gridX = {grid:{color:C.grid,drawTicks:false},border:{color:C.grid},ticks:{color:C.text}};
+const gridY = {grid:{color:C.grid,drawTicks:false},border:{color:C.grid},ticks:{color:C.text}};
+const noGridX = {grid:{display:false},border:{color:C.grid},ticks:{color:C.text}};
+
+// ---------- Tab switching ----------
+document.getElementById('tabs').addEventListener('click', e=>{
+  const t = e.target.closest('.tab'); if(!t) return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById(t.dataset.tab).classList.add('active');
+});
+
+function pct(v){return v+'%';}
+
+// =================== TAB 1 ===================
+// =================== TAB 1 (appointment-type driven) ===================
+// Per-type overall metrics from findings (Appointments_V4).
+const APPT = {
+  all:{name:'All Types',sched:235017,comp:92.4,ns:5.3,cancel:1.8,sub:'5 visit types'},
+  est:{name:'Established',sched:157771,comp:94.6,ns:3.9,cancel:1.0,sub:'highest volume'},
+  npv:{name:'New Patient',sched:29596,comp:88.1,ns:9.2,cancel:2.3,sub:'resource-intensive'},
+  awv:{name:'Wellness',sched:1895,comp:94.3,ns:4.1,cancel:1.1,sub:'lowest volume'},
+  phv:{name:'Post Hospital',sched:27742,comp:92.0,ns:6.0,cancel:1.4,sub:'transition of care'},
+  tel:{name:'Telehealth',sched:18013,comp:79.6,ns:9.5,cancel:8.4,sub:'highest cancel rate'},
+};
+// Base ("All") distributions — shifted per type by completion delta, no-show by ratio.
+const baseRegions=[
+  {r:'Great Lakes',s:67174,c:94.2,n:4.3,x:1.0},
+  {r:'Midwest',s:28526,c:92.8,n:4.0,x:2.5},
+  {r:'Northeast',s:35576,c:91.9,n:5.6,x:1.9},
+  {r:'Atlantic Coast',s:45264,c:91.8,n:5.3,x:2.1},
+  {r:'Texas West',s:58477,c:90.7,n:6.8,x:2.0},
+];
+const typeBars=[['Established',94.6],['Annual Wellness',94.3],['Post Hospital',92.0],['New Patient',88.1],['Telehealth',79.6]];
+const typeKeyOrder=['est','awv','phv','npv','tel'];
+const baseMonths=['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26'];
+const baseCompT=[92.7,92.7,92.2,91.7,92.8,91.9,92.7,93.8,93.5,92.8,88.7];
+const baseNsT=[4.7,4.4,4.8,5.0,6.0,6.4,5.5,4.9,5.3,6.1,5.8];
+const baseTopOff=[['Milwaukee',97.5],['Akron',97.4],['Marysville',97.2],['Seattle',96.6],['Flint',96.4],['Lansing',96.3],['Youngstown',95.8],['Virginia Beach',95.4],['Austin',95.2],['Indianapolis',95.2]];
+const baseBotOff=[['Dallas',90.6],['Roanoke',90.6],['Jacksonville',89.6],['North Virginia',89.6],['Orlando',89.3],['Newark',88.4],['Tampa',87.1],['Atlanta',86.2],['Houston',86.1],['Toledo',83.2]];
+
+const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+let chRegion,chType,chDonut,chTrend,chTopOff,chBotOff;
+
+function renderType(key){
+  const t=APPT[key];
+  const dC=t.comp-92.4;            // completion shift (pts)
+  const rN=t.ns/5.3;               // no-show ratio
+  const rX=t.cancel/1.8;           // cancellation ratio
+
+  // ---- KPIs ----
+  document.getElementById('k1_compLbl').textContent = key==='all'?'Overall Completion Rate':`Completion Rate — ${t.name}`;
+  document.getElementById('k1_comp').textContent = t.comp.toFixed(1)+'%';
+  document.getElementById('k1_compSub').textContent = t.sched.toLocaleString()+' scheduled appts';
+  document.getElementById('k1_ns').textContent = t.ns.toFixed(1)+'%';
+  document.getElementById('k1_nsSub').textContent = Math.round(t.sched*t.ns/100).toLocaleString()+' no-shows';
+  document.getElementById('k1_cancel').textContent = t.cancel.toFixed(1)+'%';
+  document.getElementById('k1_cancelSub').textContent = Math.round(t.sched*t.cancel/100).toLocaleString()+' cancellations';
+  document.getElementById('k1_scope').textContent = t.name;
+  document.getElementById('k1_scopeSub').textContent = t.sub;
+  document.getElementById('s1_region').textContent = `Scheduled appointments — ${key==='all'?'all types':t.name}`;
+  document.getElementById('s1_type').textContent = key==='all'?'Telehealth lags significantly':`${t.name} highlighted`;
+
+  // ---- Completion by region (shifted) ----
+  const regC=baseRegions.map(d=>clamp(+(d.c+dC).toFixed(1),60,100));
+  const rMin=Math.floor(Math.min(...regC)/2)*2-2, rMax=Math.ceil(Math.max(...regC)/2)*2+1;
+  if(chRegion) chRegion.destroy();
+  chRegion=new Chart(c1_region,{type:'bar',data:{labels:baseRegions.map(d=>d.r),datasets:[{data:regC,
+    backgroundColor:regC.map(v=>v>=93?C.green:v>=88?C.greenDk:v>=83?C.amber:C.red),borderRadius:3}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{...gridX,min:rMin,max:rMax,ticks:{callback:pct}},y:noGridX}}});
+
+  // ---- By appointment type (highlight selected) ----
+  if(chType) chType.destroy();
+  chType=new Chart(c1_type,{type:'bar',data:{labels:typeBars.map(d=>d[0]),datasets:[{data:typeBars.map(d=>d[1]),
+    backgroundColor:typeBars.map((d,i)=>{
+      const isSel = key!=='all' && typeKeyOrder[i]===key;
+      if(key==='all') return d[1]>=92?C.green:d[1]>=85?C.amber:C.red;
+      return isSel ? C.blue : 'rgba(120,130,145,.35)';
+    }),borderRadius:3}]},
+    options:{plugins:{legend:{display:false}},scales:{x:noGridX,y:{...gridY,min:70,max:100,ticks:{callback:pct}}}}});
+
+  // ---- Donut ----
+  if(chDonut) chDonut.destroy();
+  chDonut=new Chart(c1_donut,{type:'doughnut',data:{labels:['Completed','No-Show','Cancelled'],
+    datasets:[{data:[t.comp,t.ns,t.cancel],backgroundColor:[C.green,C.red,C.amber],borderColor:'#161b24',borderWidth:2}]},
+    options:{cutout:'62%',plugins:{legend:{position:'bottom'}}}});
+
+  // ---- Monthly trend (shifted comp, scaled ns) ----
+  const compT=baseCompT.map(v=>clamp(+(v+dC).toFixed(1),40,100));
+  const nsT=baseNsT.map(v=>+(v*rN).toFixed(1));
+  const yMin=Math.floor(Math.min(...compT)/5)*5, yMax=Math.ceil(Math.max(...compT)/2)*2+1;
+  const y2Max=Math.ceil(Math.max(...nsT,1)*1.3);
+  if(chTrend) chTrend.destroy();
+  chTrend=new Chart(c1_trend,{data:{labels:baseMonths,datasets:[
+    {type:'line',label:'Completion %',data:compT,borderColor:C.green,backgroundColor:'rgba(33,181,115,.12)',fill:true,tension:.3,yAxisID:'y',pointRadius:2},
+    {type:'line',label:'No-Show %',data:nsT,borderColor:C.red,backgroundColor:'transparent',tension:.3,yAxisID:'y2',pointRadius:2}]},
+    options:{plugins:{legend:{position:'top'}},scales:{x:noGridX,
+      y:{...gridY,position:'left',min:yMin,max:yMax,ticks:{callback:pct}},
+      y2:{grid:{display:false},position:'right',min:0,max:y2Max,ticks:{callback:pct,color:C.red}}}}});
+
+  // ---- Top / bottom offices (shifted) ----
+  const topOff=baseTopOff.map(d=>[d[0],clamp(+(d[1]+dC).toFixed(1),50,100)]);
+  const botOff=baseBotOff.map(d=>[d[0],clamp(+(d[1]+dC).toFixed(1),40,100)]);
+  if(chTopOff) chTopOff.destroy();
+  chTopOff=new Chart(c1_topoff,{type:'bar',data:{labels:topOff.map(d=>d[0]),datasets:[{data:topOff.map(d=>d[1]),
+    backgroundColor:topOff.map(v=>v[1]>=90?C.green:v[1]>=83?C.amber:C.red),borderRadius:3}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{...gridX,min:60,max:100,ticks:{callback:pct}},y:noGridX}}});
+  if(chBotOff) chBotOff.destroy();
+  chBotOff=new Chart(c1_botoff,{type:'bar',data:{labels:botOff.map(d=>d[0]),datasets:[{data:botOff.map(d=>d[1]),
+    backgroundColor:botOff.map(v=>v[1]<83?C.red:v[1]<90?C.amber:C.green),borderRadius:3}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{...gridX,min:60,max:100,ticks:{callback:pct}},y:noGridX}}});
+
+  // ---- Region table ----
+  const totalSched=baseRegions.reduce((a,d)=>a+d.s,0);
+  document.getElementById('t1_tbody').innerHTML = baseRegions.map(d=>{
+    const c=clamp(+(d.c+dC).toFixed(1),40,100);
+    const n=+(d.n*rN).toFixed(1), x=+(d.x*rX).toFixed(1);
+    const s=Math.round(d.s/totalSched*t.sched);
+    const cls=c>=93?'good':c<88?'bad':'';
+    return `<tr><td>${d.r}</td><td class="num">${s.toLocaleString()}</td><td class="num ${cls}">${c}%</td><td class="num">${n}%</td><td class="num">${x}%</td></tr>`;
+  }).join('');
+}
+
+document.getElementById('apptType').addEventListener('change', e=>renderType(e.target.value));
+renderType('all');
+
+// ---- Chase List: upcoming high-risk scheduled appointments (illustrative) ----
+// cols: region, office, provider, mrn, first, last, dob, age, dttm, type, confirmed(Y/N), commute(0-100), density(0-100)
+const chase=[
+  ['Texas West','Dallas','PAULA EBO, FNP','2104877','Marcus','Whitfield','1948-03-12',78,'2026-06-15 08:30','New Patient','N',96,94],
+  ['Northeast','Toms River','STEFANIE CAIN, NP','1987342','Rosa','Delgado','1955-11-02',70,'2026-06-15 09:15','Established Patient','N',91,98],
+  ['Texas West','Houston','KIRAN KAUR, FNP','2231905','Eugene','Pham','1942-07-28',83,'2026-06-16 10:00','Post Hospital','N',99,97],
+  ['Midwest','Atlanta','ARIEL GRADY, MD','1765540','Bernice','Okafor','1950-01-19',76,'2026-06-16 11:30','Telehealth','Y',88,95],
+  ['Atlantic Coast','Virginia Beach','DONNA LUDWIG, NP-C','2098431','Harold','Mensah','1939-09-05',86,'2026-06-17 08:45','New Patient','N',93,90],
+  ['Texas West','Dallas','ADAM BROCK, NP','2117760','Gloria','Sandoval','1958-04-22',68,'2026-06-17 13:00','Established Patient','N',97,99],
+  ['Northeast','Newark','MICHELLE GILES-HONORE, NP','1903228','Theodore','Nguyen','1946-12-11',79,'2026-06-18 09:30','Annual Wellness','Y',86,92],
+  ['Great Lakes','Troy','HOLLY WEISSMAN, NP','2044519','Dorothy','Abara','1953-06-30',72,'2026-06-18 14:15','Post Hospital','N',90,96],
+  ['Texas West','San Antonio','DANIELLE FLORES, NP','2156083','Walter','Castillo','1944-02-17',82,'2026-06-19 08:00','New Patient','N',95,89],
+  ['Midwest','Dayton','ABBY NEFF, NP','1846671','Lillian','Osei','1951-10-08',74,'2026-06-19 10:45','Established Patient','N',89,93],
+  ['Atlantic Coast','Jacksonville','VERONICA LINN, NP','2073914','Clarence','Vega','1937-05-25',89,'2026-06-22 09:00','Post Hospital','N',98,95],
+  ['Texas West','Dallas','ASHLEY HOPKINS, NP','2129558','Frances','Mwangi','1956-08-14',69,'2026-06-22 11:15','Telehealth','Y',92,87],
+  ['Northeast','New York City','JESSICA LOPEZ, NP','1995207','Raymond','Dela Cruz','1949-03-03',77,'2026-06-23 08:30','New Patient','N',94,100],
+  ['Midwest','West Cleveland','DEBRA DEFRANCO, FNP','1788460','Edith','Bonsu','1941-11-19',84,'2026-06-23 13:30','Established Patient','N',87,91],
+  ['Great Lakes','Flint','KATHERINE WALKER, NP','2061338','Stanley','Reyes','1952-07-07',73,'2026-06-24 09:45','Annual Wellness','Y',90,88],
+  ['Texas West','Seattle','PRAKASH KHAREL, NP','2143092','Mabel','Adeyemi','1945-01-30',81,'2026-06-24 14:00','Post Hospital','N',96,99],
+];
+// Populate filter dropdowns (dependent: Office & Provider narrow to Region)
+const chaseRegionSel=document.getElementById('chaseRegion');
+const chaseOfficeSel=document.getElementById('chaseOffice');
+const chaseProviderSel=document.getElementById('chaseProvider');
+function fillSel(sel,vals,keep){const cur=keep?sel.value:'All';sel.innerHTML=['All',...vals].map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');}
+function uniq(arr){return [...new Set(arr)].sort();}
+function refreshChaseOptions(){
+  const reg=chaseRegionSel.value;
+  const pool=chase.filter(r=>reg==='All'||r[0]===reg);
+  fillSel(chaseOfficeSel,uniq(pool.map(r=>r[1])),true);
+  const off=chaseOfficeSel.value;
+  const pool2=pool.filter(r=>off==='All'||r[1]===off);
+  fillSel(chaseProviderSel,uniq(pool2.map(r=>r[2])),true);
+}
+function renderChase(){
+  const reg=chaseRegionSel.value, off=chaseOfficeSel.value, prov=chaseProviderSel.value;
+  const rows=chase.filter(r=>(reg==='All'||r[0]===reg)&&(off==='All'||r[1]===off)&&(prov==='All'||r[2]===prov));
+  const risk=v=>`<span class="${v>=95?'bad':''}" style="font-weight:600">${v}</span>`;
+  document.getElementById('t1_chase').innerHTML = rows.length ? rows.map(r=>{
+    const conf = r[10]==='Y'?`<span class="badge b-mod">Y</span>`:`<span class="badge b-crit">N</span>`;
+    return `<tr>
+      <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="num">${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td>
+      <td>${r[6]}</td><td class="num">${r[7]}</td><td>${r[8]}</td><td>${r[9]}</td>
+      <td>${conf}</td><td><span class="badge b-low">Scheduled</span></td>
+      <td class="num">${risk(r[11])}</td><td class="num">${risk(r[12])}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="14" style="color:var(--text-faint);font-style:italic;padding:14px">No matching appointments for the selected filters.</td></tr>`;
+}
+fillSel(chaseRegionSel,uniq(chase.map(r=>r[0])));
+refreshChaseOptions();
+renderChase();
+chaseRegionSel.addEventListener('change',()=>{refreshChaseOptions();renderChase();});
+chaseOfficeSel.addEventListener('change',()=>{refreshChaseOptions();renderChase();});
+chaseProviderSel.addEventListener('change',renderChase);
+
+// =================== TAB 3 (threshold-driven) ===================
+// Scenario data per NPV/day threshold. Higher threshold => fewer providers,
+// more extreme overload, and a wider TAT gap (illustrative).
+const THRESH = {
+  '3':{ prov:47, chronic:4, tatOver:33.8, tatOther:23.1, gap:46, delta:10.7,
+    combo:{names:['Brock','Gleason','Hopkins','Mungai','Gregg','Ludwig','Toronto','Liggatt','Grady','Vernacchia'],
+           days:[9,8,7,6,6,5,4,4,3,3], tat:[33.0,42.0,31.0,29.0,28.0,27.0,25.0,24.0,23.5,29.0]},
+    monthly:[7,9,11,9,8,5,9,7,8,7,5], ymaxTrend:12,
+    rows:[
+      ['ADAM BROCK, NP','Texas West','Dallas',9,'6.0%',4.6,6,33.0],
+      ['DEBRA GLEASON, NP','Northeast','Toms River',8,'38.1%',4.8,6,42.0],
+      ['ASHLEY HOPKINS, NP','Texas West','Dallas',7,'9.6%',4.9,6,31.0],
+      ['CARRIE MUNGAI, NP','Texas West','Dallas',6,'4.4%',4.4,5,29.0],
+      ['BRYCE GREGG, NP','Texas West','Houston',6,'3.6%',4.3,5,28.0],
+      ['DONNA LUDWIG, NP-C','Atlantic Coast','Virginia Beach',5,'5.4%',4.7,6,27.0],
+      ['ALEXANDRA LIGGATT, MD','Northeast','Newark',4,'6.4%',4.4,5,24.0],
+      ['ALENA TORONTO, NP','Northeast','Newark',4,'4.0%',4.3,5,25.0],
+      ['MELANIE VERNACCHIA, NP','Northeast','Toms River',3,'3.6%',5.2,7,29.0],
+      ['ARIEL GRADY, MD','Midwest','Atlanta',3,'3.7%',4.2,5,23.5],
+    ],
+    trend:[{x:0,y:23.1},{x:9,y:42}], xmax:10, ymaxTAT:50 },
+
+  '4':{ prov:23, chronic:1, tatOver:41.6, tatOther:22.4, gap:86, delta:19.2,
+    combo:{names:['Brock','Gleason','Hopkins','Mungai','Gregg','Ludwig','Toronto','Liggatt','Grady','Vernacchia'],
+           days:[5,5,3,3,3,2,1,1,1,1], tat:[38.0,51.7,34.2,31.4,29.8,28.1,25.0,24.4,24.1,33.0]},
+    monthly:[3,4,5,4,4,2,4,3,4,3,2], ymaxTrend:6,
+    rows:[
+      ['ADAM BROCK, NP','Texas West','Dallas',5,'3.3%',5.2,6,38.0],
+      ['DEBRA GLEASON, NP','Northeast','Toms River',5,'23.8%',5.4,6,51.7],
+      ['ASHLEY HOPKINS, NP','Texas West','Dallas',3,'4.1%',5.7,6,34.2],
+      ['CARRIE MUNGAI, NP','Texas West','Dallas',3,'2.2%',5.0,5,31.4],
+      ['BRYCE GREGG, NP','Texas West','Houston',3,'1.8%',5.0,5,29.8],
+      ['DONNA LUDWIG, NP-C','Atlantic Coast','Virginia Beach',2,'2.2%',5.5,6,28.1],
+      ['MELANIE VERNACCHIA, NP','Northeast','Toms River',1,'1.2%',7.0,7,33.0],
+      ['DANIELLE FLORES, NP','Texas West','San Antonio',1,'0.8%',6.0,6,27.3],
+      ['ARIEL GRADY, MD','Midwest','Atlanta',1,'1.2%',5.0,5,24.1],
+      ['HOLLY WEISSMAN, NP','Great Lakes','Troy',1,'1.2%',5.0,5,23.0],
+    ],
+    trend:[{x:0,y:22.4},{x:5,y:47}], xmax:6, ymaxTAT:60 },
+
+  '5':{ prov:6, chronic:1, tatOver:49.2, tatOther:21.8, gap:126, delta:27.4,
+    combo:{names:['Gleason','Vernacchia','Brock','Hopkins','Ludwig','Flores'],
+           days:[2,1,1,1,1,1], tat:[58.0,47.0,46.0,44.0,43.0,42.0]},
+    monthly:[1,1,2,1,1,0,1,1,1,1,0], ymaxTrend:4,
+    rows:[
+      ['DEBRA GLEASON, NP','Northeast','Toms River',2,'9.5%',5.8,6,58.0],
+      ['MELANIE VERNACCHIA, NP','Northeast','Toms River',1,'1.2%',7.0,7,47.0],
+      ['ADAM BROCK, NP','Texas West','Dallas',1,'0.7%',6.0,6,46.0],
+      ['ASHLEY HOPKINS, NP','Texas West','Dallas',1,'1.4%',6.0,6,44.0],
+      ['DONNA LUDWIG, NP-C','Atlantic Coast','Virginia Beach',1,'1.1%',6.0,6,43.0],
+      ['DANIELLE FLORES, NP','Texas West','San Antonio',1,'0.8%',6.0,6,42.0],
+    ],
+    trend:[{x:0,y:21.8},{x:2,y:55}], xmax:3, ymaxTAT:65 },
+};
+
+const otherOffsets=[-2.3,0,1.9,-3.5,0.7,-1.2,3.0,-0.4,-2.7,1.4];
+let chTop, chTrendC, chCombo, chScatter;
+const months3 = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26'];
+
+function renderNPV(t){
+  const d = THRESH[t];
+  // ---- KPI tiles + labels ----
+  document.getElementById('k_provLbl').textContent = `Providers Exceeding ${t} NPV/Day`;
+  document.getElementById('k_prov').textContent = d.prov;
+  document.getElementById('k_chronic').textContent = d.chronic;
+  document.getElementById('k_chronicSub').innerHTML = `&gt;${t} NPV on ≥10% of days`;
+  document.getElementById('k_tatOver').textContent = d.tatOver.toFixed(1)+'h';
+  document.getElementById('k_tatDelta').innerHTML = `▲ ${d.delta.toFixed(1)}h vs others`;
+  document.getElementById('k_tatOther').textContent = d.tatOther.toFixed(1)+'h';
+  document.getElementById('k_gap').textContent = '+'+d.gap+'%';
+  // ---- subtitles / headers ----
+  document.getElementById('s_top').innerHTML = `Days with &gt; ${t} New Patient Visits`;
+  document.getElementById('s_trend').innerHTML = `Days with &gt; ${t} NPV per month`;
+  document.getElementById('s_combo').innerHTML = `Days &gt; ${t} NPV (bars, left) vs Avg Doc TAT in hours (line, right) — by provider`;
+  document.getElementById('th_days').innerHTML = `Days &gt;${t}`;
+
+  // ---- Top providers (horizontal bar) ----
+  const topData = d.combo.names.map((n,i)=>[d.rows[i]?d.rows[i][0]:n, d.combo.days[i]]);
+  const maxDays = Math.max(...d.combo.days);
+  if(chTop) chTop.destroy();
+  chTop = new Chart(c3_top,{type:'bar',data:{labels:d.rows.map(r=>r[0]),datasets:[{label:`Days > ${t} NPV`,
+    data:d.rows.map(r=>r[3]),backgroundColor:d.rows.map(r=>r[3]>=maxDays*0.7?C.red:r[3]>=maxDays*0.35?C.amber:C.blue),borderRadius:3}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{...gridX,min:0,max:d.xmax},y:noGridX}}});
+
+  // ---- Monthly trend ----
+  if(chTrendC) chTrendC.destroy();
+  chTrendC = new Chart(c3_trend,{type:'bar',data:{labels:months3,datasets:[{label:'High-NPV provider-days',data:d.monthly,backgroundColor:C.amber,borderRadius:3}]},
+    options:{plugins:{legend:{display:false}},scales:{x:noGridX,y:{...gridY,min:0,max:d.ymaxTrend,ticks:{stepSize:Math.ceil(d.ymaxTrend/6)}}}}});
+
+  // ---- Combo dual-axis ----
+  if(chCombo) chCombo.destroy();
+  chCombo = new Chart(c3_combo,{data:{labels:d.combo.names,datasets:[
+    {type:'bar',label:`Days > ${t} NPV`,data:d.combo.days,backgroundColor:C.amber,borderRadius:3,yAxisID:'y',order:2},
+    {type:'line',label:'Avg Doc TAT (hrs)',data:d.combo.tat,borderColor:C.red,backgroundColor:'rgba(239,78,58,.10)',fill:true,tension:.3,pointRadius:3,yAxisID:'y2',order:1}]},
+    options:{plugins:{legend:{position:'top'}},scales:{
+      x:noGridX,
+      y:{...gridY,position:'left',min:0,max:d.xmax,title:{display:true,text:`Days > ${t} NPV`,color:C.amber}},
+      y2:{grid:{display:false},position:'right',min:0,max:d.ymaxTAT,ticks:{color:C.red,callback:v=>v+'h'},title:{display:true,text:'Avg Doc TAT (hrs)',color:C.red}}}}});
+
+  // ---- Scatter + trend ----
+  const overloadedPts = d.rows.map(r=>({x:r[3],y:r[7]}));
+  const otherPts = otherOffsets.map(o=>({x:0,y:+(d.tatOther+o).toFixed(1)}));
+  if(chScatter) chScatter.destroy();
+  chScatter = new Chart(c3_scatter,{data:{datasets:[
+    {type:'scatter',label:'Other providers',data:otherPts,backgroundColor:C.blue,pointRadius:4},
+    {type:'scatter',label:`Overloaded (>${t} NPV days)`,data:overloadedPts,backgroundColor:C.red,pointRadius:5},
+    {type:'line',label:'Trend',data:d.trend,borderColor:C.amber,borderDash:[6,4],pointRadius:0,fill:false,tension:0}]},
+    options:{plugins:{legend:{position:'top'}},scales:{
+      x:{...gridX,min:-0.5,max:d.xmax,title:{display:true,text:`Days > ${t} NPV per provider`}},
+      y:{...gridY,min:0,max:d.ymaxTAT,title:{display:true,text:'Avg Doc TAT (hrs)'},ticks:{callback:v=>v+'h'}}}}});
+
+  // ---- Provider detail table ----
+  document.getElementById('t3_tbody').innerHTML = d.rows.map(r=>{
+    const chronic = parseFloat(r[4])>=10;
+    const tatCls = r[7]>=35?'bad':r[7]<=24?'good':'';
+    return `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="num">${r[3]}</td><td class="num ${chronic?'bad':''}">${r[4]}</td><td class="num">${r[5].toFixed(1)}</td><td class="num">${r[6]}</td><td class="num ${tatCls}">${r[7].toFixed(1)}</td></tr>`;
+  }).join('')
+  + `<tr style="border-top:2px solid var(--border-2)"><td colspan="7" style="color:var(--text-dim);font-style:italic">All other providers (≤ threshold) — baseline avg</td><td class="num good">${d.tatOther.toFixed(1)}</td></tr>`;
+}
+
+document.getElementById('npvThreshold').addEventListener('change', e=>renderNPV(e.target.value));
+renderNPV('4');
+</script>
+</body>
+</html>
