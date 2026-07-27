@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Python (future tooling)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node (future tooling)
+node_modules/
+
+# Local env / secrets
+.env
+.env.*
+*.local
+
+# Claude Code local state
+.claude/settings.local.json
