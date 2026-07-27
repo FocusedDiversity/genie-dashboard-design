@@ -31,7 +31,7 @@ sketch. See `example-appointment-analytics.html` for the canonical standard and
         <div class="chart-wrap"><canvas id="c1_region"></canvas></div></div>
     </div>
   </div>
-  <div class="footer"><!-- MOCKUP note, dashboard name, source object + row count --></div>
+  <div class="footer">Mockup</div>
   <script>/* Chart.js charts + scenario data + filter re-render logic */</script>
 </body>
 </html>
@@ -51,7 +51,7 @@ sketch. See `example-appointment-analytics.html` for the canonical standard and
   the canonical example). Filters that are pure pass-throughs may be inert.
 - **Honest**: only widget shapes AI/BI can render — counters, bar/line/donut/
   scatter/combo charts, tables. Grid proportions mirror the real layout.
-- **Labeled**: a visible MOCKUP tag in the title row and a footer stating the
-  source object and that figures are illustrative.
+- **Labeled**: a visible MOCKUP tag in the title row; the footer reads only
+  "Mockup".
 - **Synthetic data only**: names, MRNs, and values are fabricated. Never paste
   real patient or member rows into a mockup.
