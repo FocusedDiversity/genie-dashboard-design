@@ -199,7 +199,7 @@ See [existing Genie prompts](./references/genie-dashboard-prompts.md) for a comp
 
 ## Getting Started
 
-1. **Invoke this skill**: Type `/genie-dashboard-design` and describe your dashboard vision.
+1. **Invoke this skill**: Type `/genie-dashboard-design:genie-dashboard-design` (or `/genie-dashboard-design` if installed as a standalone skill) and describe your dashboard vision.
 2. **Complete Gate 1**: Share context; I'll propose a plan.
 3. **Review & approve**: Confirm the plan, or request changes.
 4. **Gate 2**: I'll share a wireframe and design rationale.

@@ -1,0 +1,15 @@
+{
+  "name": "focused-diversity",
+  "description": "Focused Diversity team plugins — dashboard design automation and analytics tooling",
+  "owner": {
+    "name": "Focused Diversity",
+    "url": "https://github.com/FocusedDiversity"
+  },
+  "plugins": [
+    {
+      "name": "genie-dashboard-design",
+      "description": "Three-gate workflow (Plan, Design Review, Build Prompts) for designing Databricks AI/BI dashboards and generating Genie widget prompts",
+      "source": "./"
+    }
+  ]
+}
