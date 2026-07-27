@@ -1,0 +1,47 @@
+activity: frame
+number: "01"
+
+entry_requirements:
+  automated: []
+  manual:
+    - "Dashboard purpose and requesting stakeholder identified"
+    - "Candidate source tables named (catalog.schema.table) and readable"
+
+exit_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/01-frame/dashboard-brief.md
+      description: "Dashboard brief must exist"
+
+    - check: file_exists
+      path: docs/helix/01-frame/widget-inventory.md
+      description: "Widget inventory must exist"
+
+    - check: grep_present
+      pattern: "W-[0-9]+"
+      path: docs/helix/01-frame/widget-inventory.md
+      description: "Every widget has a stable W-### identifier"
+
+    - check: grep_present
+      pattern: "[a-z_]+\\.[a-z_]+\\.[a-z_]+"
+      path: docs/helix/01-frame/widget-inventory.md
+      description: "Data sources use full three-part table paths"
+
+    - check: grep_absent
+      pattern: "\\[NEEDS CLARIFICATION\\]"
+      path: docs/helix/01-frame/**/*.md
+      description: "No unresolved clarification markers"
+
+    - check: grep_absent
+      pattern: "\\[TBD\\]"
+      path: docs/helix/01-frame/dashboard-brief.md
+      description: "No TBD markers in the brief"
+
+  manual:
+    - "Every KPI names its aggregation (distinct count, sum, max-per-id) — no bare 'count of claims'"
+    - "Every metric with a rate or percentage has an explicit numerator and denominator definition"
+    - "Global filters list expected cardinality and default values"
+    - "Grain of every widget is stated; double-counting risks called out per source table"
+    - "Stakeholder confirmed the page list and widget inventory (Gate: 'Proceed to Design')"
+
+next_activity: design

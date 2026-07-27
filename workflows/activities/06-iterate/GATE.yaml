@@ -1,0 +1,25 @@
+activity: iterate
+number: "06"
+
+entry_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/05-deploy/deployment-guide.md
+      description: "Deployment evidence exists to learn from"
+  manual:
+    - "Dashboard released to its audience"
+
+exit_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/06-iterate/iteration-log.md
+      description: "Iteration log must exist"
+
+  manual:
+    - "Usage and feedback recorded with dates and sources, not summarized from memory"
+    - "Accuracy drift checked: baseline queries re-run and compared to live widgets at least once post-release"
+    - "Alert noise reviewed where the dashboard raises alerts (thresholds tuned or confirmed)"
+    - "Change requests captured in the parking lot with a W-### or a new-widget note"
+    - "Next cycle scoped or explicitly closed (Gate: 'Spiral again' or 'Done')"
+
+next_activity: frame

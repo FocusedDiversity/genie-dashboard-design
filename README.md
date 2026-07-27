@@ -40,15 +40,18 @@ To have Claude Code prompt teammates to install this plugin automatically when t
 
 ## What the skill does
 
-The core skill walks a dashboard from idea to deployable Genie prompts through three approval gates:
+The core skill runs a dashboard through the six **HELIX** activities, producing versioned artifacts in your working repo under `docs/helix/` and pausing at a stakeholder gate after each:
 
-| Gate | Deliverable |
-|------|-------------|
-| **1. Plan** | Context analysis and dashboard architecture (pages, sections, layout, filters) |
-| **2. Design Review** | Wireframe/mockup, design rationale, global filter flow |
-| **3. Build Prompts** | Databricks AI/BI Genie prompts and setup instructions, ready to deploy |
+| # | Activity | Artifacts | Gate question |
+|---|----------|-----------|---------------|
+| 01 | **Frame** | dashboard-brief, widget-inventory (W-### ids) | Is this the right dashboard? |
+| 02 | **Design** | **HTML mockup** (browser-viewable, Databricks look & feel), design-decisions | Is this what it should look like? |
+| 03 | **Test** | widget-test-plan — baseline SQL executed *before any prompt exists* | Do we know what correct means? |
+| 04 | **Build** | prompt-catalog — one Genie prompt per widget, traceable to its test | Are the prompts written to spec? |
+| 05 | **Deploy** | deployment-guide with recorded PASS/FAIL verification | Does the live dashboard pass? |
+| 06 | **Iterate** | iteration-log — feedback, drift re-checks, next-cycle scope | Spiral again or close? |
 
-It gathers context (audience, data sources, KPIs, filters), proposes an architecture, iterates on a wireframe with you, and then emits a prompt catalog you paste widget-by-widget into a Databricks AI/BI dashboard.
+Test-before-Build is the core discipline: Genie writes SQL nondeterministically, so deterministic baseline queries — written and run first — are the contract its output must match.
 
 ## Repository layout
 
@@ -56,13 +59,23 @@ It gathers context (audience, data sources, KPIs, filters), proposes an architec
 .claude-plugin/
 ├── plugin.json          Plugin manifest
 └── marketplace.json     Marketplace catalog (this repo is its own marketplace)
+workflows/
+└── activities/          HELIX artifact pack (format-compatible with the HELIX repo)
+    ├── 01-frame/        GATE.yaml + dashboard-brief, widget-inventory
+    ├── 02-design/       GATE.yaml + dashboard-mockup (HTML), design-decisions
+    ├── 03-test/         GATE.yaml + widget-test-plan
+    ├── 04-build/        GATE.yaml + prompt-catalog
+    ├── 05-deploy/       GATE.yaml + deployment-guide
+    └── 06-iterate/      GATE.yaml + iteration-log
 skills/
 └── genie-dashboard-design/
-    ├── SKILL.md                          The three-gate workflow skill
-    ├── assets/design-template.md         Gate 2 design checklist & wireframe template
-    ├── assets/prompt-style-guide.md      Gate 3 style guide for unambiguous Genie prompts
+    ├── SKILL.md                          The six-activity workflow skill (orchestration map)
+    ├── assets/design-template.md         Legacy ASCII wireframe template (superseded by the HTML mockup artifact)
+    ├── assets/prompt-style-guide.md      Style authority for Build's Genie prompts
     └── references/genie-dashboard-prompts.md   Complete worked example (Tuva synthetic data)
 ```
+
+Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example-appointment-analytics.html` — open it in a browser.
 
 New skills go in `skills/<skill-name>/SKILL.md` and become available to all installers as `/genie-dashboard-design:<skill-name>` on their next plugin update.
 

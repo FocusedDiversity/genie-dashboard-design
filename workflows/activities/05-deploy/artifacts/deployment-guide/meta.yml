@@ -1,0 +1,70 @@
+# Metadata for Deployment Guide
+
+artifact:
+  name: Deployment Guide
+  id: deployment-guide
+  type: document
+  activity: deploy
+
+voice: artifact-signal
+
+description: |
+  Step-by-step dashboard creation instructions plus the verification record:
+  every T-### check executed against the LIVE dashboard with a recorded
+  PASS/FAIL/BLOCKED outcome and triage notes. Deployment without recorded
+  verification evidence does not pass the Deploy gate.
+
+output:
+  location: docs/helix/05-deploy/deployment-guide.md
+  format: markdown
+  naming: deployment-guide.md
+
+validation:
+  required_sections:
+    - prerequisites
+    - creation_steps
+    - verification_record
+    - troubleshooting
+    - access_and_rollback
+
+  quality_checks:
+    - check: outcomes_recorded
+      description: Every T-### has PASS, FAIL, or BLOCKED with a date — never "will verify"
+      severity: blocking
+
+    - check: failures_triaged
+      description: Every FAIL has a disposition — re-prompted, fallback view, or recorded waiver
+      severity: blocking
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review for:
+    1. Steps executable by someone who did not build the catalog
+    2. Verification table complete with dates and outcomes
+    3. Generated-SQL inspection noted where checks required it
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Deployment record excerpt for the healthcare example
+
+workflow:
+  creation_order: 1
+  approval_required: true
+  approvers:
+    - Primary stakeholder
+
+relationships:
+  informs:
+    - iteration-log
+
+tags:
+  - deploy
+  - verification
+  - evidence
+
+version: 1.0.0
+last_updated: 2026-07-27

@@ -1,0 +1,93 @@
+# Metadata for Dashboard Mockup (HTML)
+
+artifact:
+  name: Dashboard Mockup
+  id: dashboard-mockup
+  type: document
+  activity: design
+
+voice: artifact-signal
+
+description: |
+  Browser-viewable, self-contained HTML mockup of the full dashboard —
+  every page, widget, and filter rendered with representative fake data.
+  Supersedes ASCII wireframes as the Design review medium: stakeholders
+  open one file in a browser and approve what they will actually get.
+  Every widget element carries data-widget-id="W-###" tracing to the
+  widget inventory.
+
+output:
+  location: docs/helix/02-design/dashboard-mockup.html
+  format: html
+  naming: dashboard-mockup.html
+
+validation:
+  required_sections:
+    - page_navigation
+    - global_filter_bar
+    - one_section_per_page
+    - mockup_banner
+
+  quality_checks:
+    - check: single_file
+      description: All CSS/JS/data inline; the only permitted external reference is the Chart.js CDN script — no external fonts, stylesheets, images, or fetches
+      severity: blocking
+
+    - check: interactive_filters
+      description: Design-driving filters re-render KPIs/charts/tables from pre-baked scenario data; page tabs always work
+      severity: warning
+
+    - check: synthetic_data_only
+      description: All person-level values (names, MRNs, DOBs) are fabricated — never real patient or member rows
+      severity: blocking
+
+    - check: widget_ids_tagged
+      description: Every widget element carries data-widget-id matching an inventory W-### row
+      severity: blocking
+
+    - check: fake_data_labeled
+      description: A visible banner states values are illustrative, so screenshots are never mistaken for real numbers
+      severity: blocking
+
+    - check: layout_honest
+      description: Widget proportions and placement match what AI/BI can render — no mockup-only chrome the product cannot deliver
+      severity: warning
+
+prompts:
+  generation: prompt.md
+  review: |
+    Open the file in a browser and review:
+    1. Every inventory widget present, correctly placed, tagged with its W-###
+    2. Page navigation works; each page matches its stated purpose
+    3. Chart types match metric shape per the inventory
+    4. Readable in both light and dark OS themes
+    5. Mockup banner visible on every page
+
+template:
+  file: template.md
+
+examples:
+  - file: example-appointment-analytics.html
+    description: Canonical standard — two-tab appointment analytics mockup with Databricks chrome, Chart.js charts, live scenario-driven filters, cascading chase-list filters, and W-### traceability tags
+  - file: example.html
+    description: Minimal fully-offline starter — inline SVG placeholders only, no CDN dependency
+
+workflow:
+  creation_order: 1
+  approval_required: true
+  approvers:
+    - Primary stakeholder
+
+relationships:
+  informs:
+    - widget-test-plan
+    - prompt-catalog
+    - deployment-guide
+
+tags:
+  - design
+  - mockup
+  - dashboard
+
+version: 1.0.0
+last_updated: 2026-07-27

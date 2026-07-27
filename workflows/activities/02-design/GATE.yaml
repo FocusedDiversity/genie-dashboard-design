@@ -1,0 +1,41 @@
+activity: design
+number: "02"
+
+entry_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/01-frame/widget-inventory.md
+      description: "Frame produced a widget inventory to design against"
+  manual:
+    - "Frame exit gate passed; stakeholder approved the plan"
+
+exit_requirements:
+  automated:
+    - check: file_exists
+      path: docs/helix/02-design/dashboard-mockup.html
+      description: "Browser-viewable HTML mockup must exist"
+
+    - check: file_exists
+      path: docs/helix/02-design/design-decisions.md
+      description: "Design decisions record must exist"
+
+    - check: grep_present
+      pattern: "data-widget-id=\"W-[0-9]+\""
+      path: docs/helix/02-design/dashboard-mockup.html
+      description: "Every mockup widget is tagged with its inventory W-### id"
+
+    - check: grep_absent
+      pattern: "<link[^>]+href=\"https?://|@import|fonts\\.googleapis"
+      path: docs/helix/02-design/dashboard-mockup.html
+      description: "No external stylesheets or fonts; Chart.js CDN script is the only permitted external reference"
+
+  manual:
+    - "Mockup opened in a browser by the stakeholder; every page reviewed"
+    - "Every inventory widget appears in the mockup; no mockup widget is missing from the inventory"
+    - "Chart types match metric shape (time series -> line, comparison -> bar, part-of-whole -> donut)"
+    - "Aggregation rules recorded per widget; double-counting prevention stated, not implied"
+    - "Filter flow documented: which filters reach which widgets, and which widgets are exempt"
+    - "Accessibility reviewed: series distinguishable without color, direction glyphs paired with text"
+    - "Stakeholder approved the design (Gate: 'Proceed to Test')"
+
+next_activity: test

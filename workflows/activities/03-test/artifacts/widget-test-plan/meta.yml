@@ -1,0 +1,76 @@
+# Metadata for Widget Test Plan
+
+artifact:
+  name: Widget Test Plan
+  id: widget-test-plan
+  type: document
+  activity: test
+
+voice: artifact-signal
+
+description: |
+  Executable verification written BEFORE any Genie prompt exists. Each check
+  (T-###) pairs a widget (W-###) with deterministic baseline SQL and an
+  expected-result rule. Genie generates SQL nondeterministically; these
+  baselines are the contract its output must match. Deploy re-runs every
+  check against the live dashboard and records PASS/FAIL.
+
+output:
+  location: docs/helix/03-test/widget-test-plan.md
+  format: markdown
+  naming: widget-test-plan.md
+
+validation:
+  required_sections:
+    - strategy
+    - baseline_checks
+    - dashboard_level_checks
+    - out_of_scope
+
+  quality_checks:
+    - check: baselines_executed
+      description: Every baseline query was run against the warehouse and its result recorded before Build starts
+      severity: blocking
+
+    - check: rules_not_prose
+      description: Expected results are exact values, tolerances, or invariants — never "looks reasonable"
+      severity: blocking
+
+    - check: design_rules_covered
+      description: Every aggregation rule in design-decisions.md has at least one check exercising it
+      severity: blocking
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review for:
+    1. Every P0 widget covered by a T-### check with runnable SQL
+    2. Recorded baseline results present (dated), not promised
+    3. Dedupe/null/grain rules each exercised by a dedicated check
+    4. Out-of-scope list has reasons
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Test plan for the healthcare members & claims example
+
+workflow:
+  creation_order: 1
+  approval_required: true
+  approvers:
+    - Primary stakeholder or data lead
+
+relationships:
+  informs:
+    - prompt-catalog
+    - deployment-guide
+
+tags:
+  - test
+  - verification
+  - sql
+
+version: 1.0.0
+last_updated: 2026-07-27
