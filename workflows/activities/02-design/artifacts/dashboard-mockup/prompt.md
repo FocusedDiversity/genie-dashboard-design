@@ -19,8 +19,8 @@ looking at a published Databricks dashboard.
 4. Draw charts with Chart.js (CDN script is the one allowed external ref).
    Fake data must be plausible and internally consistent: right magnitudes,
    right units, KPI values that agree with their charts and tables.
-5. Add the footer: MOCKUP note, source object, row count, "figures are
-   illustrative".
+5. Add the footer: the single word "Mockup" — nothing else (no source objects,
+   row counts, or styling notes).
 6. Verify before the gate: open in a browser, click every tab, exercise every
    wired filter, and grep your own file for untagged cards.
 
