@@ -11,7 +11,12 @@
 
 ## Creation Steps
 
-1. Workspace → Dashboards → Create dashboard: **[name]**
+1. Import the themed seed: workspace folder → **Import** →
+   `workflows/resources/seed.lvdash.json` (from the genie-dashboard-design
+   plugin) → rename the dashboard to **[name]**. This applies the canonical
+   theme before any widget exists. (Fallback if import is unavailable: create
+   a blank dashboard, then set every value from
+   `workflows/resources/dashboard-theme.json` in the theme editor.)
 2. Data tab: create each dataset from the catalog's Datasets table
 3. Create pages named exactly as the inventory; add filter widgets per page
 4. Per widget, in inventory order: add widget, paste the W-### prompt, confirm

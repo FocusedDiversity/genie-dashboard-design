@@ -60,6 +60,8 @@ Test-before-Build is the core discipline: Genie writes SQL nondeterministically,
 ├── plugin.json          Plugin manifest
 └── marketplace.json     Marketplace catalog (this repo is its own marketplace)
 workflows/
+├── resources/           Shared resources: dashboard-theme.json (canonical AI/BI theme),
+│                        seed.lvdash.json (themed starter dashboard for Deploy imports)
 └── activities/          HELIX artifact pack (format-compatible with the HELIX repo)
     ├── 01-frame/        GATE.yaml + dashboard-brief, widget-inventory
     ├── 02-design/       GATE.yaml + dashboard-mockup (HTML), design-decisions
