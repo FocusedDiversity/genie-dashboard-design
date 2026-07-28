@@ -29,6 +29,11 @@ exit_requirements:
       path: docs/helix/02-design/dashboard-mockup.html
       description: "No external stylesheets or fonts; Chart.js CDN script is the only permitted external reference"
 
+    - check: grep_present
+      pattern: "D3456B"
+      path: docs/helix/02-design/dashboard-mockup.html
+      description: "Mockup uses the canonical theme (selection color from workflows/resources/dashboard-theme.json)"
+
   manual:
     - "Mockup opened in a browser by the stakeholder; every page reviewed"
     - "Every inventory widget appears in the mockup; no mockup widget is missing from the inventory"

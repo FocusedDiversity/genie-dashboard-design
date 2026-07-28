@@ -26,6 +26,7 @@ exit_requirements:
       description: "Each verification check has a recorded outcome, not a promise"
 
   manual:
+    - "Dashboard created from the themed seed (workflows/resources/seed.lvdash.json); theme matches workflows/resources/dashboard-theme.json — spot-check canvas/widget colors, font, and series palette"
     - "Dashboard created in the workspace; every widget loads on the assigned warehouse"
     - "Every T-### check executed against the LIVE dashboard; generated SQL inspected where the check requires it"
     - "Failures triaged: re-prompted, moved to fallback views, or accepted with a recorded waiver"

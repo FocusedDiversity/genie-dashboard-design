@@ -26,8 +26,13 @@ looking at a published Databricks dashboard.
 
 ## Rules
 
-- Dark Databricks-style theme (CSS variables, like the canonical example);
-  contrast readable on a projector.
+- **Theme is not a choice**: derive all chrome colors, the chart series
+  palette, corner radius, header alignment, and font stack from
+  `workflows/resources/dashboard-theme.json` using the mapping table in
+  `workflows/resources/README.md` (dark variant by default). Chart.js series
+  use `visualizationColors` in order. Font is declared with system fallbacks —
+  never loaded from a CDN. The exit gate greps the mockup for the selection
+  color hex.
 - Semantic color: green = good, amber = watch, red = intervene — consistent
   across KPIs, chart fills, and table badges.
 - Tables: sticky headers, scrollable body, badges for status/severity, an

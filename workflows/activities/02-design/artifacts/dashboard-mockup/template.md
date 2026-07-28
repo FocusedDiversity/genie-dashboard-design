@@ -14,7 +14,10 @@ sketch. See `example-appointment-analytics.html` for the canonical standard and
   <meta charset="utf-8">
   <title>[Dashboard Name] — Databricks Dashboard Mockup</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  <style>/* all CSS inline — dark Databricks-style theme via CSS variables */</style>
+  <style>/* all CSS inline — variables derived from workflows/resources/dashboard-theme.json
+            (dark variant): --bg:#1E343F --panel:#08141A --text:#EBEBEB --accent:#D3456B;
+            charts use visualizationColors in order; border-radius:12px;
+            font-family:"Space Grotesk",system-ui,sans-serif */</style>
 </head>
 <body>
   <!-- 1. Databricks chrome: app bar (brand, search, workspace), dashboard
