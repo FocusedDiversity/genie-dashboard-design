@@ -2,8 +2,11 @@
 
 The mockup is a single `.html` file that imitates a published Databricks AI/BI
 dashboard closely enough that stakeholders review the real experience, not a
-sketch. See `example-appointment-analytics.html` for the canonical standard and
-`example.html` for a minimal fully-offline starter.
+sketch. See `example-appointment-analytics.html` for the canonical
+layout/interactivity standard and `example.html` for a minimal fully-offline
+starter themed with the `wanderbricks` theme. A theme must be selected first —
+see `workflows/resources/themes/README.md` and the design-decisions "Theme
+Selection" section — before either example's colors are copied in.
 
 ## Required structure
 
@@ -14,10 +17,13 @@ sketch. See `example-appointment-analytics.html` for the canonical standard and
   <meta charset="utf-8">
   <title>[Dashboard Name] — Databricks Dashboard Mockup</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  <style>/* all CSS inline — variables derived from workflows/resources/dashboard-theme.json
-            (dark variant): --bg:#1E343F --panel:#08141A --text:#EBEBEB --accent:#D3456B;
-            charts use visualizationColors in order; border-radius:12px;
-            font-family:"Space Grotesk",system-ui,sans-serif */</style>
+  <style>/* all CSS inline — variables derived from the theme selected in
+            design-decisions.md, workflows/resources/themes/<id>.json:
+            --bg (canvasBackgroundColor) --panel (widgetBackgroundColor)
+            --text (fontColor) --accent (selectionColor);
+            charts use visualizationColors in order; border-radius from
+            widgetCornerRadius (default 8px if absent);
+            font-family: "<fontFamily>", system-ui, sans-serif */</style>
 </head>
 <body>
   <!-- 1. Databricks chrome: app bar (brand, search, workspace), dashboard

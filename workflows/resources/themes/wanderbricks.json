@@ -1,0 +1,28 @@
+{
+  "id": "wanderbricks",
+  "name": "Wanderbricks",
+  "description": "Vivid, dark-forward theme for technical and analyst audiences. Custom display font gives it a distinct, modern identity; suits dense dashboards reviewed on screen.",
+  "personaFit": ["Data analysts", "Engineers", "Product teams", "Internal tools"],
+  "defaultMode": "dark",
+  "provenance": "Extracted 2026-07-28 from wanderbricks_dashboard.lvdash.json (Databricks AI/BI example dashboard).",
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": { "light": "#EBEBEB", "dark": "#1E343F" },
+      "widgetBackgroundColor": { "light": "#FCFCFD", "dark": "#08141A" },
+      "widgetBorderColor": { "dark": "#08141A" },
+      "fontColor": { "light": "#08141A", "dark": "#EBEBEB" },
+      "selectionColor": { "light": "#D3456B", "dark": "#D3456B" },
+      "visualizationColors": ["#15AFDD", "#2375A8", "#52A870", "#C85070", "#C89930"],
+      "widgetHeaderAlignment": "LEFT",
+      "fontFamily": "Space Grotesk",
+      "widgetCornerRadius": 12,
+      "fontSettings": {
+        "base": {
+          "fontFamily": "Space Grotesk",
+          "fontColor": { "light": "#08141A", "dark": "#EBEBEB" }
+        }
+      }
+    },
+    "applyModeEnabled": false
+  }
+}

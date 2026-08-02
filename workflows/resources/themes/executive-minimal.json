@@ -1,0 +1,22 @@
+{
+  "id": "executive-minimal",
+  "name": "Executive Minimal",
+  "description": "Light-forward, low-decoration theme built directly from Databricks' AI/BI theming guidance (60% neutral background, 30% supporting font/data color, 10% accent) for leadership-facing dashboards where restraint reads as authority.",
+  "personaFit": ["C-suite", "Board reporting", "External/client-facing"],
+  "defaultMode": "light",
+  "provenance": "Constructed 2026-07-28 following the 60-30-10 framework and accessibility guidance in https://www.databricks.com/blog/design-beautiful-dashboards-aibi (softened neutrals instead of pure black/white; 5-color palette spaced to avoid red/green adjacency). Not extracted from a live dashboard export.",
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": { "light": "#F4F5F7", "dark": "#161B22" },
+      "widgetBackgroundColor": { "light": "#FFFFFF", "dark": "#1E2530" },
+      "widgetBorderColor": { "light": "#E2E5EA", "dark": "#1E2530" },
+      "fontColor": { "light": "#1B2430", "dark": "#EDEFF2" },
+      "selectionColor": { "light": "#B8874B", "dark": "#B8874B" },
+      "visualizationColors": ["#2C5C8A", "#6B7A90", "#8FAFC9", "#B8874B", "#4F6D5A"],
+      "widgetHeaderAlignment": "LEFT",
+      "fontFamily": "Arial",
+      "widgetCornerRadius": 4
+    },
+    "applyModeEnabled": false
+  }
+}

@@ -10,7 +10,9 @@
 
 ## Creation Steps
 
-1. Workspace → Dashboards → Create dashboard: **Synaptiq Healthcare Analytics**
+1. Import `workflows/resources/themes/seed.clinical-slate.lvdash.json`
+   (theme selected in design-decisions.md) → rename to
+   **Synaptiq Healthcare Analytics**
 2. Datasets: `members`, `claims` per catalog
 3. Pages: Members, Claims & Charges; filters: Date Range, Payer Type, State
 4. Widgets pasted in inventory order; titles verified

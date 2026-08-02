@@ -1,0 +1,21 @@
+{
+  "id": "clinical-slate",
+  "name": "Clinical Slate",
+  "description": "Muted, conservative theme for healthcare and executive audiences. Web-safe font and a restrained blue/tan palette read as calm and trustworthy rather than flashy; light mode is the primary review surface.",
+  "personaFit": ["Executives", "Clinicians", "Operations leads", "Healthcare analytics"],
+  "defaultMode": "light",
+  "provenance": "Extracted 2026-07-28 from Synaptiq Healthcare Analytics.lvdash.json (org export).",
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": { "light": "#EEF3F8", "dark": "#1A2332" },
+      "widgetBackgroundColor": { "light": "#FFFFFF", "dark": "#243447" },
+      "widgetBorderColor": { "light": "#8BA4BD", "dark": "#6B8EAD" },
+      "fontColor": { "light": "#2D3748", "dark": "#EEF3F8" },
+      "selectionColor": { "light": "#C8956A", "dark": "#C8956A" },
+      "visualizationColors": ["#8BA4BD", "#C8956A", "#6B8EAD", "#B8845A", "#2D3748", "#A3C4E0", "#E0B08A", "#4A6B8A"],
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED",
+      "fontFamily": "Arial"
+    },
+    "applyModeEnabled": false
+  }
+}
