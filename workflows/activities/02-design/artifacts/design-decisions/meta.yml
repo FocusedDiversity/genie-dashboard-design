@@ -22,6 +22,7 @@ output:
 
 validation:
   required_sections:
+    - theme_selection
     - layout_choices
     - chart_type_rationale
     - aggregation_rules
@@ -30,6 +31,10 @@ validation:
     - rejected_alternatives
 
   quality_checks:
+    - check: theme_valid
+      description: Selected theme id matches an existing file in workflows/resources/themes/
+      severity: blocking
+
     - check: aggregation_testable
       description: Every aggregation rule is stated so Test can write a baseline query from it verbatim
       severity: blocking
@@ -42,9 +47,10 @@ prompts:
   generation: prompt.md
   review: |
     Review for:
-    1. Every mockup widget's aggregation covered by a rule
-    2. Filter flow names exempt widgets and why
-    3. Rejected alternatives capture the stakeholder debate
+    1. Theme id is real and its persona-fit rationale is stated, not assumed
+    2. Every mockup widget's aggregation covered by a rule
+    3. Filter flow names exempt widgets and why
+    4. Rejected alternatives capture the stakeholder debate
 
 template:
   file: template.md
