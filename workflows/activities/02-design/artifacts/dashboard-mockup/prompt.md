@@ -5,6 +5,11 @@ widget-inventory, following `template.md`. Match the look and feel of
 `example-appointment-analytics.html` — stakeholders should feel they are
 looking at a published Databricks dashboard.
 
+**Prerequisite**: a theme must already be selected and recorded in
+`design-decisions.md` (see that artifact's "Step Zero: Theme Selection"). If
+it isn't, stop and run that step first — the mockup is built from the chosen
+theme, not a default.
+
 ## Process
 
 1. Read the widget inventory. Every W-### row becomes exactly one card with
@@ -26,13 +31,13 @@ looking at a published Databricks dashboard.
 
 ## Rules
 
-- **Theme is not a choice**: derive all chrome colors, the chart series
+- **Theme is not improvised**: derive all chrome colors, the chart series
   palette, corner radius, header alignment, and font stack from
-  `workflows/resources/dashboard-theme.json` using the mapping table in
-  `workflows/resources/README.md` (dark variant by default). Chart.js series
-  use `visualizationColors` in order. Font is declared with system fallbacks —
-  never loaded from a CDN. The exit gate greps the mockup for the selection
-  color hex.
+  `workflows/resources/themes/<selected-id>.json` using the mapping table in
+  `workflows/resources/README.md` (that theme's `defaultMode` variant by
+  default). Chart.js series use `visualizationColors` in order. Font is
+  declared with system fallbacks — never loaded from a CDN. The exit gate
+  greps the mockup for the selected theme's selection-color hex.
 - Semantic color: green = good, amber = watch, red = intervene — consistent
   across KPIs, chart fills, and table badges.
 - Tables: sticky headers, scrollable body, badges for status/severity, an

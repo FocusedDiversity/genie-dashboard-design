@@ -1,0 +1,25 @@
+{
+  "datasets": [],
+  "pages": [
+    {
+      "name": "page_01",
+      "displayName": "Page 1",
+      "layout": [],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": { "light": "#EEF3F8", "dark": "#1A2332" },
+      "widgetBackgroundColor": { "light": "#FFFFFF", "dark": "#243447" },
+      "widgetBorderColor": { "light": "#8BA4BD", "dark": "#6B8EAD" },
+      "fontColor": { "light": "#2D3748", "dark": "#EEF3F8" },
+      "selectionColor": { "light": "#C8956A", "dark": "#C8956A" },
+      "visualizationColors": ["#8BA4BD", "#C8956A", "#6B8EAD", "#B8845A", "#2D3748", "#A3C4E0", "#E0B08A", "#4A6B8A"],
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED",
+      "fontFamily": "Arial"
+    },
+    "applyModeEnabled": false
+  }
+}

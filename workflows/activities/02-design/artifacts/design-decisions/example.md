@@ -3,6 +3,17 @@
 **Mockup**: dashboard-mockup.html (v1.0, 2026-07-27)
 **Inventory**: widget-inventory.md (v1.0, 2026-07-27)
 
+## Theme Selection
+
+- **Theme**: `clinical-slate`
+- **Why**: audience is operations leads and analysts reviewing health-plan
+  data; the catalog's persona fit (healthcare, conservative executive) matches
+  directly, and the muted blue/tan palette reads calmer than a vivid technical
+  theme for this stakeholder group.
+- **Mode**: light — the dashboard is reviewed on shared monitors in daytime
+  meetings.
+- **Per-widget overrides**: none.
+
 ## Layout Choices
 
 - Members before Claims: enrollment context frames spend questions.
