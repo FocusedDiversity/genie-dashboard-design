@@ -45,7 +45,7 @@ The core skill runs a dashboard through the six **HELIX** activities, producing 
 | # | Activity | Artifacts | Gate question |
 |---|----------|-----------|---------------|
 | 01 | **Frame** | dashboard-brief, widget-inventory (W-### ids) | Is this the right dashboard? |
-| 02 | **Design** | **HTML mockup** (browser-viewable, Databricks look & feel), design-decisions | Is this what it should look like? |
+| 02 | **Design** | theme selection, **HTML mockup** (browser-viewable, Databricks look & feel), design-decisions | Is this what it should look like? |
 | 03 | **Test** | widget-test-plan — baseline SQL executed *before any prompt exists* | Do we know what correct means? |
 | 04 | **Build** | prompt-catalog — one Genie prompt per widget, traceable to its test | Are the prompts written to spec? |
 | 05 | **Deploy** | deployment-guide with recorded PASS/FAIL verification | Does the live dashboard pass? |
@@ -60,8 +60,9 @@ Test-before-Build is the core discipline: Genie writes SQL nondeterministically,
 ├── plugin.json          Plugin manifest
 └── marketplace.json     Marketplace catalog (this repo is its own marketplace)
 workflows/
-├── resources/           Shared resources: dashboard-theme.json (canonical AI/BI theme),
-│                        seed.lvdash.json (themed starter dashboard for Deploy imports)
+├── resources/           Shared resources
+│   └── themes/          Theme catalog (wanderbricks, clinical-slate, executive-minimal):
+│                        <id>.json (palette authority) + seed.<id>.lvdash.json (themed starter)
 └── activities/          HELIX artifact pack (format-compatible with the HELIX repo)
     ├── 01-frame/        GATE.yaml + dashboard-brief, widget-inventory
     ├── 02-design/       GATE.yaml + dashboard-mockup (HTML), design-decisions
@@ -77,7 +78,7 @@ skills/
     └── references/genie-dashboard-prompts.md   Complete worked example (Tuva synthetic data)
 ```
 
-Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example-appointment-analytics.html` — open it in a browser.
+Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example-appointment-analytics.html` — open it in a browser. Design starts by picking one of three themes (see `workflows/resources/themes/README.md`); the mockup and the deployed dashboard are both built from that choice.
 
 New skills go in `skills/<skill-name>/SKILL.md` and become available to all installers as `/genie-dashboard-design:<skill-name>` on their next plugin update.
 

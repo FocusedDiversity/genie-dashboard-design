@@ -61,14 +61,23 @@ For each activity, in order:
 Activity-specific notes:
 
 - **Frame**: interview before writing — purpose, audience, data sources (verify
-  tables exist), KPI definitions (pin numerators/denominators), filters.
-  Unknowns become `[NEEDS CLARIFICATION]` markers; the exit gate blocks while
+  tables exist), KPI definitions (pin numerators/denominators), filters. VERY IMPORTANT: Ask the the stakeholder to define things like how dashbaord is to be used, with specifics, by who (Personas), and what actionss will be taken base don the dashbaord. This information should inform the design.  Personas and Use become very improtant to account for by tabs, and widgets. Unknowns become `[NEEDS CLARIFICATION]` markers; the exit gate blocks while
   any remain.
-- **Design**: the mockup is a browser-viewable HTML file imitating a published
-  Databricks dashboard — dark chrome, Chart.js charts, live scenario-driven
-  filters. Match `example-appointment-analytics.html`. Write
+- **Design**: **first, select a theme** — present the catalog in
+  `workflows/resources/themes/README.md` (Wanderbricks, Clinical Slate,
+  Executive Minimal — each with a stated persona fit) and get the
+  stakeholder's pick before building anything; record it, the reason, mode,
+  and any per-widget overrides in `design-decisions.md`'s Theme Selection
+  section. Then the mockup: a browser-viewable HTML file imitating a
+  published Databricks dashboard, styled from the selected theme's exact
+  colors/font/corner-radius (not assumed dark, not assumed Wanderbricks) —
+  Chart.js charts, live scenario-driven filters. Match
+  `example-appointment-analytics.html` for layout and interactivity. Write
   `design-decisions.md` as you go, not after. Aggregation rules stated there
-  must be SQL-translatable verbatim.
+  must be SQL-translatable verbatim. Verify with the user data grains for data
+  sets, and ensure that the mockup reflects the correct grain and
+  deduplication rules. If any assumptions are made, they should be documented
+  in the decisions artifact.
 - **Test**: write baseline SQL per widget, **run it**, record results and
   dates. Choose exact/tolerance/invariant rules deliberately. Add
   dashboard-level checks (filter cascade, counter/table agreement,
@@ -97,9 +106,11 @@ the HELIX methodology repo's Discover artifacts if needed.
 
 1. **Frame**: brief + inventory (W-101 Total Members … W-203 Monthly Billed vs
    Paid), payer/date/state filters. Gate: stakeholder approves scope.
-2. **Design**: `dashboard-mockup.html` — two tabs, Databricks chrome, working
-   payer-type filter re-rendering fake-but-plausible data; decisions record the
-   max-per-claim charge rule. Gate: stakeholder clicks through, approves.
+2. **Design**: stakeholder picks `clinical-slate` (healthcare audience) from
+   the theme catalog; `dashboard-mockup.html` — two tabs, themed chrome,
+   working payer-type filter re-rendering fake-but-plausible data; decisions
+   record the theme choice and the max-per-claim charge rule. Gate:
+   stakeholder clicks through, approves.
 3. **Test**: T-101/T-201/T-202 baseline SQL run on the warehouse; results
    recorded (2.14M members, $412M billed, 6.8% denial). Gate: correct is now
    defined.
