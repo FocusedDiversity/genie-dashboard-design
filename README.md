@@ -97,7 +97,7 @@ New skills go in `skills/<skill-name>/SKILL.md` and become available to all inst
 
 ## Features to Be Added
 
-1. **Ask User About Existing Requiremetnt Document Dpfront** — every session should start with asking the user if they have a pre-existing design document they would like to start from?
+1. **Ask User About Existing Requirement Document Upfront** — every session should start with asking the user if they have a pre-existing design document they would like to start from?
 2. **Check for latest AI/BI Genie Features that may impact development process or final product.** — Newly released features that may impact dashboards need to be figured in.
-3. **Check for Patterns on Existing Dashbaords** — New dashbaords being added to a set of existing dashbaords should check those existing to aim to math those design patterns first - then fall back to best practices if noe exist. A prompt of the user should confirm if existing dashbaords exist to try to match.
-4. **Enhance Dashbaord Mode** — New Tabs being added to existing dashbaords.  A new mode to add a new tab to an existing dashbaord.  Match the existing, factor in new datasets, etc. and add to an existing just a new tab.
+3. **Check for Patterns on Existing Dashboards** — New dashboards being added to a set of existing dashboards should check those existing to aim to math those design patterns first - then fall back to best practices if noe exist. A prompt of the user should confirm if existing dashboards exist to try to match.
+4. **Enhance Dashboard Mode** — New Tabs being added to existing dashboards.  A new mode to add a new tab to an existing dashboard.  Match the existing, factor in new datasets, etc. and add to an existing just a new tab.
