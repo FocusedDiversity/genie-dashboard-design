@@ -31,6 +31,7 @@ exit_requirements:
       description: "Prompts carry full three-part table paths"
 
   manual:
+    - "If Frame's Source Documents table lists a data dictionary, prompt-catalog reuses its field names and definitions verbatim (spot-check a sample against the brief) rather than paraphrasing"
     - "Every prompt follows the prompt style guide: explicit aggregation, join logic, null handling, formatting"
     - "Dedupe and grain language appears verbatim in every prompt it applies to"
     - "One prompt per inventory widget; no widget skipped, no prompt without a widget"
