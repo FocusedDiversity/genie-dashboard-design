@@ -38,6 +38,7 @@ exit_requirements:
       description: "No TBD markers in the brief"
 
   manual:
+    - "Stakeholder was asked about existing requirements docs (data dictionary, PRD, mockups, design docs); any supplied are logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded"
     - "Every KPI names its aggregation (distinct count, sum, max-per-id) — no bare 'count of claims'"
     - "Every metric with a rate or percentage has an explicit numerator and denominator definition"
     - "Global filters list expected cardinality and default values"

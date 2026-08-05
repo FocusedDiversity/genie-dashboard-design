@@ -4,6 +4,12 @@
 **Date**: [YYYY-MM-DD]
 **Status**: Draft | Approved
 
+## Source Documents
+
+| Document | Type | What it provided |
+|---|---|---|
+| [name/link, or "None provided"] | data dictionary \| PRD \| mockup \| wireframe \| design doc \| none | [e.g., "field names & grain for claims table", "target KPIs & audience"] |
+
 ## Summary
 
 [1–2 paragraphs: what business question this dashboard answers, for whom, and
