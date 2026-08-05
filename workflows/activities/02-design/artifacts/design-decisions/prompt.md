@@ -17,6 +17,13 @@ in the Theme Selection section immediately — the mockup is built from this
 theme's `uiSettings.theme`, so an unrecorded or wrong theme choice means
 rebuilding the mockup.
 
+If the brief's Source Documents table lists an existing mockup, wireframe, or
+brand/style doc, present it alongside the catalog: does one catalog theme
+already match its colors/fonts/corner-radius, or does the pick need per-widget
+overrides to get closer? Note the source doc, the reconciliation, and any
+gaps that remain unmatched in the Theme Selection section — don't silently
+pick a catalog theme that ignores supplied styling.
+
 ## Rules
 
 - Aggregation rules are the load-bearing section: state each one so Test can
