@@ -60,7 +60,16 @@ For each activity, in order:
 
 Activity-specific notes:
 
-- **Frame**: interview before writing — purpose, audience, data sources (verify
+- **Frame**: before interviewing, ask whether the stakeholder has existing
+  requirements docs to start from — data dictionaries, PRDs, mockups,
+  wireframes, or other design docs (see dashboard-brief's "Step Zero:
+  Existing Requirements Intake"). Ingest anything supplied first; use the
+  interview to fill gaps and verify claims, not repeat what the docs already
+  establish. Log every source doc in the brief's Source Documents table — its
+  content keeps surfacing downstream (widget-inventory mines mockups for
+  candidate widgets, design-decisions reconciles style docs against the theme
+  catalog, prompt-catalog reuses a data dictionary's terms verbatim). Then
+  interview before writing — purpose, audience, data sources (verify
   tables exist), KPI definitions (pin numerators/denominators), filters. VERY IMPORTANT: Ask the the stakeholder to define things like how dashbaord is to be used, with specifics, by who (Personas), and what actionss will be taken base don the dashbaord. This information should inform the design.  Personas and Use become very improtant to account for by tabs, and widgets. Unknowns become `[NEEDS CLARIFICATION]` markers; the exit gate blocks while
   any remain.
 - **Design**: **first, select a theme** — present the catalog in

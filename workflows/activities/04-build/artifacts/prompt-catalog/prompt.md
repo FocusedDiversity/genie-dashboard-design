@@ -24,3 +24,6 @@ style authority is `skills/genie-dashboard-design/assets/prompt-style-guide.md`.
   decimal places, sort order).
 - No prompt invents a metric definition — definitions are Frame/Design
   authority; a prompt that needs a new rule sends you back a gate.
+- If Frame's Source Documents table lists a data dictionary, its field names
+  and definitions outrank paraphrase, same as design-decisions language — copy
+  them verbatim rather than restating in your own words.

@@ -35,6 +35,7 @@ exit_requirements:
       description: "A catalog theme id is recorded under Theme Selection"
 
   manual:
+    - "If Frame's Source Documents table lists an existing mockup, wireframe, or style/brand doc, Theme Selection in design-decisions.md documents how it was reconciled with the catalog choice (match, override, or gap) — not silently ignored"
     - "Mockup's canvas/widget/font/accent colors and chart series match the exact hex values of the theme recorded in design-decisions.md (workflows/resources/themes/<id>.json)"
     - "Mockup opened in a browser by the stakeholder; every page reviewed"
     - "Every inventory widget appears in the mockup; no mockup widget is missing from the inventory"

@@ -3,6 +3,14 @@
 Derive `docs/helix/01-frame/widget-inventory.md` from the approved
 dashboard-brief using `template.md`.
 
+If the brief's Source Documents table lists a data dictionary or existing
+mockup/wireframe, mine them before inventing rows from scratch: a data
+dictionary gives field names and grain for the Source column verbatim; an
+existing mockup gives candidate widgets, layout, and page groupings.
+Reconcile those candidates against the brief's KPIs rather than treating them
+as final — a widget from an old mockup that no longer maps to a defined KPI
+gets flagged in Open Questions, not carried over silently.
+
 ## Rules
 
 - One row per widget the dashboard will contain. KPI tiles count individually.

@@ -10,6 +10,12 @@ looking at a published Databricks dashboard.
 it isn't, stop and run that step first — the mockup is built from the chosen
 theme, not a default.
 
+If the brief's Source Documents table lists an existing mockup or wireframe,
+treat it as the layout starting point: reproduce its tab structure and widget
+placement wherever it's compatible with the approved inventory, and record any
+deviation (and why) in `design-decisions.md`. It informs layout, not chrome —
+colors/fonts/corner-radius still come from the selected theme.
+
 ## Process
 
 1. Read the widget inventory. Every W-### row becomes exactly one card with
