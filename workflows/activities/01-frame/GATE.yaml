@@ -4,6 +4,8 @@ number: "01"
 entry_requirements:
   automated: []
   manual:
+    - "Stakeholder was asked about existing requirements docs (data dictionary, PRD, mockups, design docs); any supplied are logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded"
+    - "If existing documents are provided by User, they are retained in stage artifact directory and used to inform All aspects of each stage ('01-frame' and '02-design')"
     - "Dashboard purpose and requesting stakeholder identified"
     - "Candidate source tables named (catalog.schema.table) and readable"
 
