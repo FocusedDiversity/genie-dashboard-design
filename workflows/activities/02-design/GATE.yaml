@@ -8,6 +8,7 @@ entry_requirements:
       description: "Frame produced a widget inventory to design against"
   manual:
     - "Frame exit gate passed; stakeholder approved the plan"
+    - "If existing documents were provided by User in stage 01-frame, design related docs (mockups, etc.) should be copied to the design stage artifact directory and used to inform All aspects of design (along with the normal widget inventory, etc.)"
 
 exit_requirements:
   automated:
@@ -35,6 +36,7 @@ exit_requirements:
       description: "A catalog theme id is recorded under Theme Selection"
 
   manual:
+    - "If User provided documents in Frame Stage, they should be used to inform All aspects of design. if there is uncertainty, the design is based on the widget inventory and stakeholder clarification from questiions to the user"
     - "If Frame's Source Documents table lists an existing mockup, wireframe, or style/brand doc, Theme Selection in design-decisions.md documents how it was reconciled with the catalog choice (match, override, or gap) — not silently ignored"
     - "Mockup's canvas/widget/font/accent colors and chart series match the exact hex values of the theme recorded in design-decisions.md (workflows/resources/themes/<id>.json)"
     - "Mockup opened in a browser by the stakeholder; every page reviewed"
