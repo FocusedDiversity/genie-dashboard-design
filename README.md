@@ -53,6 +53,19 @@ The core skill runs a dashboard through the six **HELIX** activities, producing 
 
 Test-before-Build is the core discipline: Genie writes SQL nondeterministically, so deterministic baseline queries — written and run first — are the contract its output must match.
 
+### Starting from existing docs (or not)
+
+Frame doesn't start with a blank page. Before the stakeholder interview, the workflow asks whether existing requirements or design material exists to start from — a data dictionary, PRD, mockups, wireframes, or a style/brand doc — supplied as files, pasted text, or links. Whatever's supplied is logged in the brief's **Source Documents** table and reused as artifacts are produced, not just read once:
+
+- **Frame** extracts purpose, audience, and success criteria from a PRD/brief, and field names/definitions/grain from a data dictionary — still verified against the live tables, not taken on faith.
+- **Design** reconciles a supplied style/brand doc or mockup against the theme catalog, recording a match, an override, or a gap rather than silently picking a catalog theme's color palette. A supplied mockup/wireframe seeds the HTML mockup's layout (tab structure, widget placement); chrome — colors, fonts, corner-radius — still comes from the selected catalog theme.
+- **Build** reuses a data dictionary's field names and metric definitions verbatim in the Genie prompts instead of paraphrasing them.
+- Sources that conflict — with each other, with live data, or with the stakeholder's answers — are flagged `[NEEDS CLARIFICATION]` for the stakeholder rather than silently resolved.
+
+If nothing is supplied, "None provided" is recorded and every artifact is built from scratch: Frame runs the full stakeholder interview, and Design's theme (color palette, typography, layout) is chosen from the catalog — `wanderbricks`, `clinical-slate`, `executive-minimal` — on fit to the brief alone.
+
+The `01-frame` and `02-design` `GATE.yaml` files enforce this: their entry/exit requirements block until the stakeholder has actually been asked, any supplied docs are retained in the stage's artifact directory, and — when source docs exist — until that reuse is demonstrated in the artifacts rather than assumed.
+
 ## Repository layout
 
 ```
