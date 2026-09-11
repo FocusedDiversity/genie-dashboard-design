@@ -6,13 +6,13 @@ The repo is its own plugin marketplace — install it once and the skills work i
 
 # Summary 
 
-A HELIX based Claude plugin built around the idea that metiric rules / design decisions, etc. should exist in writing and get tested before Genie is ever asked to compute or build. This solution takes a user through a guided process of establishing requirements, design, user personas, etc. and then builds the data layer logic and tests and ultimately the dashboard (via genie prompts or Databricks CLI from VS code or an IDE).
+A HELIX based Claude plugin built around the idea that metric rules / design decisions, etc. should exist in writing and get tested before Genie is ever asked to compute or build. This solution takes a user through a guided process of establishing requirements, design, user personas, etc. and then builds the data layer logic and tests and ultimately the dashboard (via genie prompts or Databricks CLI from VS code or an IDE).
 
 The Process begins by asking the user how they would like to start the process:
-1. As a 'blank slate' adn the user is interviewed / asked clarificaiton questions after initial prompt to build out the requirements / design, etc..
+1. As a 'blank slate' and the user is interviewed / asked clarification questions after initial prompt to build out the requirements / design, etc.
 2. A User brings a formal requirements document to the session and uploads it, this is used to inform many of the decisions, design etc.
-3. A User brings a formal requirements document and a wireframe /. mockup to the session and uploads them, these are used to inform many of the decisions, design etc.
-4. A user has an existing Tableau Dashboard file (.twb / .twbx) they would like to convert to a databricks dashbaoard.  This files is used to deduce many aspects of the dashbaord design. 
+3. A User brings a formal requirements document and a wireframe / mockup to the session and uploads them, these are used to inform many of the decisions, design etc.
+4. A user has an existing Tableau Dashboard file (.twb / .twbx) they would like to convert to a databricks dashboard. This file is used to deduce many aspects of the dashboard design.
 
 Six activities, one spiral
 The workflow runs a dashboard through six HELIX activities: Frame, Design, Test, Build, Deploy, Iterate. Each one writes versioned artifacts to docs/helix/ in the calling repo and ends at a gate the stakeholder has to explicitly approve before the next activity starts. It is a Claude Code plugin, installed once and invoked in any repo with a one-line prompt describing the dashboard, and every artifact it produces is a plain file under version control.
@@ -73,7 +73,7 @@ Test-before-Build is the core discipline: Genie writes SQL nondeterministically,
 
 Frame doesn't start with a blank page. Before the stakeholder interview, the workflow asks whether existing requirements or design material exists to start from — a data dictionary, PRD, mockups, wireframes, a style/brand doc, or an existing **Tableau workbook** (`.twb`/`.twbx`) — supplied as files, pasted text, or links. Whatever's supplied is logged in the brief's **Source Documents** table and reused as artifacts are produced, not just read once:
 
-- **Frame** extracts purpose, audience, and success criteria from a PRD/brief, and field names/definitions/grain from a data dictionary — still verified against the live tables, not taken on faith. A supplied Tableau workbook is unpacked and its XML mined the same way (see `skills/genie-dashboard-design/assets/tableau-intake.md`): worksheets and dashboard layout, fields with their aggregations already decided, data source connections, and calculated fields (flagged, not ported as SQL).
+- **Frame** extracts purpose, audience, and success criteria from a PRD/brief, and field names/definitions/grain from a data dictionary — still verified against the live tables, not taken on faith. A supplied Tableau workbook (`.twb` or `.twbx`) is unpacked and its XML mined the same way (see `skills/genie-dashboard-design/assets/tableau-intake.md`): worksheets and dashboard layout, fields with their aggregations already decided, data source connections, and calculated fields (flagged, not ported as SQL). If the `.twbx` packages its own `.hyper` extract, its real schema/grain is read directly via a bundled script rather than trusted from the XML alone.
 - **Design** reconciles a supplied style/brand doc or mockup against the theme catalog, recording a match, an override, or a gap rather than silently picking a catalog theme's color palette. A supplied mockup/wireframe (or a Tableau workbook's dashboard zones) seeds the HTML mockup's layout (tab structure, widget placement); chrome — colors, fonts, corner-radius — still comes from the selected catalog theme.
 - **Test** treats a Tableau custom-SQL data source or calculated field as a draft only — its baseline still gets run and verified, never accepted on Tableau's authority.
 - **Build** reuses a data dictionary's (or a Tableau workbook's) field names and metric definitions verbatim in the Genie prompts instead of paraphrasing them.
@@ -105,7 +105,8 @@ skills/
     ├── SKILL.md                          The six-activity workflow skill (orchestration map)
     ├── assets/design-template.md         Legacy ASCII wireframe template (superseded by the HTML mockup artifact)
     ├── assets/prompt-style-guide.md      Style authority for Build's Genie prompts
-    ├── assets/tableau-intake.md          XML mining guide for a supplied Tableau workbook (.twb/.twbx)
+    ├── assets/tableau-intake.md          Mining guide for a supplied Tableau workbook (.twb/.twbx)
+    ├── assets/read_hyper_schema.py       Reads a packaged .hyper extract's real schema/grain (needs tableauhyperapi)
     └── references/genie-dashboard-prompts.md   Complete worked example (Tuva synthetic data)
 ```
 
