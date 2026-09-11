@@ -19,6 +19,44 @@ each artifact's structure and rules.** This document is the orchestration map.
 
 ---
 
+## Step Zero: Starting Point
+
+Before anything else — before checking any gate, before Frame's interview,
+before even the six activities below are relevant — ask the stakeholder which
+of these best matches their situation. This is the first thing the stakeholder
+sees, even in response to a one-line invocation like
+`/genie-dashboard-design:genie-dashboard-design Members & claims dashboard`:
+
+1. **Blank slate** — no existing materials; interview me from scratch to
+   build requirements, design, personas, etc.
+2. **Requirements document only** — a data dictionary, PRD, or similar
+   written requirements, but no wireframe or mockup.
+3. **Requirements document + wireframe/mockup** — both a requirements
+   document and a design mockup/wireframe.
+4. **Existing Tableau workbook (.twb/.twbx)** — an existing Tableau
+   dashboard to convert.
+
+The answer decides what Frame's Step Zero (dashboard-brief's "Step Zero:
+Existing Requirements Intake") does — it acts on the choice made here rather
+than asking the open-ended version of this question again:
+
+- **1** → skip straight to the interview; record "None provided" in Source
+  Documents.
+- **2** → ask for the document (file path, pasted text, or link); ingest it,
+  then interview to fill what it doesn't answer.
+- **3** → ask for both; ingest each. The mockup also seeds Design's layout
+  and widget-inventory's candidate widgets.
+- **4** → ask for the `.twb`/`.twbx` path; follow
+  `skills/genie-dashboard-design/assets/tableau-intake.md` instead of a
+  generic document read.
+
+A stakeholder whose materials don't fit their stated choice (they picked
+"blank slate" but then mention a PRD) is not a problem — ingest what's
+actually offered; the choice sets expectations for the interview, it doesn't
+gate what's allowed.
+
+---
+
 ## The Spiral
 
 | # | Activity | Artifacts produced (`docs/helix/…`) | Gate question |
@@ -60,13 +98,13 @@ For each activity, in order:
 
 Activity-specific notes:
 
-- **Frame**: before interviewing, ask whether the stakeholder has existing
-  requirements docs to start from — data dictionaries, PRDs, mockups,
-  wireframes, a Tableau workbook (.twb/.twbx — see
-  `skills/genie-dashboard-design/assets/tableau-intake.md`), or other design
-  docs (see dashboard-brief's "Step Zero: Existing Requirements Intake").
-  Ingest anything supplied first; use the interview to fill gaps and verify
-  claims, not repeat what the docs already establish. Log every source doc in
+- **Frame**: act on the starting point already chosen in Step Zero above (see
+  dashboard-brief's "Step Zero: Existing Requirements Intake" for the
+  mechanics of ingesting whatever was supplied — files, pasted text, links,
+  or a Tableau workbook via
+  `skills/genie-dashboard-design/assets/tableau-intake.md`). Ingest anything
+  supplied first; use the interview to fill gaps and verify claims, not
+  repeat what the docs already establish. Log every source doc in
   the brief's Source Documents table — its content keeps surfacing downstream
   (widget-inventory mines mockups or Tableau worksheets for candidate
   widgets, design-decisions reconciles style docs or a workbook's color

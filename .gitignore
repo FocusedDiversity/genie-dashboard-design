@@ -12,6 +12,9 @@ __pycache__/
 .venv/
 venv/
 
+# tableauhyperapi (read_hyper_schema.py)
+hyperd.log
+
 # Node (future tooling)
 node_modules/
 

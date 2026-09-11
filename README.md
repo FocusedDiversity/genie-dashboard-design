@@ -106,6 +106,7 @@ skills/
     ├── assets/design-template.md         Legacy ASCII wireframe template (superseded by the HTML mockup artifact)
     ├── assets/prompt-style-guide.md      Style authority for Build's Genie prompts
     ├── assets/tableau-intake.md          Mining guide for a supplied Tableau workbook (.twb/.twbx)
+    ├── assets/list_workbook_structure.py Parses a .twb/.twbx's dashboards, worksheets, and calculated fields
     ├── assets/read_hyper_schema.py       Reads a packaged .hyper extract's real schema/grain (needs tableauhyperapi)
     └── references/genie-dashboard-prompts.md   Complete worked example (Tuva synthetic data)
 ```

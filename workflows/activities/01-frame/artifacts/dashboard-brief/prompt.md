@@ -5,15 +5,23 @@ from `template.md`.
 
 ## Step Zero: Existing Requirements Intake
 
-Before interviewing, ask the stakeholder: *"Do you have any existing
-requirements documentation you'd like to start from — a data dictionary,
-PRD, design mockups, wireframes, an existing Tableau workbook (.twb/.twbx),
-or other design docs? You can point me to one or several — local file paths,
-pasted text, or links (Google Drive, Notion, Confluence, SharePoint, etc.)."*
+The stakeholder already chose a starting point in the skill's opening
+"Step Zero: Starting Point" (see `SKILL.md`) — don't ask the open-ended
+version of this question again here. Act on that choice:
+
+- **Blank slate** → skip straight to Gather; record "None provided" in
+  Source Documents.
+- **Requirements document only** → ask for it (below), ingest, then
+  interview to fill gaps.
+- **Requirements document + wireframe/mockup** → ask for both, ingest each,
+  then interview to fill gaps.
+- **Existing Tableau workbook** → ask for the `.twb`/`.twbx` path and follow
+  `skills/genie-dashboard-design/assets/tableau-intake.md` instead of a
+  generic document read.
 
 There is no upload widget in this environment, so be explicit about how to
-hand docs over, and accept any number of them (zero, one, or many) — don't
-assume a single file:
+hand docs over, and accept any number of them (whatever the chosen option
+implies) — don't assume a single file:
 
 - **Local file paths** (repo or elsewhere on disk, including screenshots or
   exported images of a mockup) → read each with the file Read tool, which
@@ -30,7 +38,8 @@ assume a single file:
   fetched, ask the stakeholder to paste the content or export it to a file
   instead of silently skipping it.
 
-If any are supplied (however many, in whatever mix of forms):
+Whatever the chosen option supplies (however many documents, in whatever mix
+of forms):
 
 - Read every one in full before writing anything.
 - Extract what each one answers: PRDs/briefs → purpose, audience, success
@@ -54,8 +63,7 @@ If any are supplied (however many, in whatever mix of forms):
   stakeholder before the brief is finalized; the Frame exit gate already
   blocks on unresolved markers.
 
-If no: proceed to Gather as normal and record "None provided" in Source
-Documents.
+(Blank slate: proceed straight to Gather, as noted above.)
 
 This intake is not a one-time read — content from these docs should keep
 surfacing downstream: widget-inventory mines any supplied mockup (or Tableau

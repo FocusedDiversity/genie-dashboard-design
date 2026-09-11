@@ -27,11 +27,14 @@ prompt is written — the Build entry gate depends on it.
   type="text">` — see `skills/genie-dashboard-design/assets/tableau-intake.md`),
   treat its SQL as a draft only: run it, don't assume it's correct just
   because it's what Tableau used.
-- Every `[NEEDS CLARIFICATION: Tableau calculated field ...]` marker carried
+- Every `[NEEDS CLARIFICATION: Tableau LOD expression ...]` marker carried
   from Frame gets its own baseline query here, written from a verified
   understanding of what the calculation means (confirmed with the
   stakeholder) — never a translation of the Tableau formula text itself, since
-  LOD expressions and table calcs don't map 1:1 to SQL.
+  LOD scoping doesn't map 1:1 to SQL. A Tableau table calculation that drives
+  a widget's value (a trend delta, a rank) does map to SQL — as a window
+  function — but still gets its own baseline query here rather than being
+  assumed correct because the formula looked simple.
 - Every aggregation rule in design-decisions.md appears in at least one check;
   if a rule has no check, either write the check or move the rule out of
   design authority.
