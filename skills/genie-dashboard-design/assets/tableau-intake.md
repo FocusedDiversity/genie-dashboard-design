@@ -1,24 +1,51 @@
 # Tableau Workbook Intake (.twb / .twbx)
 
-Use this when the brief's Source Documents table lists a Tableau workbook.
-It's XML-only extraction — no Tableau install, no Hyper API, nothing beyond
-the file/shell tools this workflow already uses. It gets you most of the way;
-the "What doesn't transfer" section below is the honest list of what still
-needs a human.
+Use this when the brief's Source Documents table lists a Tableau workbook —
+either a bare `.twb` or a `.twbx` that packages its own `.hyper` extract.
+Both are handled: the `.twb` XML gives layout, worksheets, fields, and
+formatting; a packaged `.hyper` extract (when present) gets queried directly
+for its real schema and row counts. Nothing beyond the file/shell tools this
+workflow already uses, plus one small bundled script for the extract. The
+"What doesn't transfer" section below is the honest list of what still needs
+a human.
 
 ## Step 1: Unpack
 
 - `.twbx` is a zip. Unzip it into the scratchpad directory (PowerShell
   `Expand-Archive`, bash `unzip`) — you get a `.twb` file (plain XML) plus,
   sometimes, `Data/Extracts/*.hyper` and any embedded images.
-- A bare `.twb` is already the XML — no unpacking needed.
-- The embedded `.hyper` extract (if present) is a binary format this
-  procedure does not read — that's Tier 2, out of scope here. Its absence
-  changes nothing: a live-connection workbook has no extract at all, and
-  either way the real tables still get verified against the warehouse in
-  Frame/Test like any other claimed source.
+- A bare `.twb` is already the XML — no unpacking needed, and it never
+  packages an extract (that's what makes a `.twbx` a `.twbx`).
+- If unpacking produced a `.hyper` file, continue to Step 2 before reading
+  the XML. If not — a live-connection workbook, or a bare `.twb` — skip to
+  Step 3; the real tables get verified against the warehouse in Frame/Test
+  like any other claimed source instead.
 
-## Step 2: Read the XML for these elements
+## Step 2: Read the packaged extract (if present)
+
+A `.hyper` file is Tableau's own binary format — not readable with
+Grep/Read. Query it directly with the bundled script:
+
+```
+python skills/genie-dashboard-design/assets/read_hyper_schema.py "<path>/Data/Extracts/<name>.hyper"
+```
+
+This requires the `tableauhyperapi` package (`pip install tableauhyperapi`);
+if it isn't installed, install it first — it's a small, official Tableau
+package, not a build dependency of anything else. If installing it isn't
+possible in this environment, don't silently skip the extract: tell the
+stakeholder the packaged data couldn't be inspected and fall back to the
+`.twb` XML's declared schema, flagging it as unverified rather than
+confirmed.
+
+The script prints one entry per table: real column names/types, row count,
+and a small sample. Use this to confirm — or correct — what the `.twb` XML's
+`<relation>`/`<column>` elements claim about that same data source, exactly
+as DESCRIBE/LIMIT 1 confirms a live table. A mismatch (a column the XML
+references that the extract doesn't have, a grain that doesn't match the row
+count) is a `[NEEDS CLARIFICATION]`, not a silent pick of one over the other.
+
+## Step 3: Read the XML for these elements
 
 Attribute names shift a little across Tableau versions (2018.x–2024.x+) —
 if a `grep` below comes up empty, search for the worksheet or field name
@@ -26,7 +53,7 @@ directly rather than assuming the workbook has nothing to offer.
 
 | Element | What it tells you | Maps to |
 |---|---|---|
-| `<datasource>` … `<connection class="databricks\|snowflake\|hyper\|...">` | live connection vs. packaged extract | `dashboard-brief` Data Sources — connection class tells you if this is a live warehouse table or a static extract |
+| `<datasource>` … `<connection class="databricks\|snowflake\|hyper\|...">` | live connection vs. packaged extract | `dashboard-brief` Data Sources — `class="hyper"` means Step 2's extract read is the source of truth for schema/grain; any live class means the warehouse table is |
 | `<relation type="table" table="[schema].[tbl]">` | table/schema referenced | `dashboard-brief` Data Sources, `widget-inventory` Source column (still verify with DESCRIBE — this is a claim, not confirmation) |
 | `<relation type="text">SELECT ...</relation>` (custom SQL data source) | literal SQL text | a **draft** baseline for `widget-test-plan` — must still be run against the warehouse, never copied in as an already-verified result |
 | `<column caption="Denial Rate" name="[Calculation_12345]" role="measure">` with a nested `<calculation class="tableau" formula="...">` | a calculated field, in Tableau's own formula language | flag `[NEEDS CLARIFICATION: Tableau calculated field — verify SQL equivalent]`; see "What doesn't transfer" below |
@@ -47,7 +74,7 @@ directly rather than assuming the workbook has nothing to offer.
 | Text, large single value, no axes | single measure | KPI / counter |
 | Text, dimension × dimension grid (crosstab) | multiple dimensions, no marks | table |
 
-## Step 3: Mine before inventing
+## Step 4: Mine before inventing
 
 Same rule as any other supplied source doc: read every worksheet used on a
 dashboard before writing a single widget-inventory row from scratch. One
@@ -90,3 +117,10 @@ decided (sum, sum, distinct count), one Data Sources row for
 `[NEEDS CLARIFICATION: Denial Rate is a Tableau LOD expression — confirm
 numerator/denominator]` marker that Test resolves with a verified baseline
 query before Build ever sees it.
+
+If `claims_overview.twbx` had instead packaged its own extract (connection
+class `hyper`, no live warehouse table behind it), Step 2's script would run
+against `Data/Extracts/Claims.hyper` before the Data Sources row is written —
+its reported columns, types, and row count become that row's grain and
+"known quality issues" entries directly, instead of "still DESCRIBE'd to
+confirm" (there is no live table to DESCRIBE).

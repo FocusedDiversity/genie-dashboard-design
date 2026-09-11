@@ -18,10 +18,12 @@ assume a single file:
 - **Local file paths** (repo or elsewhere on disk, including screenshots or
   exported images of a mockup) → read each with the file Read tool, which
   handles images as well as text.
-- **A Tableau workbook (.twb/.twbx)** → follow
-  `skills/genie-dashboard-design/assets/tableau-intake.md` to unpack (if
-  `.twbx`) and mine the XML — worksheets, dashboard layout, data source
-  connections, calculated fields, formatting.
+- **A Tableau workbook (.twb or .twbx)** → follow
+  `skills/genie-dashboard-design/assets/tableau-intake.md`: unpack if `.twbx`
+  and mine the XML — worksheets, dashboard layout, data source connections,
+  calculated fields, formatting — and, if the `.twbx` packages its own
+  `.hyper` extract, query it directly (via the bundled `read_hyper_schema.py`)
+  for its real columns, types, and row count.
 - **Pasted text/markdown** → treat the pasted content itself as the doc.
 - **Links** → fetch with WebFetch, or with the matching connector if one is
   authorized for this session (Google Drive, Notion, etc.); if a link can't be
