@@ -23,6 +23,15 @@ prompt is written — the Build entry gate depends on it.
 - One T-### per W-### minimum; number them to mirror (T-101 ↔ W-101).
 - Baseline SQL must be runnable by copy-paste — full table paths, no
   placeholders.
+- If a source Tableau workbook supplied a custom-SQL data source (a `<relation
+  type="text">` — see `skills/genie-dashboard-design/assets/tableau-intake.md`),
+  treat its SQL as a draft only: run it, don't assume it's correct just
+  because it's what Tableau used.
+- Every `[NEEDS CLARIFICATION: Tableau calculated field ...]` marker carried
+  from Frame gets its own baseline query here, written from a verified
+  understanding of what the calculation means (confirmed with the
+  stakeholder) — never a translation of the Tableau formula text itself, since
+  LOD expressions and table calcs don't map 1:1 to SQL.
 - Every aggregation rule in design-decisions.md appears in at least one check;
   if a rule has no check, either write the check or move the rule out of
   design authority.

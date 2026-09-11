@@ -16,6 +16,13 @@ placement wherever it's compatible with the approved inventory, and record any
 deviation (and why) in `design-decisions.md`. It informs layout, not chrome —
 colors/fonts/corner-radius still come from the selected theme.
 
+The same applies to a Tableau workbook's dashboard `<zones>` tree (see
+`skills/genie-dashboard-design/assets/tableau-intake.md`): its tab names and
+per-worksheet grid positions are the layout starting point, reconciled against
+the approved inventory the same way. Any dashboard action or parameter
+control the workbook used for interactivity gets rebuilt as a normal wired
+filter here — it doesn't carry over as-is.
+
 ## Process
 
 1. Read the widget inventory. Every W-### row becomes exactly one card with

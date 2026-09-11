@@ -7,9 +7,9 @@ from `template.md`.
 
 Before interviewing, ask the stakeholder: *"Do you have any existing
 requirements documentation you'd like to start from — a data dictionary,
-PRD, design mockups, wireframes, or other design docs? You can point me to
-one or several — local file paths, pasted text, or links (Google Drive,
-Notion, Confluence, SharePoint, etc.)."*
+PRD, design mockups, wireframes, an existing Tableau workbook (.twb/.twbx),
+or other design docs? You can point me to one or several — local file paths,
+pasted text, or links (Google Drive, Notion, Confluence, SharePoint, etc.)."*
 
 There is no upload widget in this environment, so be explicit about how to
 hand docs over, and accept any number of them (zero, one, or many) — don't
@@ -18,6 +18,10 @@ assume a single file:
 - **Local file paths** (repo or elsewhere on disk, including screenshots or
   exported images of a mockup) → read each with the file Read tool, which
   handles images as well as text.
+- **A Tableau workbook (.twb/.twbx)** → follow
+  `skills/genie-dashboard-design/assets/tableau-intake.md` to unpack (if
+  `.twbx`) and mine the XML — worksheets, dashboard layout, data source
+  connections, calculated fields, formatting.
 - **Pasted text/markdown** → treat the pasted content itself as the doc.
 - **Links** → fetch with WebFetch, or with the matching connector if one is
   authorized for this session (Google Drive, Notion, etc.); if a link can't be
@@ -30,7 +34,11 @@ If any are supplied (however many, in whatever mix of forms):
 - Extract what each one answers: PRDs/briefs → purpose, audience, success
   criteria; data dictionaries → field names, definitions, grain, known
   data-quality notes; mockups/wireframes/design docs → layout, tabs, widget
-  types, visual style cues, filters.
+  types, visual style cues, filters; a Tableau workbook → worksheets/
+  dashboards (layout and candidate widgets), fields and their aggregations
+  (chart type often already decided), data source connections, calculated
+  fields (flag Tableau-specific ones, don't port their formulas as SQL), and
+  formatting/color palette.
 - Use the interview below to fill what the docs leave open, and to *verify*
   what they claim rather than take it on faith — a data dictionary's stated
   grain still gets confirmed with DESCRIBE/LIMIT 1; a PRD's KPI still gets its
@@ -48,10 +56,11 @@ If no: proceed to Gather as normal and record "None provided" in Source
 Documents.
 
 This intake is not a one-time read — content from these docs should keep
-surfacing downstream: widget-inventory mines any supplied mockup for candidate
-widgets and layout, design-decisions reconciles any supplied style guide
-against the theme catalog, and prompt-catalog reuses a data dictionary's exact
-field names/definitions verbatim.
+surfacing downstream: widget-inventory mines any supplied mockup (or Tableau
+workbook's worksheets) for candidate widgets and layout, design-decisions
+reconciles any supplied style guide (or a workbook's color palette) against
+the theme catalog, and prompt-catalog reuses a data dictionary's exact field
+names/definitions verbatim.
 
 ## Gather (ask, don't assume)
 

@@ -8,7 +8,7 @@
 
 | Document | Type | What it provided |
 |---|---|---|
-| [name/link, or "None provided"] | data dictionary \| PRD \| mockup \| wireframe \| design doc \| none | [e.g., "field names & grain for claims table", "target KPIs & audience"] |
+| [name/link, or "None provided"] | data dictionary \| PRD \| mockup \| wireframe \| design doc \| Tableau workbook \| none | [e.g., "field names & grain for claims table", "target KPIs & audience", "3 worksheets mined for chart type/aggregation"] |
 
 ## Summary
 

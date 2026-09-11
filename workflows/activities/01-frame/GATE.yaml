@@ -41,6 +41,7 @@ exit_requirements:
 
   manual:
     - "Stakeholder was asked about existing requirements docs (data dictionary, PRD, mockups, design docs); any supplied are logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded"
+    - "If a Tableau workbook (.twb/.twbx) is listed in Source Documents, its worksheets/dashboards were parsed per tableau-intake.md and every worksheet used on a dashboard maps to a widget-inventory row (chart type, fields, and aggregation carried over), or the omission is explained"
     - "Every KPI names its aggregation (distinct count, sum, max-per-id) — no bare 'count of claims'"
     - "Every metric with a rate or percentage has an explicit numerator and denominator definition"
     - "Global filters list expected cardinality and default values"

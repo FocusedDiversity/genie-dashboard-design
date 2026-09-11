@@ -32,6 +32,7 @@ exit_requirements:
 
   manual:
     - "If Frame's Source Documents table lists a data dictionary, prompt-catalog reuses its field names and definitions verbatim (spot-check a sample against the brief) rather than paraphrasing"
+    - "If Frame's Source Documents table lists a Tableau workbook, prompt-catalog reuses its worksheet field captions/titles verbatim where they match the inventory, and no prompt's logic is derived from a Tableau calculated field's formula instead of its Test-verified baseline"
     - "Every prompt follows the prompt style guide: explicit aggregation, join logic, null handling, formatting"
     - "Dedupe and grain language appears verbatim in every prompt it applies to"
     - "One prompt per inventory widget; no widget skipped, no prompt without a widget"
