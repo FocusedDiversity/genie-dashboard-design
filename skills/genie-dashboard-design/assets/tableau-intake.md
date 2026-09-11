@@ -2,32 +2,57 @@
 
 Use this when the brief's Source Documents table lists a Tableau workbook —
 either a bare `.twb` or a `.twbx` that packages its own `.hyper` extract.
-Both are handled: the `.twb` XML gives layout, worksheets, fields, and
-formatting; a packaged `.hyper` extract (when present) gets queried directly
-for its real schema and row counts. Nothing beyond the file/shell tools this
-workflow already uses, plus one small bundled script for the extract. The
-"What doesn't transfer" section below is the honest list of what still needs
-a human.
+Two bundled scripts do the actual reading; this document says what their
+output means and how it maps into HELIX artifacts. The "What doesn't
+transfer" section below is the honest list of what still needs a human.
 
-## Step 1: Unpack
+Don't hand-roll structural extraction with `grep` on the raw XML — attribute
+order and quoting on tags like `<dashboard>`/`<zone>`/`<connection>` varies
+between workbooks (sometimes `name` is the first attribute, sometimes the
+third), so a `grep '<dashboard name='` that comes up empty does not mean the
+workbook has no dashboards. `grep` is fine for a quick spot-check of one
+known field or worksheet name; for enumeration, use the script below.
 
-- `.twbx` is a zip. Unzip it into the scratchpad directory (PowerShell
-  `Expand-Archive`, bash `unzip`) — you get a `.twb` file (plain XML) plus,
-  sometimes, `Data/Extracts/*.hyper` and any embedded images.
-- A bare `.twb` is already the XML — no unpacking needed, and it never
-  packages an extract (that's what makes a `.twbx` a `.twbx`).
-- If unpacking produced a `.hyper` file, continue to Step 2 before reading
-  the XML. If not — a live-connection workbook, or a bare `.twb` — skip to
-  Step 3; the real tables get verified against the warehouse in Frame/Test
-  like any other claimed source instead.
-
-## Step 2: Read the packaged extract (if present)
-
-A `.hyper` file is Tableau's own binary format — not readable with
-Grep/Read. Query it directly with the bundled script:
+## Step 1: Read the workbook's structure
 
 ```
-python skills/genie-dashboard-design/assets/read_hyper_schema.py "<path>/Data/Extracts/<name>.hyper"
+python skills/genie-dashboard-design/assets/list_workbook_structure.py "<path-to-workbook>.twb-or-.twbx"
+```
+
+This works directly on either a `.twb` or a `.twbx` — no manual unzip
+needed for this step (it reads the zip in place). Add `--worksheet "<name>"`
+to limit output to one worksheet once you know which one you're mining. It
+reports:
+
+| Output key | What it is | Maps to |
+|---|---|---|
+| `dashboards[].name`, `.worksheet_zones` | each dashboard and the worksheet zones placed on it | `widget-inventory` page grouping and row order; mockup tab structure — treat exactly like a supplied image mockup |
+| `worksheets[].mark_classes` | the mark type Tableau rendered | chart type — see mapping table below |
+| `worksheets[].rows_shelf` / `.cols_shelf` / `.encodings` | which fields drive the view, on which shelf | `widget-inventory`'s Metric & aggregation and Filters cells |
+| `worksheets[].datasource_dependencies` | the fields **that specific worksheet** uses, with human-readable captions and formulas | the scoped view to mine one widget from — a worksheet's own dependency list, not the workbook-wide field list |
+| `datasources[].source_connection` | the original connection (`excel-direct`, `snowflake`, `databricks`, a live table, …) | `dashboard-brief` Data Sources — what this data was *before* Tableau packaged it |
+| `datasources[].packaged_extract` | present only if this datasource ships its own `.hyper` file, with its real relative path | if present, go to Step 2 before trusting any schema claim; if absent, this is a live connection — verify against the warehouse instead, same as any other claimed source |
+| `calculated_fields_flagged` | calculated fields classified `lod` or `table_calc`, deduplicated, with every worksheet that references each one | see "Calculated fields" below — most calculated fields in a real workbook are **not** in this list and need no clarification |
+
+A workbook commonly declares far more `<calculation>` elements than any
+worksheet actually uses (parked experiments, superseded versions); the
+`datasource_dependencies` scoping — and the tool's `calculated_fields_summary`
+(`total_referenced` vs. `flagged_lod_or_table_calc`) — is what keeps this
+tractable. A workbook with 500+ calculated fields total might have only
+a few dozen actually in use, and only a handful of those flagged.
+
+## Step 2: Read the packaged extract (if a datasource has one)
+
+A `.hyper` file is Tableau's own binary format — not readable with Grep/Read.
+First unzip the `.twbx` (PowerShell `Expand-Archive`, bash `unzip`) into the
+scratchpad directory to get the extract onto disk, using the path Step 1
+reported in `packaged_extract.dbname` — **do not assume it lives under
+`Data/Extracts/`**; that is the common case, but real workbooks also ship it
+under `Data/TableauTemp/` or elsewhere, and this attribute is the actual
+source of truth. Then:
+
+```
+python skills/genie-dashboard-design/assets/read_hyper_schema.py "<unzipped-path>/<packaged_extract.dbname>"
 ```
 
 This requires the `tableauhyperapi` package (`pip install tableauhyperapi`);
@@ -35,46 +60,37 @@ if it isn't installed, install it first — it's a small, official Tableau
 package, not a build dependency of anything else. If installing it isn't
 possible in this environment, don't silently skip the extract: tell the
 stakeholder the packaged data couldn't be inspected and fall back to the
-`.twb` XML's declared schema, flagging it as unverified rather than
-confirmed.
+`.twb`'s declared schema, flagged as unverified rather than confirmed.
 
 The script prints one entry per table: real column names/types, row count,
-and a small sample. Use this to confirm — or correct — what the `.twb` XML's
-`<relation>`/`<column>` elements claim about that same data source, exactly
-as DESCRIBE/LIMIT 1 confirms a live table. A mismatch (a column the XML
-references that the extract doesn't have, a grain that doesn't match the row
-count) is a `[NEEDS CLARIFICATION]`, not a silent pick of one over the other.
-
-## Step 3: Read the XML for these elements
-
-Attribute names shift a little across Tableau versions (2018.x–2024.x+) —
-if a `grep` below comes up empty, search for the worksheet or field name
-directly rather than assuming the workbook has nothing to offer.
-
-| Element | What it tells you | Maps to |
-|---|---|---|
-| `<datasource>` … `<connection class="databricks\|snowflake\|hyper\|...">` | live connection vs. packaged extract | `dashboard-brief` Data Sources — `class="hyper"` means Step 2's extract read is the source of truth for schema/grain; any live class means the warehouse table is |
-| `<relation type="table" table="[schema].[tbl]">` | table/schema referenced | `dashboard-brief` Data Sources, `widget-inventory` Source column (still verify with DESCRIBE — this is a claim, not confirmation) |
-| `<relation type="text">SELECT ...</relation>` (custom SQL data source) | literal SQL text | a **draft** baseline for `widget-test-plan` — must still be run against the warehouse, never copied in as an already-verified result |
-| `<column caption="Denial Rate" name="[Calculation_12345]" role="measure">` with a nested `<calculation class="tableau" formula="...">` | a calculated field, in Tableau's own formula language | flag `[NEEDS CLARIFICATION: Tableau calculated field — verify SQL equivalent]`; see "What doesn't transfer" below |
-| `<dashboard name="Overview"><zones>...<zone name="..." x="" y="" w="" h="">` (nested zone tree) | tab name + widget grid position/size per worksheet | `widget-inventory` page grouping and row order; mockup layout — treat exactly like a supplied image mockup |
-| `<worksheet name="..."><pane><mark class="Bar\|Line\|Circle\|...">` | mark type Tableau rendered | chart type — see mapping table below |
-| `<encodings>` and `<column-instance column="[Field]" derivation="Sum\|CountD\|Avg\|..." role="dimension\|measure">` | which fields drive the view, and their aggregation | `widget-inventory`'s Metric & aggregation and Filters cells — this is normally the hardest thing to extract from an interview; here it's stated |
-| `<style>` rules, `<color-palette name="..."><color>#4E79A7</color>...` | fonts, custom colors | `design-decisions.md` Theme Selection reconciliation — treat exactly like a supplied brand/style doc (match, override, or gap; never silently ignored) |
+and a small sample. Use this to confirm — or correct — what the workbook's
+`datasource_dependencies` claim about that same data source, exactly as
+DESCRIBE/LIMIT 1 confirms a live table (there is no live table behind an
+extract-only datasource, so this read *is* the verification). A mismatch
+(a field the workbook references that the extract doesn't have, a grain that
+doesn't match the row count) is a `[NEEDS CLARIFICATION]`, not a silent pick
+of one over the other.
 
 ## Mark class → HELIX chart type
 
-| Tableau mark class | Typical encoding shape | Chart type |
+| Tableau mark class | Typical shape | Chart type |
 |---|---|---|
 | Bar | one dimension, one measure | bar |
 | Line | date/continuous field on one shelf | line |
+| Area | like Line, with a filled region | area |
 | Circle | two measures (rows × columns) | scatter |
 | Square | dimension × dimension grid with a color measure | heatmap |
 | Pie | part-of-whole | donut |
-| Text, large single value, no axes | single measure | KPI / counter |
-| Text, dimension × dimension grid (crosstab) | multiple dimensions, no marks | table |
+| GanttBar | a start field + a duration/end field per row | timeline — no standard HELIX equivalent; note as a design decision for what replaces it |
+| Shape / Polygon | custom icon markers or filled map regions | usually a map or a highly custom visual — no standard HELIX equivalent; note as a design decision, don't force it into bar/scatter |
+| Automatic, single measure on `text`, no `cols_shelf` (or rows filtered to one value via a parameter) | one value on display | KPI / counter |
+| Automatic, dimensions on both `rows_shelf` and `cols_shelf`, multiple fields on `text` | a grid of values | table |
 
-## Step 4: Mine before inventing
+`Automatic` needs the shelf/encoding check — the mark class alone doesn't
+say whether it's a single-value tile or a crosstab; Tableau picks "Automatic"
+for both.
+
+## Step 3: Mine before inventing
 
 Same rule as any other supplied source doc: read every worksheet used on a
 dashboard before writing a single widget-inventory row from scratch. One
@@ -84,14 +100,40 @@ not counted. Reconcile against the brief's approved KPIs rather than
 carrying every worksheet over silently: a worksheet with no corresponding
 KPI gets flagged in Open Questions, same as a stale row from an old mockup.
 
+## Calculated fields
+
+Only `calculated_fields_flagged` entries need attention — everything else
+(`total_referenced` minus that list) is SQL-translatable directly from its
+formula. Within the flagged list, the right treatment differs by kind:
+
+- **`lod`** (`{FIXED ...}`, `{INCLUDE ...}`, `{EXCLUDE ...}`) — the scoping is
+  inherently ambiguous outside Tableau. Flag
+  `[NEEDS CLARIFICATION: Tableau LOD expression — confirm scope]` and resolve
+  the actual meaning with the stakeholder; Test then writes a baseline from
+  that confirmed meaning, never a literal translation of the formula text.
+- **`table_calc`** that is a pure interaction helper — typically boolean,
+  comparing `LOOKUP(...)` of a field against a parameter to drive
+  highlighting or "which row is selected" logic, not a displayed value. This
+  doesn't need a SQL translation at all; note the *intent* (e.g., "the
+  selected agent's row is highlighted") as a filter-flow requirement in
+  `design-decisions.md` and rebuild it as ordinary dashboard filter/selection
+  behavior in Design.
+- **`table_calc`** that computes an actual displayed metric — a
+  period-over-period delta, a running total, a rank — needs a real SQL
+  window-function baseline (`LAG`/`LEAD`, `RANK`/`DENSE_RANK`, a self-join).
+  The business meaning is usually clear from the field's caption (e.g., a
+  month-over-month change), so this is a translation-and-verify task for
+  Test, not necessarily an open stakeholder question — but it still gets a
+  baseline query and a recorded result before Build, like any other metric.
+
+Every flagged entry lists every worksheet that references it — write the
+clarification or baseline **once per calculated field**, not once per widget;
+several widgets commonly share the same underlying calculation (a KPI tile,
+its trend sparkline, and its category-rank chart are often three worksheets
+built on one calc).
+
 ## What doesn't transfer
 
-- **LOD expressions and table calculations** (`{FIXED ...}`, `{INCLUDE ...}`,
-  `RUNNING_SUM`, `WINDOW_AVG`, etc.) are Tableau's own computation model —
-  there is no mechanical translation to SQL. Every one becomes a
-  `[NEEDS CLARIFICATION]` item in Frame, and a from-scratch baseline query in
-  Test that the stakeholder confirms means the same thing the Tableau
-  calculation did — not a port of the formula text.
 - **Dashboard actions and parameters** (filter/highlight/URL actions,
   parameter controls) are Tableau-specific interactivity. Note the *intent*
   (e.g., "clicking a region bar filters the detail table") as a filter-flow
@@ -105,22 +147,26 @@ KPI gets flagged in Open Questions, same as a stale row from an old mockup.
 
 A supplied `claims_overview.twbx` has one dashboard ("Claims Overview") with
 three worksheets: a Bar mark on `payer_type` with `SUM([Charge Amount])`, a
-Line mark on `month(claim_date)` with `SUM([Paid Amount])`, and a Text mark
-showing `COUNTD([Claim ID])`. Its data source connects live to
-`prod.claims.medical_claim`. One calculated field, `[Denial Rate]`, uses an
-LOD expression.
+Line mark on `month(claim_date)` with `SUM([Paid Amount])`, and an
+`Automatic`-mark worksheet with a single `text` encoding and no `cols_shelf`
+showing `COUNTD([Claim ID])`. `list_workbook_structure.py` reports this
+datasource's `source_connection` as a live `databricks` class with no
+`packaged_extract` — a live connection, so Step 2 is skipped and the table
+gets verified against the warehouse instead. One calculated field,
+`[Denial Rate]`, is classified `lod`.
 
 This mines into: three widget-inventory rows (bar → "Billed by Payer Type",
 line → "Monthly Paid Trend", KPI → "Total Claims") with aggregation already
 decided (sum, sum, distinct count), one Data Sources row for
-`prod.claims.medical_claim` (still DESCRIBE'd to confirm), and one
-`[NEEDS CLARIFICATION: Denial Rate is a Tableau LOD expression — confirm
-numerator/denominator]` marker that Test resolves with a verified baseline
-query before Build ever sees it.
+`prod.claims.medical_claim` (still DESCRIBE'd to confirm — it's a live
+connection), and one `[NEEDS CLARIFICATION: Denial Rate is a Tableau LOD
+expression — confirm scope]` marker that Test resolves with a verified
+baseline query before Build ever sees it.
 
-If `claims_overview.twbx` had instead packaged its own extract (connection
-class `hyper`, no live warehouse table behind it), Step 2's script would run
-against `Data/Extracts/Claims.hyper` before the Data Sources row is written —
-its reported columns, types, and row count become that row's grain and
-"known quality issues" entries directly, instead of "still DESCRIBE'd to
-confirm" (there is no live table to DESCRIBE).
+If `claims_overview.twbx` had instead packaged its own extract, the
+datasource entry would carry a `packaged_extract.dbname` value (commonly,
+but not always, under `Data/Extracts/`) — Step 2's script would run against
+that file before the Data Sources row is written, and its reported columns,
+types, and row count become that row's grain and "known quality issues"
+entries directly, instead of "still DESCRIBE'd to confirm" (there is no live
+table to DESCRIBE).

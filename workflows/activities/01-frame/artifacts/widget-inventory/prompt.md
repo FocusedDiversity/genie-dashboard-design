@@ -15,10 +15,13 @@ If a Tableau workbook (.twb/.twbx) is listed, follow
 `skills/genie-dashboard-design/assets/tableau-intake.md`: each worksheet
 placed on a dashboard is normally one candidate row, with chart type
 (from its mark class) and aggregation (from its field encodings) already
-decided rather than guessed. Calculated fields using LOD expressions or
-table calculations don't carry a usable aggregation — carry the
-`[NEEDS CLARIFICATION]` marker from the brief into that row's Metric &
-aggregation cell instead of inventing one.
+decided rather than guessed. If the widget's measure is a calculated field
+flagged `lod` in that guide, carry the brief's `[NEEDS CLARIFICATION]`
+marker into the row's Metric & aggregation cell instead of inventing one —
+its scope isn't decided yet. If it's flagged `table_calc` and it genuinely
+drives the widget's value (a trend delta, a rank), state the aggregation as
+what it will become — a window function — not the Tableau formula; Test
+still verifies it before Build sees it.
 
 ## Rules
 

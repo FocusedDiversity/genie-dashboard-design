@@ -4,7 +4,7 @@ number: "01"
 entry_requirements:
   automated: []
   manual:
-    - "Stakeholder was asked about existing requirements docs (data dictionary, PRD, mockups, design docs); any supplied are logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded"
+    - "Stakeholder was asked to choose a starting point in the skill's opening Step Zero (blank slate / requirements doc only / requirements doc + mockup / existing Tableau workbook) before Frame's interview began; whatever was supplied is logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded for blank slate"
     - "If existing documents are provided by User, they are retained in stage artifact directory and used to inform All aspects of each stage ('01-frame' and '02-design')"
     - "Dashboard purpose and requesting stakeholder identified"
     - "Candidate source tables named (catalog.schema.table) and readable"
@@ -40,7 +40,7 @@ exit_requirements:
       description: "No TBD markers in the brief"
 
   manual:
-    - "Stakeholder was asked about existing requirements docs (data dictionary, PRD, mockups, design docs); any supplied are logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded"
+    - "Stakeholder was asked to choose a starting point in the skill's opening Step Zero (blank slate / requirements doc only / requirements doc + mockup / existing Tableau workbook) before Frame's interview began; whatever was supplied is logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded for blank slate"
     - "If a Tableau workbook (.twb/.twbx) is listed in Source Documents, its worksheets/dashboards were parsed per tableau-intake.md and every worksheet used on a dashboard maps to a widget-inventory row (chart type, fields, and aggregation carried over), or the omission is explained"
     - "Every KPI names its aggregation (distinct count, sum, max-per-id) — no bare 'count of claims'"
     - "Every metric with a rate or percentage has an explicit numerator and denominator definition"

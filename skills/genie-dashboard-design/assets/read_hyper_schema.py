@@ -65,7 +65,11 @@ def read_hyper_schema(hyper_path: str, sample: int) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("hyper_path", help="Path to the .hyper file (from Data/Extracts/ inside an unzipped .twbx)")
+    parser.add_argument(
+        "hyper_path",
+        help="Path to the .hyper file, after unzipping the .twbx (see list_workbook_structure.py's "
+        "packaged_extract.dbname for its relative path -- it is not always under Data/Extracts/)",
+    )
     parser.add_argument("--sample", type=int, default=5, help="Rows to sample per table (0 to skip)")
     args = parser.parse_args()
 
