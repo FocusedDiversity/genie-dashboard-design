@@ -130,5 +130,5 @@ New skills go in `skills/<skill-name>/SKILL.md` and become available to all inst
 
 ## Features to Be Added
 
-1. **Check for Patterns on Existing Dashboards** — New dashboards being added to a set of existing dashboards should check those existing to aim to math those design patterns first - then fall back to best practices if noe exist. A prompt of the user should confirm if existing dashboards exist to try to match.
+1. **Check for Patterns on Existing Dashboards** — New dashboards being added to a set of existing dashboards should check those existing to aim to math those design patterns first - then fall back to best practices if none exist. A prompt of the user should confirm if existing dashboards exist to try to match.
 2. **Enhance Dashboard Mode** — New Tabs being added to existing dashboards.  A new mode to add a new tab to an existing dashboard.  Match the existing, factor in new datasets, etc. and add to an existing just a new tab.
