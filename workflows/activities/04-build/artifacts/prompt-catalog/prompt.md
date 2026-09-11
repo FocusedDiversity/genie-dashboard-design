@@ -27,3 +27,8 @@ style authority is `skills/genie-dashboard-design/assets/prompt-style-guide.md`.
 - If Frame's Source Documents table lists a data dictionary, its field names
   and definitions outrank paraphrase, same as design-decisions language — copy
   them verbatim rather than restating in your own words.
+- Same for a supplied Tableau workbook: reuse its worksheet field captions and
+  titles for widget titles/metric names where they match the approved
+  inventory. Never reuse a Tableau calculated field's formula as prompt
+  logic — its baseline in widget-test-plan is the authority; the prompt states
+  what Test already verified, not what Tableau's formula said.

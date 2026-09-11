@@ -36,5 +36,6 @@ exit_requirements:
     - "Dedupe, null-handling, and grain rules from Design appear as explicit checks, not assumptions"
     - "Dashboard-level checks defined: filter cascade, counter/table agreement, empty-data behavior"
     - "Out-of-scope checks named with a reason, not silently omitted"
+    - "Every Tableau calculated field flagged in Frame (LOD expression or table calculation) has a baseline query built from a verified understanding of its meaning, not a translation of the Tableau formula text; any custom-SQL Tableau data source was run and its result recorded, not accepted on Tableau's authority"
 
 next_activity: build

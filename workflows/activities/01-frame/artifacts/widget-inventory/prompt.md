@@ -11,6 +11,15 @@ Reconcile those candidates against the brief's KPIs rather than treating them
 as final — a widget from an old mockup that no longer maps to a defined KPI
 gets flagged in Open Questions, not carried over silently.
 
+If a Tableau workbook (.twb/.twbx) is listed, follow
+`skills/genie-dashboard-design/assets/tableau-intake.md`: each worksheet
+placed on a dashboard is normally one candidate row, with chart type
+(from its mark class) and aggregation (from its field encodings) already
+decided rather than guessed. Calculated fields using LOD expressions or
+table calculations don't carry a usable aggregation — carry the
+`[NEEDS CLARIFICATION]` marker from the brief into that row's Metric &
+aggregation cell instead of inventing one.
+
 ## Rules
 
 - One row per widget the dashboard will contain. KPI tiles count individually.
