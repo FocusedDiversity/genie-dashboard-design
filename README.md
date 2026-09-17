@@ -65,7 +65,7 @@ The core skill runs a dashboard through the six **HELIX** activities, producing 
 | 03 | **Test** | widget-test-plan — baseline SQL executed *before any prompt exists* | Do we know what correct means? |
 | 04 | **Build** | prompt-catalog — one Genie prompt per widget, traceable to its test | Are the prompts written to spec? |
 | 05 | **Deploy** | deployment-guide with recorded PASS/FAIL verification | Does the live dashboard pass? |
-| 06 | **Iterate** | iteration-log — feedback, drift re-checks, next-cycle scope | Spiral again or close? |
+| 06 | **Iterate** | iteration-log — feedback, drift re-checks, next-cycle scope; **stakeholder-inputs** — every question asked this cycle and what it changed | Spiral again or close? |
 
 Test-before-Build is the core discipline: Genie writes SQL nondeterministically, so deterministic baseline queries — written and run first — are the contract its output must match.
 
@@ -99,7 +99,7 @@ workflows/
     ├── 03-test/         GATE.yaml + widget-test-plan
     ├── 04-build/        GATE.yaml + prompt-catalog
     ├── 05-deploy/       GATE.yaml + deployment-guide
-    └── 06-iterate/      GATE.yaml + iteration-log
+    └── 06-iterate/      GATE.yaml + iteration-log, stakeholder-inputs
 skills/
 └── genie-dashboard-design/
     ├── SKILL.md                          The six-activity workflow skill (orchestration map)

@@ -1,0 +1,82 @@
+# Metadata for Stakeholder Inputs
+
+artifact:
+  name: Stakeholder Inputs
+  id: stakeholder-inputs
+  type: document
+  activity: iterate
+
+voice: artifact-signal
+
+description: |
+  The record of what the cycle asked of the stakeholder: every question put to
+  them, the options offered, what they chose, and what changed in the build as a
+  result — plus what to prepare before the next cycle so the same questions are
+  not asked twice. Entries are captured as each question is answered; the
+  synthesis is written last, as the final step of the cycle.
+
+output:
+  location: docs/helix/06-iterate/stakeholder-inputs.md
+  format: markdown
+  naming: stakeholder-inputs.md
+
+validation:
+  required_sections:
+    - opening_brief
+    - questions_by_activity
+    - gate_approvals
+    - prepare_for_next_cycle
+
+  quality_checks:
+    - check: options_recorded
+      description: Every question lists the options offered and which was recommended, not just the outcome
+      severity: blocking
+
+    - check: effect_stated
+      description: Each question block states what changed in the build as a result, or that nothing did
+      severity: blocking
+
+    - check: overrides_explained
+      description: Every overridden recommendation records the stakeholder's reasoning
+      severity: blocking
+
+    - check: gate_responses_verbatim
+      description: Gate approvals are quoted verbatim, not paraphrased
+      severity: warning
+
+prompts:
+  generation: prompt.md
+  review: |
+    Review for:
+    1. Questions numbered continuously and grouped by activity/round
+    2. Options offered recorded, recommendation marked, choice stated
+    3. Effect on the build stated per block, with W-### ids where applicable
+    4. Overridden recommendations carry the stakeholder's reasoning
+    5. Next-cycle preparation names specific profiling queries and decisions
+
+template:
+  file: template.md
+
+examples:
+  - file: example.md
+    description: Full-cycle input record for the Synaptiq healthcare analytics example
+
+workflow:
+  creation_order: 2
+  approval_required: false
+
+relationships:
+  informs:
+    - dashboard-brief
+
+  referenced_by:
+    - iteration-log
+
+tags:
+  - iterate
+  - stakeholder
+  - decisions
+  - handoff
+
+version: 1.0.0
+last_updated: 2026-09-17

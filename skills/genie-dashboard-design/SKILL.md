@@ -66,7 +66,7 @@ gate what's allowed.
 | 03 | **Test** | `03-test/widget-test-plan.md` (baselines **executed**) | Do we know what correct means? |
 | 04 | **Build** | `04-build/prompt-catalog.md` | Are the prompts written to spec? |
 | 05 | **Deploy** | `05-deploy/deployment-guide.md` (verification **recorded**) | Does the live dashboard pass its checks? |
-| 06 | **Iterate** | `06-iterate/iteration-log.md` | What did we learn; spiral again or close? |
+| 06 | **Iterate** | `06-iterate/iteration-log.md`, `06-iterate/stakeholder-inputs.md` | What did we learn; spiral again or close? |
 
 **Traceability spine**: every widget gets a `W-###` id in Frame. The mockup
 tags it (`data-widget-id`), Test verifies it (`T-###`), Build prompts it,
@@ -95,6 +95,13 @@ For each activity, in order:
 4. **Present the gate** to the stakeholder: what was produced, the judgment
    calls, the open questions. Wait for explicit approval
    ("Proceed to <next activity>") or revise.
+
+**Throughout every activity**: each question put to the stakeholder gets logged
+when it is answered — the question and the conflict that forced it, every option
+offered and which was recommended, what they chose (verbatim for gate approvals),
+and what changed in the build as a result. Iterate's `stakeholder-inputs.md` is
+assembled from these entries and closes the cycle; it is not reconstructable from
+memory afterwards. See 06-iterate's stakeholder-inputs artifact for the format.
 
 Activity-specific notes:
 
@@ -142,7 +149,13 @@ Activity-specific notes:
   when the number matches.
 - **Iterate**: append-only log — dated feedback, periodic baseline re-runs
   (drift), alert-noise review. Cycle ends "next cycle scoped" (returns to
-  Frame) or "closed", never by silence.
+  Frame) or "closed", never by silence. **Then, as the final step of the whole
+  cycle**, write `stakeholder-inputs.md`: every question the cycle put to the
+  stakeholder, grouped by activity and numbered continuously, with the options
+  offered, what they chose, what it changed — and a closing section on what to
+  profile or decide up front so the next cycle doesn't have to ask again.
+  Overridden recommendations and their reasoning matter most here; they are
+  how a standing preference gets discovered.
 
 The optional HELIX **Discover** activity (validating whether the dashboard is
 worth building) precedes Frame when the opportunity itself is in question; use
