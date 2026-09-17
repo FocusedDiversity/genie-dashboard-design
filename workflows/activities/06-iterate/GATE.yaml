@@ -15,11 +15,23 @@ exit_requirements:
       path: docs/helix/06-iterate/iteration-log.md
       description: "Iteration log must exist"
 
+    - check: file_exists
+      path: docs/helix/06-iterate/stakeholder-inputs.md
+      description: "Stakeholder inputs record must exist — the cycle's final step"
+
+    - check: grep_present
+      pattern: "Options offered"
+      path: docs/helix/06-iterate/stakeholder-inputs.md
+      description: "Questions are recorded with the options offered, not just their outcomes"
+
   manual:
     - "Usage and feedback recorded with dates and sources, not summarized from memory"
     - "Accuracy drift checked: baseline queries re-run and compared to live widgets at least once post-release"
     - "Alert noise reviewed where the dashboard raises alerts (thresholds tuned or confirmed)"
     - "Change requests captured in the parking lot with a W-### or a new-widget note"
+    - "Stakeholder inputs record covers every question put to the stakeholder this cycle — numbered continuously, grouped by activity, each with the options offered, the choice made, and what changed in the build as a result"
+    - "Every overridden recommendation records the stakeholder's reasoning; gate approvals are quoted verbatim"
+    - "Next-cycle preparation section names the specific profiling queries and up-front decisions that would have prevented this cycle's round-tripping"
     - "Next cycle scoped or explicitly closed (Gate: 'Spiral again' or 'Done')"
 
 next_activity: frame
