@@ -1,6 +1,6 @@
 # Genie Dashboard Design
 
-A **Claude Code plugin** — and a portable **Agent Skill** — with tools for automating **Databricks AI/BI dashboard design** and generating the **prompts for Genie** that build each widget.
+A **Claude Code plugin** — and a portable **Agent Skill** (CoPilot) — with tools for automating **Databricks AI/BI dashboard design** and generating the **prompts for Genie** that build each widget.
 
 The repo is its own plugin marketplace, so Claude Code users install it once and the skills work in every repo they open. For **GitHub Copilot** (which has no marketplace), the same skill folder drops into a repo's `.github/skills/` — see [Using this with GitHub Copilot](#using-this-with-github-copilot).
 
