@@ -6,5 +6,6 @@
     "url": "https://github.com/FocusedDiversity"
   },
   "homepage": "https://github.com/FocusedDiversity/genie-dashboard-design",
-  "repository": "https://github.com/FocusedDiversity/genie-dashboard-design"
+  "repository": "https://github.com/FocusedDiversity/genie-dashboard-design",
+  "license": "Apache-2.0"
 }
