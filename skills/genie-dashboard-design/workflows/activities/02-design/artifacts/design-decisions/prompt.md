@@ -19,7 +19,7 @@ rebuilding the mockup.
 
 If the brief's Source Documents table lists an existing mockup, wireframe,
 brand/style doc, or Tableau workbook (its `<style>`/`<color-palette>`
-elements — see `skills/genie-dashboard-design/assets/tableau-intake.md`),
+elements — see `assets/tableau-intake.md`),
 present it alongside the catalog: does one catalog theme already match its
 colors/fonts/corner-radius, or does the pick need per-widget overrides to get
 closer? Note the source doc, the reconciliation, and any gaps that remain

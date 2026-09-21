@@ -24,7 +24,7 @@ prompt is written — the Build entry gate depends on it.
 - Baseline SQL must be runnable by copy-paste — full table paths, no
   placeholders.
 - If a source Tableau workbook supplied a custom-SQL data source (a `<relation
-  type="text">` — see `skills/genie-dashboard-design/assets/tableau-intake.md`),
+  type="text">` — see `assets/tableau-intake.md`),
   treat its SQL as a draft only: run it, don't assume it's correct just
   because it's what Tableau used.
 - Every `[NEEDS CLARIFICATION: Tableau LOD expression ...]` marker carried

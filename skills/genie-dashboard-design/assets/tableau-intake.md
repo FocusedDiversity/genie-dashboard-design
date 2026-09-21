@@ -15,8 +15,12 @@ known field or worksheet name; for enumeration, use the script below.
 
 ## Step 1: Read the workbook's structure
 
+Both scripts below live in this skill's own `assets/` folder — run them by their
+resolved path on disk, wherever the skill is installed, not relative to the repo
+you are working in.
+
 ```
-python skills/genie-dashboard-design/assets/list_workbook_structure.py "<path-to-workbook>.twb-or-.twbx"
+python <skill>/assets/list_workbook_structure.py "<path-to-workbook>.twb-or-.twbx"
 ```
 
 This works directly on either a `.twb` or a `.twbx` — no manual unzip
@@ -52,7 +56,7 @@ under `Data/TableauTemp/` or elsewhere, and this attribute is the actual
 source of truth. Then:
 
 ```
-python skills/genie-dashboard-design/assets/read_hyper_schema.py "<unzipped-path>/<packaged_extract.dbname>"
+python <skill>/assets/read_hyper_schema.py "<unzipped-path>/<packaged_extract.dbname>"
 ```
 
 This requires the `tableauhyperapi` package (`pip install tableauhyperapi`);

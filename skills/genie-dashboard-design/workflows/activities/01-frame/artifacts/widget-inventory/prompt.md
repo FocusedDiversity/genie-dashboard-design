@@ -12,7 +12,7 @@ as final — a widget from an old mockup that no longer maps to a defined KPI
 gets flagged in Open Questions, not carried over silently.
 
 If a Tableau workbook (.twb/.twbx) is listed, follow
-`skills/genie-dashboard-design/assets/tableau-intake.md`: each worksheet
+`assets/tableau-intake.md`: each worksheet
 placed on a dashboard is normally one candidate row, with chart type
 (from its mark class) and aggregation (from its field encodings) already
 decided rather than guessed. If the widget's measure is a calculated field
