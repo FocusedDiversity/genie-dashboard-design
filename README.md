@@ -29,7 +29,7 @@ In any Claude Code session:
 /plugin install genie-dashboard-design@focused-diversity
 ```
 
-The repo is private, so you need GitHub credentials configured (`gh auth status` should succeed, or a working SSH key with access to FocusedDiversity).
+The repo is public — no credentials or special access required.
 
 Then, in any repo, invoke the skill:
 
@@ -132,3 +132,14 @@ New skills go in `skills/<skill-name>/SKILL.md` and become available to all inst
 
 1. **Check for Patterns on Existing Dashboards** — New dashboards being added to a set of existing dashboards should check those existing to aim to math those design patterns first - then fall back to best practices if none exist. A prompt of the user should confirm if existing dashboards exist to try to match.
 2. **Enhance Dashboard Mode** — New Tabs being added to existing dashboards.  A new mode to add a new tab to an existing dashboard.  Match the existing, factor in new datasets, etc. and add to an existing just a new tab.
+
+## License
+
+Licensed under the Apache License, Version 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+Copyright 2026 Synaptiq.
+
+All example data in this repository is synthetic. The healthcare examples use the
+[Tuva Project](https://thetuvaproject.com/) open-source data model; person-level values in the
+mockups (names, MRNs, dates of birth) are fabricated for illustration and correspond to no real
+individual.
