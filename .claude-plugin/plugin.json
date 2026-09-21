@@ -1,6 +1,6 @@
 {
   "name": "genie-dashboard-design",
-  "description": "Three-gate workflow (Plan, Design Review, Build Prompts) for designing Databricks AI/BI dashboards and generating Genie widget prompts",
+  "description": "Six-activity HELIX workflow for Databricks AI/BI dashboards — brief, HTML mockup, baseline SQL tests, Genie widget prompts, verified deploy, and iteration",
   "author": {
     "name": "Focused Diversity",
     "url": "https://github.com/FocusedDiversity"

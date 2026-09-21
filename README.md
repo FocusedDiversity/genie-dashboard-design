@@ -37,6 +37,22 @@ Then, in any repo, invoke the skill:
 /genie-dashboard-design:genie-dashboard-design Members & claims dashboard for healthcare analytics
 ```
 
+## Prerequisites
+
+The workflow drives the Databricks CLI and runs real queries, so it expects:
+
+| Requirement | Needed for | Notes |
+|---|---|---|
+| **Databricks workspace** | All activities | The dashboard is built and deployed here |
+| **Databricks CLI with a configured profile** | Test, Deploy | `databricks auth login` — the workflow always asks which profile to use and never auto-selects one |
+| **A SQL warehouse** | Test, Deploy | Test executes baseline queries against it before any Genie prompt is written |
+| **Unity Catalog tables** to build against | Frame onward | Frame verifies every named table exists before writing the brief |
+| **Python 3** | Tableau conversion only | `list_workbook_structure.py` uses only the standard library |
+| **`tableauhyperapi`** | Tableau conversion only | `pip install tableauhyperapi` — needed solely to read a `.twbx`'s packaged `.hyper` extract |
+
+The first four are required for a full cycle. The last two matter only if you start from an
+existing Tableau workbook (Step Zero option 4).
+
 ## Recommending the plugin from a working repo
 
 To have Claude Code prompt teammates to install this plugin automatically when they open one of your team's repos, commit this to that repo's `.claude/settings.json`:
