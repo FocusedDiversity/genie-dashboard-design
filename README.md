@@ -77,15 +77,43 @@ fail in Copilot, even when Copilot is running Claude models. But Copilot support
 using the same `SKILL.md` format, so the skill itself ports directly. VS Code scans
 `.github/skills/`, `.claude/skills/`, and `.agents/skills/` in a workspace.
 
-Vendor the skill into the repo your team works in:
+Everyone starts by cloning this repo locally — it is only the source to install *from*, and never
+needs to be pushed anywhere:
 
 ```bash
 git clone https://github.com/FocusedDiversity/genie-dashboard-design
 cd genie-dashboard-design
-scripts/install-skill.sh /path/to/your-repo
 ```
 
-Then commit it, and everyone who clones that repo has the skill — no install step, no marketplace:
+Then pick one of two install modes.
+
+### Option A — Personal install (no repo permissions needed)
+
+Installs to your user profile. The skill works in **every** repo you open, and nothing is added to
+any project's git history — useful when you can't (or would rather not) commit to the team repo.
+
+```bash
+scripts/install-skill.sh --personal          # macOS / Linux / Git Bash
+```
+```powershell
+.\scripts\install-skill.ps1 -Personal        # Windows PowerShell
+```
+
+Each person runs this once on their own machine. To update later, `git pull` this repo and re-run.
+
+### Option B — Vendor into the team repo (everyone gets it on clone)
+
+Installs into one repository and is committed there, so teammates need no setup at all — they just
+pull. Requires commit access to that repo.
+
+```bash
+scripts/install-skill.sh /path/to/your-repo
+```
+```powershell
+.\scripts\install-skill.ps1 C:\path\to\your-repo
+```
+
+Then commit it:
 
 ```bash
 cd /path/to/your-repo
@@ -93,18 +121,16 @@ git add .github/skills/genie-dashboard-design
 git commit -m "Add genie-dashboard-design skill"
 ```
 
-In VS Code, Copilot loads the skill automatically when your request matches its description, or you
-can invoke it explicitly from the `/` menu in Copilot Chat.
-
 **Serving both tools from one copy**: `.claude/skills/` is read by Copilot *and* Claude Code, so
-installing there covers a mixed team with a single directory:
+installing there covers a mixed team with a single directory — add `--dir .claude/skills`
+(or `-Dir .claude\skills`) to either command.
 
-```bash
-scripts/install-skill.sh /path/to/your-repo --dir .claude/skills
-```
+### Using it
 
-Alternatively, for a personal install across all your repos rather than one shared repo, copy the
-skill folder to `~/.copilot/skills/` (Copilot) or `~/.claude/skills/` (both).
+In VS Code, open Copilot Chat in agent mode and either describe what you want ("build a members and
+claims dashboard") — Copilot loads the skill by matching its description — or type `/` and pick
+`genie-dashboard-design` explicitly. Artifacts are written to `docs/helix/` in whatever repo you
+have open.
 
 Agent Skills arrived in VS Code around version 1.108 — if the skill isn't picked up, check your VS
 Code version and that agent mode is enabled.
