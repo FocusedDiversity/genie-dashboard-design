@@ -1,8 +1,8 @@
 # Genie Dashboard Design
 
-A **Claude Code plugin** with skills and tools for automating **Databricks AI/BI dashboard design** and generating the **prompts for Genie** that build each widget.
+A **Claude Code plugin** — and a portable **Agent Skill** — with tools for automating **Databricks AI/BI dashboard design** and generating the **prompts for Genie** that build each widget.
 
-The repo is its own plugin marketplace — install it once and the skills work in every repo you open.
+The repo is its own plugin marketplace, so Claude Code users install it once and the skills work in every repo they open. For **GitHub Copilot** (which has no marketplace), the same skill folder drops into a repo's `.github/skills/` — see [Using this with GitHub Copilot](#using-this-with-github-copilot).
 
 # Summary 
 
@@ -70,6 +70,45 @@ To have Claude Code prompt teammates to install this plugin automatically when t
 }
 ```
 
+## Using this with GitHub Copilot
+
+Copilot has no plugin marketplace — `/plugin marketplace add` is a Claude Code command and will
+fail in Copilot, even when Copilot is running Claude models. But Copilot supports **Agent Skills**
+using the same `SKILL.md` format, so the skill itself ports directly. VS Code scans
+`.github/skills/`, `.claude/skills/`, and `.agents/skills/` in a workspace.
+
+Vendor the skill into the repo your team works in:
+
+```bash
+git clone https://github.com/FocusedDiversity/genie-dashboard-design
+cd genie-dashboard-design
+scripts/install-skill.sh /path/to/your-repo
+```
+
+Then commit it, and everyone who clones that repo has the skill — no install step, no marketplace:
+
+```bash
+cd /path/to/your-repo
+git add .github/skills/genie-dashboard-design
+git commit -m "Add genie-dashboard-design skill"
+```
+
+In VS Code, Copilot loads the skill automatically when your request matches its description, or you
+can invoke it explicitly from the `/` menu in Copilot Chat.
+
+**Serving both tools from one copy**: `.claude/skills/` is read by Copilot *and* Claude Code, so
+installing there covers a mixed team with a single directory:
+
+```bash
+scripts/install-skill.sh /path/to/your-repo --dir .claude/skills
+```
+
+Alternatively, for a personal install across all your repos rather than one shared repo, copy the
+skill folder to `~/.copilot/skills/` (Copilot) or `~/.claude/skills/` (both).
+
+Agent Skills arrived in VS Code around version 1.108 — if the skill isn't picked up, check your VS
+Code version and that agent mode is enabled.
+
 ## What the skill does
 
 The core skill runs a dashboard through the six **HELIX** activities, producing versioned artifacts in your working repo under `docs/helix/` and pausing at a stakeholder gate after each:
@@ -105,27 +144,34 @@ The `01-frame` and `02-design` `GATE.yaml` files enforce this: their entry/exit 
 .claude-plugin/
 ├── plugin.json          Plugin manifest
 └── marketplace.json     Marketplace catalog (this repo is its own marketplace)
-workflows/
-├── resources/           Shared resources
-│   └── themes/          Theme catalog (wanderbricks, clinical-slate, executive-minimal):
-│                        <id>.json (palette authority) + seed.<id>.lvdash.json (themed starter)
-└── activities/          HELIX artifact pack (format-compatible with the HELIX repo)
-    ├── 01-frame/        GATE.yaml + dashboard-brief, widget-inventory
-    ├── 02-design/       GATE.yaml + dashboard-mockup (HTML), design-decisions
-    ├── 03-test/         GATE.yaml + widget-test-plan
-    ├── 04-build/        GATE.yaml + prompt-catalog
-    ├── 05-deploy/       GATE.yaml + deployment-guide
-    └── 06-iterate/      GATE.yaml + iteration-log, stakeholder-inputs
+scripts/
+└── install-skill.sh     Vendors the skill into another repo (Copilot / team sharing)
 skills/
-└── genie-dashboard-design/
+└── genie-dashboard-design/   ← self-contained: this entire folder IS the skill
     ├── SKILL.md                          The six-activity workflow skill (orchestration map)
     ├── assets/design-template.md         Legacy ASCII wireframe template (superseded by the HTML mockup artifact)
     ├── assets/prompt-style-guide.md      Style authority for Build's Genie prompts
     ├── assets/tableau-intake.md          Mining guide for a supplied Tableau workbook (.twb/.twbx)
     ├── assets/list_workbook_structure.py Parses a .twb/.twbx's dashboards, worksheets, and calculated fields
     ├── assets/read_hyper_schema.py       Reads a packaged .hyper extract's real schema/grain (needs tableauhyperapi)
-    └── references/genie-dashboard-prompts.md   Complete worked example (Tuva synthetic data)
+    ├── references/genie-dashboard-prompts.md   Complete worked example (Tuva synthetic data)
+    └── workflows/
+        ├── resources/           Shared resources
+        │   └── themes/          Theme catalog (wanderbricks, clinical-slate, executive-minimal):
+        │                        <id>.json (palette authority) + seed.<id>.lvdash.json (themed starter)
+        └── activities/          HELIX artifact pack (format-compatible with the HELIX repo)
+            ├── 01-frame/        GATE.yaml + dashboard-brief, widget-inventory
+            ├── 02-design/       GATE.yaml + dashboard-mockup (HTML), design-decisions
+            ├── 03-test/         GATE.yaml + widget-test-plan
+            ├── 04-build/        GATE.yaml + prompt-catalog
+            ├── 05-deploy/       GATE.yaml + deployment-guide
+            └── 06-iterate/      GATE.yaml + iteration-log, stakeholder-inputs
 ```
+
+Everything the skill needs lives under `skills/genie-dashboard-design/`, and every path inside it
+(`workflows/…`, `assets/…`, `references/…`) resolves relative to that folder. That is what lets the
+same directory be copied into another repo and work unchanged — see [Using this with GitHub
+Copilot](#using-this-with-github-copilot).
 
 Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example-appointment-analytics.html` — open it in a browser. Design starts by picking one of three themes (see `workflows/resources/themes/README.md`); the mockup and the deployed dashboard are both built from that choice.
 

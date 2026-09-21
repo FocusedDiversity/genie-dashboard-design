@@ -2,7 +2,7 @@
 
 Write `docs/helix/04-build/prompt-catalog.md` from `template.md`. Inputs: the
 approved inventory, design-decisions, and the executed widget-test-plan. The
-style authority is `skills/genie-dashboard-design/assets/prompt-style-guide.md`.
+style authority is `assets/prompt-style-guide.md`.
 
 ## Process
 

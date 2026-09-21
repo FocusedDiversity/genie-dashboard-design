@@ -30,7 +30,7 @@ validation:
 
   quality_checks:
     - check: style_guide_compliance
-      description: Every prompt satisfies the prompt style guide (skills/genie-dashboard-design/assets/prompt-style-guide.md)
+      description: Every prompt satisfies the prompt style guide (assets/prompt-style-guide.md)
       severity: blocking
 
     - check: rules_verbatim

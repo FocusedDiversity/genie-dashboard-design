@@ -16,7 +16,7 @@ version of this question again here. Act on that choice:
 - **Requirements document + wireframe/mockup** → ask for both, ingest each,
   then interview to fill gaps.
 - **Existing Tableau workbook** → ask for the `.twb`/`.twbx` path and follow
-  `skills/genie-dashboard-design/assets/tableau-intake.md` instead of a
+  `assets/tableau-intake.md` instead of a
   generic document read.
 
 There is no upload widget in this environment, so be explicit about how to
@@ -27,7 +27,7 @@ implies) — don't assume a single file:
   exported images of a mockup) → read each with the file Read tool, which
   handles images as well as text.
 - **A Tableau workbook (.twb or .twbx)** → follow
-  `skills/genie-dashboard-design/assets/tableau-intake.md`: unpack if `.twbx`
+  `assets/tableau-intake.md`: unpack if `.twbx`
   and mine the XML — worksheets, dashboard layout, data source connections,
   calculated fields, formatting — and, if the `.twbx` packages its own
   `.hyper` extract, query it directly (via the bundled `read_hyper_schema.py`)

@@ -11,11 +11,16 @@ dashboards. Work moves through six activities, each producing versioned
 artifacts in the working repo under `docs/helix/`, each ending in a gate the
 stakeholder approves before the next activity starts.
 
-This skill ships with a HELIX artifact pack at `workflows/activities/` in the
-plugin root (`${CLAUDE_PLUGIN_ROOT}`). Each activity there has a `GATE.yaml`
-(entry/exit requirements) and artifact folders with `template.md`, `prompt.md`,
-`example.md`, and `meta.yml`. **Follow those files — they are the authority for
-each artifact's structure and rules.** This document is the orchestration map.
+This skill ships with a HELIX artifact pack at [`workflows/activities/`](./workflows/activities/).
+Each activity there has a `GATE.yaml` (entry/exit requirements) and artifact
+folders with `template.md`, `prompt.md`, `example.md`, and `meta.yml`.
+**Follow those files — they are the authority for each artifact's structure and
+rules.** This document is the orchestration map.
+
+**Every path in this skill and its artifact pack is relative to this skill's own
+folder** — `workflows/…`, `assets/…`, `references/…` all resolve from here, not
+from the repo you are working in. Artifacts you *produce* go to `docs/helix/…`
+in the working repo, as each `meta.yml` states.
 
 ---
 
@@ -47,7 +52,7 @@ than asking the open-ended version of this question again:
 - **3** → ask for both; ingest each. The mockup also seeds Design's layout
   and widget-inventory's candidate widgets.
 - **4** → ask for the `.twb`/`.twbx` path; follow
-  `skills/genie-dashboard-design/assets/tableau-intake.md` instead of a
+  `assets/tableau-intake.md` instead of a
   generic document read.
 
 A stakeholder whose materials don't fit their stated choice (they picked
@@ -109,7 +114,7 @@ Activity-specific notes:
   dashboard-brief's "Step Zero: Existing Requirements Intake" for the
   mechanics of ingesting whatever was supplied — files, pasted text, links,
   or a Tableau workbook via
-  `skills/genie-dashboard-design/assets/tableau-intake.md`). Ingest anything
+  `assets/tableau-intake.md`). Ingest anything
   supplied first; use the interview to fill gaps and verify claims, not
   repeat what the docs already establish. Log every source doc in
   the brief's Source Documents table — its content keeps surfacing downstream
@@ -140,7 +145,7 @@ Activity-specific notes:
   dashboard-level checks (filter cascade, counter/table agreement,
   empty-slice).
 - **Build**: one prompt per widget, style per
-  `skills/genie-dashboard-design/assets/prompt-style-guide.md`, dedupe/null/
+  `assets/prompt-style-guide.md`, dedupe/null/
   grain language copied verbatim from design-decisions. Pre-write fallback
   views for window-logic widgets.
 - **Deploy**: execute the creation steps, then run every T-### against the
