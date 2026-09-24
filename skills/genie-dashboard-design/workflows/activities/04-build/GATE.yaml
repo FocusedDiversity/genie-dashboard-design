@@ -4,7 +4,7 @@ number: "04"
 entry_requirements:
   automated:
     - check: file_exists
-      path: docs/helix/03-test/widget-test-plan.md
+      path: dashboards/<slug>/docs/helix/03-test/widget-test-plan.md
       description: "Tests define expected results before prompts are written"
   manual:
     - "Test exit gate passed; baseline query results recorded"
@@ -12,27 +12,28 @@ entry_requirements:
 exit_requirements:
   automated:
     - check: file_exists
-      path: docs/helix/04-build/prompt-catalog.md
+      path: dashboards/<slug>/docs/helix/04-build/prompt-catalog.md
       description: "Genie prompt catalog must exist"
 
     - check: grep_present
       pattern: "W-[0-9]+"
-      path: docs/helix/04-build/prompt-catalog.md
+      path: dashboards/<slug>/docs/helix/04-build/prompt-catalog.md
       description: "Every prompt traces to a widget inventory id"
 
     - check: grep_present
       pattern: "T-[0-9]+"
-      path: docs/helix/04-build/prompt-catalog.md
+      path: dashboards/<slug>/docs/helix/04-build/prompt-catalog.md
       description: "Every prompt names the check that verifies it"
 
     - check: grep_present
       pattern: "[a-z_]+\\.[a-z_]+\\.[a-z_]+"
-      path: docs/helix/04-build/prompt-catalog.md
+      path: dashboards/<slug>/docs/helix/04-build/prompt-catalog.md
       description: "Prompts carry full three-part table paths"
 
   manual:
     - "If Frame's Source Documents table lists a data dictionary, prompt-catalog reuses its field names and definitions verbatim (spot-check a sample against the brief) rather than paraphrasing"
     - "If Frame's Source Documents table lists a Tableau workbook, prompt-catalog reuses its worksheet field captions/titles verbatim where they match the inventory, and no prompt's logic is derived from a Tableau calculated field's formula instead of its Test-verified baseline"
+    - "If Frame's Source Documents table lists a Lakeview dashboard export, every catalog entry is reverse-engineered from the live dashboard's dataset query and marked 'unchanged (restyle)', titles match the live widgets verbatim, and the target uiSettings.theme block to apply is recorded in full"
     - "Every prompt follows the prompt style guide: explicit aggregation, join logic, null handling, formatting"
     - "Dedupe and grain language appears verbatim in every prompt it applies to"
     - "One prompt per inventory widget; no widget skipped, no prompt without a widget"

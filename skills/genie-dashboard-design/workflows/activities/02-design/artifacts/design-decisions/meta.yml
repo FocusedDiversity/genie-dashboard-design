@@ -16,7 +16,7 @@ description: |
   in someone's memory of the review meeting.
 
 output:
-  location: docs/helix/02-design/design-decisions.md
+  location: dashboards/<slug>/docs/helix/02-design/design-decisions.md
   format: markdown
   naming: design-decisions.md
 

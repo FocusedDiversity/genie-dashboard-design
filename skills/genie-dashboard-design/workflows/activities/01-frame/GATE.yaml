@@ -4,7 +4,7 @@ number: "01"
 entry_requirements:
   automated: []
   manual:
-    - "Stakeholder was asked to choose a starting point in the skill's opening Step Zero (blank slate / requirements doc only / requirements doc + mockup / existing Tableau workbook) before Frame's interview began; whatever was supplied is logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded for blank slate"
+    - "Stakeholder was asked to choose a starting point in the skill's opening Step Zero (blank slate / requirements doc only / requirements doc + mockup / existing Tableau workbook / existing production dashboard for restyle) before Frame's interview began; whatever was supplied is logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded for blank slate"
     - "If existing documents are provided by User, they are retained in stage artifact directory and used to inform All aspects of each stage ('01-frame' and '02-design')"
     - "Dashboard purpose and requesting stakeholder identified"
     - "Candidate source tables named (catalog.schema.table) and readable"
@@ -12,36 +12,37 @@ entry_requirements:
 exit_requirements:
   automated:
     - check: file_exists
-      path: docs/helix/01-frame/dashboard-brief.md
+      path: dashboards/<slug>/docs/helix/01-frame/dashboard-brief.md
       description: "Dashboard brief must exist"
 
     - check: file_exists
-      path: docs/helix/01-frame/widget-inventory.md
+      path: dashboards/<slug>/docs/helix/01-frame/widget-inventory.md
       description: "Widget inventory must exist"
 
     - check: grep_present
       pattern: "W-[0-9]+"
-      path: docs/helix/01-frame/widget-inventory.md
+      path: dashboards/<slug>/docs/helix/01-frame/widget-inventory.md
       description: "Every widget has a stable W-### identifier"
 
     - check: grep_present
       pattern: "[a-z_]+\\.[a-z_]+\\.[a-z_]+"
-      path: docs/helix/01-frame/widget-inventory.md
+      path: dashboards/<slug>/docs/helix/01-frame/widget-inventory.md
       description: "Data sources use full three-part table paths"
 
     - check: grep_absent
       pattern: "\\[NEEDS CLARIFICATION\\]"
-      path: docs/helix/01-frame/**/*.md
+      path: dashboards/<slug>/docs/helix/01-frame/**/*.md
       description: "No unresolved clarification markers"
 
     - check: grep_absent
       pattern: "\\[TBD\\]"
-      path: docs/helix/01-frame/dashboard-brief.md
+      path: dashboards/<slug>/docs/helix/01-frame/dashboard-brief.md
       description: "No TBD markers in the brief"
 
   manual:
-    - "Stakeholder was asked to choose a starting point in the skill's opening Step Zero (blank slate / requirements doc only / requirements doc + mockup / existing Tableau workbook) before Frame's interview began; whatever was supplied is logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded for blank slate"
+    - "Stakeholder was asked to choose a starting point in the skill's opening Step Zero (blank slate / requirements doc only / requirements doc + mockup / existing Tableau workbook / existing production dashboard for restyle) before Frame's interview began; whatever was supplied is logged in the brief's Source Documents table and reflected in the brief/inventory, or 'None provided' is recorded for blank slate"
     - "If a Tableau workbook (.twb/.twbx) is listed in Source Documents, its worksheets/dashboards were parsed per tableau-intake.md and every worksheet used on a dashboard maps to a widget-inventory row (chart type, fields, and aggregation carried over), or the omission is explained"
+    - "If a Lakeview dashboard export (.lvdash.json) is listed in Source Documents, the stakeholder chose it from the repo's candidates and confirmed the <slug> folder; every widget in the file maps to a widget-inventory row carrying its source widget name, and the brief's Restyle Scope section names what may and may not change plus the as-is theme"
     - "Every KPI names its aggregation (distinct count, sum, max-per-id) — no bare 'count of claims'"
     - "Every metric with a rate or percentage has an explicit numerator and denominator definition"
     - "Global filters list expected cardinality and default values"

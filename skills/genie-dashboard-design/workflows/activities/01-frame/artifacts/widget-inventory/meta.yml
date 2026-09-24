@@ -16,7 +16,7 @@ description: |
   in either direction.
 
 output:
-  location: docs/helix/01-frame/widget-inventory.md
+  location: dashboards/<slug>/docs/helix/01-frame/widget-inventory.md
   format: markdown
   naming: widget-inventory.md
 

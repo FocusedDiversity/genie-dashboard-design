@@ -17,7 +17,7 @@ description: |
   Genie fights complex window logic.
 
 output:
-  location: docs/helix/04-build/prompt-catalog.md
+  location: dashboards/<slug>/docs/helix/04-build/prompt-catalog.md
   format: markdown
   naming: prompt-catalog.md
 

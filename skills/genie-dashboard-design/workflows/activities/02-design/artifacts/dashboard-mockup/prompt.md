@@ -1,7 +1,7 @@
 # Generating a Dashboard Mockup
 
-Produce `docs/helix/02-design/dashboard-mockup.html` from the approved
-widget-inventory, following `template.md`. Match the look and feel of
+Produce `dashboards/<slug>/docs/helix/02-design/dashboard-mockup.html` from the
+approved widget-inventory, following `template.md`. Match the look and feel of
 `example-appointment-analytics.html` — stakeholders should feel they are
 looking at a published Databricks dashboard.
 
@@ -22,6 +22,14 @@ per-worksheet grid positions are the layout starting point, reconciled against
 the approved inventory the same way. Any dashboard action or parameter
 control the workbook used for interactivity gets rebuilt as a normal wired
 filter here — it doesn't carry over as-is.
+
+If the brief's Source Documents table lists a Lakeview dashboard export, the
+layout is fixed, not a starting point — see `assets/restyle-cycle.md`.
+Reproduce the live dashboard exactly: same pages in the same order, same
+widgets with the same titles, same grid positions from the intake's `position`
+values. The only thing that differs from production is the theme, so that the
+stakeholder is comparing appearance and nothing else. Anything you would
+normally improve about the layout is a parking-lot item, not a mockup change.
 
 ## Process
 

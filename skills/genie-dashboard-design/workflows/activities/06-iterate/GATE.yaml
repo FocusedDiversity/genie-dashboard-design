@@ -4,7 +4,7 @@ number: "06"
 entry_requirements:
   automated:
     - check: file_exists
-      path: docs/helix/05-deploy/deployment-guide.md
+      path: dashboards/<slug>/docs/helix/05-deploy/deployment-guide.md
       description: "Deployment evidence exists to learn from"
   manual:
     - "Dashboard released to its audience"
@@ -12,16 +12,16 @@ entry_requirements:
 exit_requirements:
   automated:
     - check: file_exists
-      path: docs/helix/06-iterate/iteration-log.md
+      path: dashboards/<slug>/docs/helix/06-iterate/iteration-log.md
       description: "Iteration log must exist"
 
     - check: file_exists
-      path: docs/helix/06-iterate/stakeholder-inputs.md
+      path: dashboards/<slug>/docs/helix/06-iterate/stakeholder-inputs.md
       description: "Stakeholder inputs record must exist — the cycle's final step"
 
     - check: grep_present
       pattern: "Options offered"
-      path: docs/helix/06-iterate/stakeholder-inputs.md
+      path: dashboards/<slug>/docs/helix/06-iterate/stakeholder-inputs.md
       description: "Questions are recorded with the options offered, not just their outcomes"
 
   manual:

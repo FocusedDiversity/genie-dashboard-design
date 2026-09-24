@@ -1,8 +1,8 @@
 # Generating a Genie Prompt Catalog
 
-Write `docs/helix/04-build/prompt-catalog.md` from `template.md`. Inputs: the
-approved inventory, design-decisions, and the executed widget-test-plan. The
-style authority is `assets/prompt-style-guide.md`.
+Write `dashboards/<slug>/docs/helix/04-build/prompt-catalog.md` from
+`template.md`. Inputs: the approved inventory, design-decisions, and the
+executed widget-test-plan. The style authority is `assets/prompt-style-guide.md`.
 
 ## Process
 
@@ -32,3 +32,22 @@ style authority is `assets/prompt-style-guide.md`.
   inventory. Never reuse a Tableau calculated field's formula as prompt
   logic — its baseline in widget-test-plan is the authority; the prompt states
   what Test already verified, not what Tableau's formula said.
+
+## Restyle cycles
+
+If the brief's Source Documents table lists a Lakeview dashboard export, no
+new prompts exist — see `assets/restyle-cycle.md`. The catalog documents the
+dashboard as built rather than proposing anything new:
+
+- Reverse-engineer one entry per W-### from that widget's dataset query and
+  field list (run `list_dashboard_structure.py --sql` for the query text), and
+  mark each one `unchanged (restyle)`.
+- Reuse the live widget's title verbatim. A restyle renames nothing, so a
+  title that differs from the inventory is a mining error to fix, not a
+  rewrite to make.
+- Record the target `uiSettings.theme` block — the exact JSON to apply, taken
+  from `workflows/resources/themes/<id>.json`. In a restyle that block is the
+  build output, and Deploy applies it verbatim.
+- A widget whose logic you cannot reconstruct from the file gets an entry
+  saying so. The "no widget skipped" rule holds here exactly as in a new
+  build; an unreconstructable widget is a gate conversation, not an omission.

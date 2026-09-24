@@ -17,7 +17,7 @@ description: |
   widget inventory.
 
 output:
-  location: docs/helix/02-design/dashboard-mockup.html
+  location: dashboards/<slug>/docs/helix/02-design/dashboard-mockup.html
   format: html
   naming: dashboard-mockup.html
 

@@ -8,8 +8,8 @@ argument-hint: 'Describe your dashboard vision (e.g., "Members & claims dashboar
 
 A HELIX-methodology workflow for designing and building Databricks AI/BI Genie
 dashboards. Work moves through six activities, each producing versioned
-artifacts in the working repo under `docs/helix/`, each ending in a gate the
-stakeholder approves before the next activity starts.
+artifacts in the working repo under `dashboards/<slug>/docs/helix/`, each ending
+in a gate the stakeholder approves before the next activity starts.
 
 This skill ships with a HELIX artifact pack at [`workflows/activities/`](./workflows/activities/).
 Each activity there has a `GATE.yaml` (entry/exit requirements) and artifact
@@ -19,8 +19,37 @@ rules.** This document is the orchestration map.
 
 **Every path in this skill and its artifact pack is relative to this skill's own
 folder** — `workflows/…`, `assets/…`, `references/…` all resolve from here, not
-from the repo you are working in. Artifacts you *produce* go to `docs/helix/…`
-in the working repo, as each `meta.yml` states.
+from the repo you are working in.
+
+**Artifacts you *produce* go to `dashboards/<slug>/docs/helix/…`** in the working
+repo. Every dashboard owns its own HELIX record, so one repo holds many of them
+side by side. Establish `<slug>` once, in Frame, before writing anything: propose
+a short `snake_case` name from the dashboard's title and confirm it with the
+stakeholder — don't derive it silently, because the folder name is usually
+shorter than the dashboard name ("Claims Overview (Revised)" →
+`claims_overview`). Reuse the existing folder when one already exists for
+that dashboard. Wherever `<slug>` appears in a `meta.yml` output location or a
+`GATE.yaml` path, substitute the confirmed value.
+
+```
+dashboards/<slug>/
+  <Dashboard Name>.lvdash.json   the dashboard itself, when the repo holds it
+  datasets/                      dataset SQL and refresh scripts
+  docs/helix/
+    01-frame/    dashboard-brief.md, widget-inventory.md, sources/
+    02-design/   dashboard-mockup.html, design-decisions.md, <theme>.json
+    03-test/     widget-test-plan.md, plus the baseline .sql files it runs
+    04-build/    prompt-catalog.md
+    05-deploy/   deployment-guide.md
+    06-iterate/  iteration-log.md, stakeholder-inputs.md
+```
+
+`01-frame/sources/` holds copies of whatever the stakeholder supplied — PRDs,
+data dictionaries, decks, source SQL — so the brief can link to them and they
+outlive the conversation. `02-design/<theme>.json` is a copy of the chosen
+theme, so the mockup's colors can be checked against it later. Baseline SQL long
+enough to hurt the test plan's readability lives beside it as `.sql` files
+rather than inline.
 
 ---
 
@@ -40,6 +69,9 @@ sees, even in response to a one-line invocation like
    document and a design mockup/wireframe.
 4. **Existing Tableau workbook (.twb/.twbx)** — an existing Tableau
    dashboard to convert.
+5. **Existing production dashboard — restyle only** — a Databricks dashboard
+   already live, to be re-themed (colors, typography, chrome) without changing
+   its metrics, queries, widgets, or layout.
 
 The answer decides what Frame's Step Zero (dashboard-brief's "Step Zero:
 Existing Requirements Intake") does — it acts on the choice made here rather
@@ -54,6 +86,10 @@ than asking the open-ended version of this question again:
 - **4** → ask for the `.twb`/`.twbx` path; follow
   `assets/tableau-intake.md` instead of a
   generic document read.
+- **5** → follow `assets/lakeview-intake.md` to find the repo's
+  `.lvdash.json` files, ask which one, and mine it into the brief and
+  inventory. Then follow `assets/restyle-cycle.md`, which is the scope
+  authority for all six activities in a restyle.
 
 A stakeholder whose materials don't fit their stated choice (they picked
 "blank slate" but then mention a PRD) is not a problem — ingest what's
@@ -64,7 +100,7 @@ gate what's allowed.
 
 ## The Spiral
 
-| # | Activity | Artifacts produced (`docs/helix/…`) | Gate question |
+| # | Activity | Artifacts produced (`dashboards/<slug>/docs/helix/…`) | Gate question |
 |---|----------|-------------------------------------|---------------|
 | 01 | **Frame** | `01-frame/dashboard-brief.md`, `01-frame/widget-inventory.md` | Is this the right dashboard? |
 | 02 | **Design** | `02-design/dashboard-mockup.html`, `02-design/design-decisions.md` | Is this what it should look like? |
@@ -82,6 +118,13 @@ The test plan's deterministic baseline SQL — written and executed *before any
 prompt exists* — is the contract Genie's output must match. Skipping ahead to
 prompts is the one shortcut this workflow forbids.
 
+**Restyle cycles run all six activities.** Starting point 5 narrows what may
+change, not which activities happen: the inventory is extracted as-built
+instead of invented, Design's theme choice becomes the deliverable, Test proves
+the numbers did not move, and Build documents the existing prompts unchanged.
+`assets/restyle-cycle.md` is the scope authority; every activity note below
+defers to it when the cycle is a restyle.
+
 ---
 
 ## Running an Activity
@@ -93,8 +136,8 @@ For each activity, in order:
    unapproved, go back.
 2. **Produce each artifact** using its `prompt.md` (process & rules) and
    `template.md` (structure), writing output to the location in `meta.yml`
-   (always `docs/helix/<NN-name>/…` in the working repo). Consult `example.md`
-   for the quality bar.
+   (always `dashboards/<slug>/docs/helix/<NN-name>/…` in the working repo).
+   Consult `example.md` for the quality bar.
 3. **Self-check the exit gate** — run the automated checks (file existence,
    grep patterns) yourself; walk the manual checklist honestly.
 4. **Present the gate** to the stakeholder: what was produced, the judgment
@@ -193,8 +236,9 @@ the HELIX methodology repo's Discover artifacts if needed.
 
 ## Key Principles
 
-1. **Artifacts are the memory.** Decisions live in `docs/helix/`, not in chat
-   history or meeting recall. If it mattered, it's written.
+1. **Artifacts are the memory.** Decisions live in
+   `dashboards/<slug>/docs/helix/`, not in chat history or meeting recall. If
+   it mattered, it's written.
 2. **Clarity first.** Exact table paths, explicit aggregation, named null
    handling — in briefs, decisions, tests, and prompts alike.
 3. **No double-counting.** Grain and dedupe rules are stated once in Design

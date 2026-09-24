@@ -15,7 +15,7 @@ description: |
   dashboard without an iteration log is unowned.
 
 output:
-  location: docs/helix/06-iterate/iteration-log.md
+  location: dashboards/<slug>/docs/helix/06-iterate/iteration-log.md
   format: markdown
   naming: iteration-log.md
 

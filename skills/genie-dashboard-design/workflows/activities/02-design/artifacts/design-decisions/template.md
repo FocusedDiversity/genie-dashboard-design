@@ -13,6 +13,29 @@
   why — e.g., "W-201 gets its own emphasis background per the theme's
   set-border-to-match-background rule"; or "none"]
 
+## Before / After Theme
+
+[Restyle cycles only (Step Zero option 5) — delete this section otherwise.]
+
+| Property | Before | After |
+|---|---|---|
+| canvasBackgroundColor | [hex, or "Lakeview default"] | [hex] |
+| widgetBackgroundColor | [hex] | [hex] |
+| widgetBorderColor | [hex] | [hex] |
+| fontColor | [hex] | [hex] |
+| selectionColor | [hex] | [hex] |
+| fontFamily | [name] | [name] |
+| visualizationColors | [hex list] | [hex list] |
+
+**Hard-coded styling reconciled**
+
+| Widget | What it hard-codes | Decision |
+|---|---|---|
+| W-### | [e.g., inline `color:#0B7FC4` in a text header] | [rewritten to the new accent / waived because …] |
+
+**Contrast & color-blindness**: [what was checked, in which mode, with what
+result — see `workflows/resources/themes/README.md`]
+
 ## Layout Choices
 
 - [Page order and why; KPI-row placement; which widgets got full width and why]

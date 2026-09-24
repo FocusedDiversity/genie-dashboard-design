@@ -8,7 +8,7 @@
 
 | Document | Type | What it provided |
 |---|---|---|
-| [name/link, or "None provided"] | data dictionary \| PRD \| mockup \| wireframe \| design doc \| Tableau workbook \| none | [e.g., "field names & grain for claims table", "target KPIs & audience", "3 worksheets mined for chart type/aggregation"] |
+| [name/link, or "None provided"] | data dictionary \| PRD \| mockup \| wireframe \| design doc \| Tableau workbook \| Lakeview dashboard export \| none | [e.g., "field names & grain for claims table", "target KPIs & audience", "3 worksheets mined for chart type/aggregation", "6 pages / 28 widgets mined as-built"] |
 
 ## Summary
 
@@ -56,3 +56,18 @@ For every metric, name the aggregation. For every rate, name numerator and denom
 
 - [Observable, checkable post-release — e.g., "analysts stop running manual query X",
   "values match source dashboard Y within 1%"]
+
+## Restyle Scope
+
+[Restyle cycles only (Step Zero option 5) — delete this section otherwise.]
+
+- **Dashboard**: [path to the .lvdash.json being restyled]
+- **Current theme**: [the as-is `uiSettings.theme` values, or "Lakeview default"]
+- **Reason for restyle**: [brand alignment, accessibility, consolidation, …]
+- **In scope**: [theme, palette, typography, widget chrome — narrow this if the
+  stakeholder narrowed it]
+- **Out of scope**: metrics, SQL, datasets, widget set, grid layout, filters.
+  [Name anything the stakeholder asked for that falls outside — it becomes a
+  parking-lot item for a later cycle, not part of this one.]
+- **Invariance requirement**: every widget returns the same values after the
+  restyle as before. [Name any accepted exception and why.]

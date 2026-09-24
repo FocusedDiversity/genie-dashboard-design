@@ -1,0 +1,70 @@
+{
+  "id": "house-style",
+  "name": "House Style",
+  "description": "Template for an organization's own brand theme. Light-first, conservative, and deliberately neutral: a deep-slate foundation, one accent blue, and a restrained six-color categorical palette. Copy this file, swap in your brand's hex values, and keep the extra keys your org actually enforces (semantic status colors, category colors, table styling, banned styles) alongside the standard uiSettings.",
+  "personaFit": ["Internal business teams", "Operations", "Executives", "Any org with a brand guide"],
+  "defaultMode": "light",
+  "provenance": "Constructed from the Databricks 60-30-10 framework as a starting point for org-specific brand themes.",
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": { "light": "#F5F7FA", "dark": "#2A3342" },
+      "widgetBackgroundColor": { "light": "#FFFFFF", "dark": "#3A4557" },
+      "widgetBorderColor": { "light": "#B9C0C9", "dark": "#3A4557" },
+      "fontColor": { "light": "#2A3342", "dark": "#FFFFFF" },
+      "selectionColor": { "light": "#3AA0D1", "dark": "#4FBBD6" },
+      "visualizationColors": ["#2F7FA8", "#2E9E93", "#465063", "#D89A72", "#6E7480", "#8A7016"],
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED",
+      "fontFamily": "Arial"
+    },
+    "applyModeEnabled": false
+  },
+  "typography": {
+    "headerFont": "Arial",
+    "bodyFont": "Lakeview default",
+    "pageTitle": { "sizePx": 32, "weight": 700, "color": "#3AA0D1" },
+    "sectionHeader": { "sizePx": 28, "weight": 700, "color": "#3AA0D1" },
+    "subsectionHeader": { "sizePx": 20, "weight": 600, "color": "#3AA0D1" },
+    "headerHtmlPattern": "<span style=\"text-align:center;display:block;\"><span style=\"font-size:NNpx;font-family:Arial;color:#3AA0D1\"><strong>TITLE</strong></span></span>"
+  },
+  "foundation": {
+    "primary": "#2A3342",
+    "secondary": "#465063"
+  },
+  "accent": {
+    "contrastBlue": "#2F7FA8",
+    "contrastTeal": "#2E9E93",
+    "highlightBlue": "#3AA0D1",
+    "highlightTeal": "#4FBBD6",
+    "mediumGrey": "#A8ADB5",
+    "warmSand": "#D89A72"
+  },
+  "semantic": {
+    "meet": "#2E7D32",
+    "watch": "#F2A900",
+    "miss": "#C62828",
+    "baseline": "#6C6F7A",
+    "invertedMetrics": ["[metrics where lower is better, e.g. Error Rate]"]
+  },
+  "categorical": ["#2F7FA8", "#2E9E93", "#465063", "#D89A72", "#6E7480", "#8A7016"],
+  "categoryColors": {
+    "[Category A]": "#2F7FA8",
+    "[Category B]": "#465063",
+    "[Category C]": "#2E9E93",
+    "[Category D]": "#8A7016",
+    "Other": "#A8ADB5",
+    "sortOrder": ["[Category A]", "[Category B]", "[Category C]", "[Category D]", "Other"]
+  },
+  "table": {
+    "headerBackground": "#2A3342",
+    "headerText": "#FFFFFF",
+    "headerCase": "Title Case",
+    "numberAlign": "right",
+    "textAlign": "left"
+  },
+  "numberFormatting": {
+    "chartPercentDecimals": 0,
+    "chartCountCompactAt": 1000,
+    "ratioDecimals": 2
+  },
+  "banned": ["#FF0000", "#00FF00", "3D", "gauge", "treemap", "radar"]
+}

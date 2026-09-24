@@ -1,8 +1,8 @@
 # Generating a Stakeholder Inputs Record
 
-Write `docs/helix/06-iterate/stakeholder-inputs.md` from `template.md` as the **final
-step of the cycle**, after the iteration log. `example.md` is the quality bar — match
-its level of specificity, not its length.
+Write `dashboards/<slug>/docs/helix/06-iterate/stakeholder-inputs.md` from
+`template.md` as the **final step of the cycle**, after the iteration log.
+`example.md` is the quality bar — match its level of specificity, not its length.
 
 ## Capture as you go, assemble at the end
 

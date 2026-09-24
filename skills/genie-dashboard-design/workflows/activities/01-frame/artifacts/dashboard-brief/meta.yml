@@ -15,7 +15,7 @@ description: |
   (mockup, tests, prompts) must trace back to a requirement stated here.
 
 output:
-  location: docs/helix/01-frame/dashboard-brief.md
+  location: dashboards/<slug>/docs/helix/01-frame/dashboard-brief.md
   format: markdown
   naming: dashboard-brief.md
 

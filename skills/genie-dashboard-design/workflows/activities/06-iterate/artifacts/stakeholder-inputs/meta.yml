@@ -16,7 +16,7 @@ description: |
   synthesis is written last, as the final step of the cycle.
 
 output:
-  location: docs/helix/06-iterate/stakeholder-inputs.md
+  location: dashboards/<slug>/docs/helix/06-iterate/stakeholder-inputs.md
   format: markdown
   naming: stakeholder-inputs.md
 

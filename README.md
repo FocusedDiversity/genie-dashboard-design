@@ -15,7 +15,7 @@ The Process begins by asking the user how they would like to start the process:
 4. A user has an existing Tableau Dashboard file (.twb / .twbx) they would like to convert to a databricks dashboard. This file is used to deduce many aspects of the dashboard design.
 
 Six activities, one spiral
-The workflow runs a dashboard through six HELIX activities: Frame, Design, Test, Build, Deploy, Iterate. Each one writes versioned artifacts to docs/helix/ in the calling repo and ends at a gate the stakeholder has to explicitly approve before the next activity starts. It is a Claude Code plugin, installed once and invoked in any repo with a one-line prompt describing the dashboard, and every artifact it produces is a plain file under version control.
+The workflow runs a dashboard through six HELIX activities: Frame, Design, Test, Build, Deploy, Iterate. Each one writes versioned artifacts to dashboards/<slug>/docs/helix/ in the calling repo and ends at a gate the stakeholder has to explicitly approve before the next activity starts. It is a Claude Code plugin, installed once and invoked in any repo with a one-line prompt describing the dashboard, and every artifact it produces is a plain file under version control.
 
 A single identifier runs through the whole spiral. The Frame stage assigns every widget a stable W-### id. The Design stage mockup tags each widget with that same id. Test writes a T-### check that verifies it. The Build stage writes the Genie prompt for it. The Deploy stage records that widget’s PASS or FAIL. Nothing enters the pipeline without a W-###, and nothing ships without a T-### that traces back to one, in either direction.
 
@@ -47,11 +47,12 @@ The workflow drives the Databricks CLI and runs real queries, so it expects:
 | **Databricks CLI with a configured profile** | Test, Deploy | `databricks auth login` — the workflow always asks which profile to use and never auto-selects one |
 | **A SQL warehouse** | Test, Deploy | Test executes baseline queries against it before any Genie prompt is written |
 | **Unity Catalog tables** to build against | Frame onward | Frame verifies every named table exists before writing the brief |
-| **Python 3** | Tableau conversion only | `list_workbook_structure.py` uses only the standard library |
+| **Python 3** | Tableau conversion, restyle cycles | `list_workbook_structure.py` and `list_dashboard_structure.py` use only the standard library |
 | **`tableauhyperapi`** | Tableau conversion only | `pip install tableauhyperapi` — needed solely to read a `.twbx`'s packaged `.hyper` extract |
 
-The first four are required for a full cycle. The last two matter only if you start from an
-existing Tableau workbook (Step Zero option 4).
+The first four are required for a full cycle. Python 3 matters only if you start from an existing
+Tableau workbook (Step Zero option 4) or an existing dashboard (option 5); `tableauhyperapi` only
+for the Tableau path.
 
 ## Recommending the plugin from a working repo
 
@@ -111,7 +112,7 @@ Code version and that agent mode is enabled.
 
 ## What the skill does
 
-The core skill runs a dashboard through the six **HELIX** activities, producing versioned artifacts in your working repo under `docs/helix/` and pausing at a stakeholder gate after each:
+The core skill runs a dashboard through the six **HELIX** activities, producing versioned artifacts in your working repo under `dashboards/<slug>/docs/helix/` and pausing at a stakeholder gate after each:
 
 | # | Activity | Artifacts | Gate question |
 |---|----------|-----------|---------------|
@@ -124,9 +125,28 @@ The core skill runs a dashboard through the six **HELIX** activities, producing 
 
 Test-before-Build is the core discipline: Genie writes SQL nondeterministically, so deterministic baseline queries — written and run first — are the contract its output must match.
 
+### Where artifacts land
+
+Every dashboard owns its own HELIX record, so one repo holds many side by side. `<slug>` is a short `snake_case` folder name the workflow proposes from the dashboard's title and confirms with you in Frame — it is usually shorter than the dashboard name ("Claims Overview (Revised)" → `claims_overview`).
+
+```
+dashboards/<slug>/
+  <Dashboard Name>.lvdash.json   the dashboard itself, when the repo holds it
+  datasets/                      dataset SQL and refresh scripts
+  docs/helix/
+    01-frame/    dashboard-brief.md, widget-inventory.md, sources/
+    02-design/   dashboard-mockup.html, design-decisions.md, <theme>.json
+    03-test/     widget-test-plan.md, plus the baseline .sql files it runs
+    04-build/    prompt-catalog.md
+    05-deploy/   deployment-guide.md
+    06-iterate/  iteration-log.md, stakeholder-inputs.md
+```
+
+`01-frame/sources/` keeps copies of whatever you supplied — PRDs, data dictionaries, decks, source SQL — so the brief can link to them and they outlive the conversation.
+
 ### Starting from existing docs (or not)
 
-Frame doesn't start with a blank page. Before the stakeholder interview, the workflow asks whether existing requirements or design material exists to start from — a data dictionary, PRD, mockups, wireframes, a style/brand doc, or an existing **Tableau workbook** (`.twb`/`.twbx`) — supplied as files, pasted text, or links. Whatever's supplied is logged in the brief's **Source Documents** table and reused as artifacts are produced, not just read once:
+Frame doesn't start with a blank page. Before the stakeholder interview, the workflow asks whether existing requirements or design material exists to start from — a data dictionary, PRD, mockups, wireframes, a style/brand doc, an existing **Tableau workbook** (`.twb`/`.twbx`), or an **existing production dashboard** to restyle — supplied as files, pasted text, or links. Whatever's supplied is logged in the brief's **Source Documents** table and reused as artifacts are produced, not just read once:
 
 - **Frame** extracts purpose, audience, and success criteria from a PRD/brief, and field names/definitions/grain from a data dictionary — still verified against the live tables, not taken on faith. A supplied Tableau workbook (`.twb` or `.twbx`) is unpacked and its XML mined the same way (see `skills/genie-dashboard-design/assets/tableau-intake.md`): worksheets and dashboard layout, fields with their aggregations already decided, data source connections, and calculated fields (flagged, not ported as SQL). If the `.twbx` packages its own `.hyper` extract, its real schema/grain is read directly via a bundled script rather than trusted from the XML alone.
 - **Design** reconciles a supplied style/brand doc or mockup against the theme catalog, recording a match, an override, or a gap rather than silently picking a catalog theme's color palette. A supplied mockup/wireframe (or a Tableau workbook's dashboard zones) seeds the HTML mockup's layout (tab structure, widget placement); chrome — colors, fonts, corner-radius — still comes from the selected catalog theme.
@@ -134,9 +154,17 @@ Frame doesn't start with a blank page. Before the stakeholder interview, the wor
 - **Build** reuses a data dictionary's (or a Tableau workbook's) field names and metric definitions verbatim in the Genie prompts instead of paraphrasing them.
 - Sources that conflict — with each other, with live data, or with the stakeholder's answers — are flagged `[NEEDS CLARIFICATION]` for the stakeholder rather than silently resolved.
 
-If nothing is supplied, "None provided" is recorded and every artifact is built from scratch: Frame runs the full stakeholder interview, and Design's theme (color palette, typography, layout) is chosen from the catalog — `wanderbricks`, `clinical-slate`, `executive-minimal` — on fit to the brief alone.
+If nothing is supplied, "None provided" is recorded and every artifact is built from scratch: Frame runs the full stakeholder interview, and Design's theme (color palette, typography, layout) is chosen from the catalog — `wanderbricks`, `clinical-slate`, `executive-minimal`, `house-style` — on fit to the brief alone.
 
 The `01-frame` and `02-design` `GATE.yaml` files enforce this: their entry/exit requirements block until the stakeholder has actually been asked, any supplied docs are retained in the stage's artifact directory, and — when source docs exist — until that reuse is demonstrated in the artifacts rather than assumed.
+
+### Restyling a dashboard that's already live
+
+Step Zero option 5 runs the full six-activity cycle against a dashboard already in production, where the only thing allowed to change is how it looks. The `.lvdash.json` is already in the repo, so the workflow lists the candidates and asks which one rather than asking for a path (see `skills/genie-dashboard-design/assets/lakeview-intake.md`), then mines it: pages, widgets, titles, datasets, metric definitions, layout, and the current theme.
+
+What makes it a *restyle* rather than a rebuild is the fence, and `restyle-cycle.md` is its authority. In scope: theme, palette, typography, widget chrome, and any styling hard-coded inside widgets that fights the new theme. Out of scope: metrics, SQL, datasets, the widget set, titles, layout, and filters. Requests that cross the fence — and they come up, because looking closely at a dashboard surfaces everything else wrong with it — go to the parking lot for a later cycle.
+
+All six activities still run. Frame's inventory becomes an as-built census binding each `W-###` to the real widget id in the file; Design's theme choice becomes the deliverable, with a before/after palette table; Test carries two families of checks — **invariance** baselines run before the theme changes and re-run after, which must match *exactly*, plus **conformance** checks on colors, contrast, and banned styles; Build documents the existing prompts unchanged and records the target theme block; Deploy applies it to a side-by-side copy with a recorded rollback, and a single invariance failure blocks the gate.
 
 ## Repository layout
 
@@ -152,12 +180,15 @@ skills/
     ├── assets/design-template.md         Legacy ASCII wireframe template (superseded by the HTML mockup artifact)
     ├── assets/prompt-style-guide.md      Style authority for Build's Genie prompts
     ├── assets/tableau-intake.md          Mining guide for a supplied Tableau workbook (.twb/.twbx)
+    ├── assets/lakeview-intake.md         Mining guide for an existing dashboard (.lvdash.json)
+    ├── assets/restyle-cycle.md           Scope authority for a restyle-only cycle (Step Zero option 5)
+    ├── assets/list_dashboard_structure.py Discovers .lvdash.json files; summarizes pages, widgets, datasets, theme
     ├── assets/list_workbook_structure.py Parses a .twb/.twbx's dashboards, worksheets, and calculated fields
     ├── assets/read_hyper_schema.py       Reads a packaged .hyper extract's real schema/grain (needs tableauhyperapi)
     ├── references/genie-dashboard-prompts.md   Complete worked example (Tuva synthetic data)
     └── workflows/
         ├── resources/           Shared resources
-        │   └── themes/          Theme catalog (wanderbricks, clinical-slate, executive-minimal):
+        │   └── themes/          Theme catalog (wanderbricks, clinical-slate, executive-minimal, house-style):
         │                        <id>.json (palette authority) + seed.<id>.lvdash.json (themed starter)
         └── activities/          HELIX artifact pack (format-compatible with the HELIX repo)
             ├── 01-frame/        GATE.yaml + dashboard-brief, widget-inventory
@@ -173,7 +204,7 @@ Everything the skill needs lives under `skills/genie-dashboard-design/`, and eve
 same directory be copied into another repo and work unchanged — see [Using this with GitHub
 Copilot](#using-this-with-github-copilot).
 
-Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example-appointment-analytics.html` — open it in a browser. Design starts by picking one of three themes (see `workflows/resources/themes/README.md`); the mockup and the deployed dashboard are both built from that choice.
+Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example-appointment-analytics.html` — open it in a browser. Design starts by picking one of four themes (see `workflows/resources/themes/README.md`); the mockup and the deployed dashboard are both built from that choice.
 
 New skills go in `skills/<skill-name>/SKILL.md` and become available to all installers as `/genie-dashboard-design:<skill-name>` on their next plugin update.
 
