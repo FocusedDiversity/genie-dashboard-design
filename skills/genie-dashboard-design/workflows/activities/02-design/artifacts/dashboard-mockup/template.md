@@ -2,11 +2,11 @@
 
 The mockup is a single `.html` file that imitates a published Databricks AI/BI
 dashboard closely enough that stakeholders review the real experience, not a
-sketch. See `example-appointment-analytics.html` for the canonical
-layout/interactivity standard and `example.html` for a minimal fully-offline
-starter themed with the `wanderbricks` theme. A theme must be selected first —
-see `workflows/resources/themes/README.md` and the design-decisions "Theme
-Selection" section — before either example's colors are copied in.
+sketch. See `example.html` for the canonical layout/interactivity standard — a
+two-page members & claims dashboard with page nav, a filter bar, and W-###
+traceability tags. A theme must be selected first — see
+`workflows/resources/themes/README.md` and the design-decisions "Theme
+Selection" section — before the example's colors are copied in.
 
 ## Required structure
 

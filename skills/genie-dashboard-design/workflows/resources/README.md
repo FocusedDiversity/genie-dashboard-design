@@ -53,8 +53,6 @@ mode reachable via `prefers-color-scheme`.
    Design decision — the theme governs chrome, typography, and the default
    series palette, not conditional formatting.
 
-Note: `dashboard-mockup/example-appointment-analytics.html` predates the
-theme catalog and keeps its original bespoke palette (it remains the
-layout/interactivity reference); `dashboard-mockup/example.html` demonstrates
-the `wanderbricks` theme concretely. Neither example is itself a palette
-authority — the files in `themes/` are.
+Note: `dashboard-mockup/example.html` predates the theme catalog and keeps its
+own bespoke palette while remaining the layout/interactivity reference. It is
+not itself a palette authority — the files in `themes/` are.

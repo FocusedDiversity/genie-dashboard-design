@@ -67,10 +67,8 @@ template:
   file: template.md
 
 examples:
-  - file: example-appointment-analytics.html
-    description: Canonical standard — two-tab appointment analytics mockup with Databricks chrome, Chart.js charts, live scenario-driven filters, cascading chase-list filters, and W-### traceability tags
   - file: example.html
-    description: Minimal fully-offline starter — inline SVG placeholders only, no CDN dependency
+    description: Canonical standard — two-page members & claims mockup with Databricks chrome, W-### traceability tags, page nav and filter bar, fully offline (inline SVG, no CDN dependency)
 
 workflow:
   creation_order: 1

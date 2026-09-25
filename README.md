@@ -230,7 +230,7 @@ Everything the skill needs lives under `skills/genie-dashboard-design/`, and eve
 same directory be copied into another repo and work unchanged — see [Using this with GitHub
 Copilot](#using-this-with-github-copilot).
 
-Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example-appointment-analytics.html` — open it in a browser. Design starts by picking one of four themes (see `workflows/resources/themes/README.md`); the mockup and the deployed dashboard are both built from that choice.
+Each artifact folder follows the HELIX four-file convention: `template.md` (structure), `prompt.md` (generation rules), `example.md` (quality bar), `meta.yml` (identity, output location, validation). The canonical mockup example is `workflows/activities/02-design/artifacts/dashboard-mockup/example.html` — open it in a browser. Design starts by picking one of four themes (see `workflows/resources/themes/README.md`); the mockup and the deployed dashboard are both built from that choice.
 
 New skills go in `skills/<skill-name>/SKILL.md` and become available to all installers as `/genie-dashboard-design:<skill-name>` on their next plugin update.
 

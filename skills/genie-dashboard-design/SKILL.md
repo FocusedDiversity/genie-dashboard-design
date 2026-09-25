@@ -176,8 +176,8 @@ Activity-specific notes:
   section. Then the mockup: a browser-viewable HTML file imitating a
   published Databricks dashboard, styled from the selected theme's exact
   colors/font/corner-radius (not assumed dark, not assumed Wanderbricks) —
-  Chart.js charts, live scenario-driven filters. Match
-  `example-appointment-analytics.html` for layout and interactivity. Write
+  Chart.js charts, live scenario-driven filters. Match `example.html` for
+  layout and interactivity. Write
   `design-decisions.md` as you go, not after. Aggregation rules stated there
   must be SQL-translatable verbatim. Verify with the user data grains for data
   sets, and ensure that the mockup reflects the correct grain and

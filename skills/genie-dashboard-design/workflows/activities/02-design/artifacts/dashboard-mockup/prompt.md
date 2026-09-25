@@ -2,7 +2,7 @@
 
 Produce `dashboards/<slug>/docs/helix/02-design/dashboard-mockup.html` from the
 approved widget-inventory, following `template.md`. Match the look and feel of
-`example-appointment-analytics.html` — stakeholders should feel they are
+`example.html` — stakeholders should feel they are
 looking at a published Databricks dashboard.
 
 **Prerequisite**: a theme must already be selected and recorded in
