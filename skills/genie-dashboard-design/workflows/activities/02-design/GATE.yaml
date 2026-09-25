@@ -31,9 +31,9 @@ exit_requirements:
       description: "No external stylesheets or fonts; Chart.js CDN script is the only permitted external reference"
 
     - check: grep_present
-      pattern: "wanderbricks|clinical-slate|executive-minimal|house-style"
+      pattern: "\\*\\*Theme\\*\\*: `[a-z0-9-]+`"
       path: dashboards/<slug>/docs/helix/02-design/design-decisions.md
-      description: "A catalog theme id is recorded under Theme Selection"
+      description: "A theme id is recorded under Theme Selection, in backticks, and names a real file in workflows/resources/themes/ (any id, including a private org theme — the unfilled [theme-id] placeholder does not match)"
 
   manual:
     - "If User provided documents in Frame Stage, they should be used to inform All aspects of design. if there is uncertainty, the design is based on the widget inventory and stakeholder clarification from questiions to the user"

@@ -5,7 +5,8 @@
 
 ## Theme Selection
 
-- **Theme**: [theme id from `workflows/resources/themes/`, e.g. `wanderbricks`]
+- **Theme**: `[theme-id]` — the id of a file in `workflows/resources/themes/`,
+  e.g. `wanderbricks`. Keep the backticks; the gate looks for them.
 - **Why**: [audience/persona fit — cite the catalog's persona-fit reasoning,
   not just "stakeholder liked it"]
 - **Mode**: [light | dark | both — which is the primary review surface]
