@@ -1,8 +1,8 @@
 # Generating Design Decisions
 
-Write `docs/helix/02-design/design-decisions.md` from `template.md` while (not
-after) building the mockup — every judgment call made in the mockup gets its
-line here the moment it is made.
+Write `dashboards/<slug>/docs/helix/02-design/design-decisions.md` from
+`template.md` while (not after) building the mockup — every judgment call made
+in the mockup gets its line here the moment it is made.
 
 ## Step Zero: Theme Selection
 
@@ -25,6 +25,17 @@ colors/fonts/corner-radius, or does the pick need per-widget overrides to get
 closer? Note the source doc, the reconciliation, and any gaps that remain
 unmatched in the Theme Selection section — don't silently pick a catalog
 theme that ignores supplied styling.
+
+If the brief's Source Documents table lists a Lakeview dashboard export, this
+is a restyle and the theme choice is the whole deliverable — see
+`assets/restyle-cycle.md`. Fill the Before / After Theme section from the
+current `uiSettings.theme` recorded in the brief's Restyle Scope, value by
+value, so the stakeholder approves a diff rather than a description. Every
+piece of hard-coded styling the intake flagged (inline `color:` or
+`font-family:` in a text widget, a per-widget chart color override) gets its
+own decision here: reconciled to the new theme, or waived with a reason.
+Layout, chart types, and aggregation rules are inherited from the live
+dashboard — record them as inherited rather than re-arguing them.
 
 ## Rules
 

@@ -15,7 +15,7 @@ description: |
   verification evidence does not pass the Deploy gate.
 
 output:
-  location: docs/helix/05-deploy/deployment-guide.md
+  location: dashboards/<slug>/docs/helix/05-deploy/deployment-guide.md
   format: markdown
   naming: deployment-guide.md
 

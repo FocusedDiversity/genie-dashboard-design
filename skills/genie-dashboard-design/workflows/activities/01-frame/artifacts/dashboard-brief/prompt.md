@@ -1,7 +1,7 @@
 # Generating a Dashboard Brief
 
-Interview the stakeholder, then write `docs/helix/01-frame/dashboard-brief.md`
-from `template.md`.
+Interview the stakeholder, then write
+`dashboards/<slug>/docs/helix/01-frame/dashboard-brief.md` from `template.md`.
 
 ## Step Zero: Existing Requirements Intake
 
@@ -18,6 +18,12 @@ version of this question again here. Act on that choice:
 - **Existing Tableau workbook** → ask for the `.twb`/`.twbx` path and follow
   `assets/tableau-intake.md` instead of a
   generic document read.
+- **Existing production dashboard — restyle only** → follow
+  `assets/lakeview-intake.md`: list the repo's `.lvdash.json` files, ask which
+  one, confirm the `<slug>` folder, and mine the dashboard itself as the source
+  document. The brief records the as-is dashboard and the restyle's scope — it
+  is not a fresh requirements interview. `assets/restyle-cycle.md` governs what
+  may change.
 
 There is no upload widget in this environment, so be explicit about how to
 hand docs over, and accept any number of them (whatever the chosen option
@@ -33,6 +39,9 @@ implies) — don't assume a single file:
   `.hyper` extract, query it directly (via the bundled `read_hyper_schema.py`)
   for its real columns, types, and row count.
 - **Pasted text/markdown** → treat the pasted content itself as the doc.
+- **An existing Databricks dashboard (.lvdash.json)** → follow
+  `assets/lakeview-intake.md`: the file is already in the repo, so discover the
+  candidates and ask which one rather than asking for a path.
 - **Links** → fetch with WebFetch, or with the matching connector if one is
   authorized for this session (Google Drive, Notion, etc.); if a link can't be
   fetched, ask the stakeholder to paste the content or export it to a file

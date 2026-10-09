@@ -4,7 +4,7 @@ number: "03"
 entry_requirements:
   automated:
     - check: file_exists
-      path: docs/helix/02-design/design-decisions.md
+      path: dashboards/<slug>/docs/helix/02-design/design-decisions.md
       description: "Design decisions exist to derive verification from"
   manual:
     - "Design exit gate passed; mockup approved"
@@ -12,22 +12,22 @@ entry_requirements:
 exit_requirements:
   automated:
     - check: file_exists
-      path: docs/helix/03-test/widget-test-plan.md
+      path: dashboards/<slug>/docs/helix/03-test/widget-test-plan.md
       description: "Widget test plan must exist"
 
     - check: grep_present
       pattern: "T-[0-9]+"
-      path: docs/helix/03-test/widget-test-plan.md
+      path: dashboards/<slug>/docs/helix/03-test/widget-test-plan.md
       description: "Every check has a stable T-### identifier"
 
     - check: grep_present
       pattern: "W-[0-9]+"
-      path: docs/helix/03-test/widget-test-plan.md
+      path: dashboards/<slug>/docs/helix/03-test/widget-test-plan.md
       description: "Checks trace to widget inventory ids"
 
     - check: grep_present
       pattern: "```sql"
-      path: docs/helix/03-test/widget-test-plan.md
+      path: dashboards/<slug>/docs/helix/03-test/widget-test-plan.md
       description: "Baseline queries are concrete runnable SQL, not prose"
 
   manual:
@@ -37,5 +37,6 @@ exit_requirements:
     - "Dashboard-level checks defined: filter cascade, counter/table agreement, empty-data behavior"
     - "Out-of-scope checks named with a reason, not silently omitted"
     - "Every Tableau calculated field flagged in Frame (LOD expression or table calculation) has a baseline query built from a verified understanding of its meaning, not a translation of the Tableau formula text; any custom-SQL Tableau data source was run and its result recorded, not accepted on Tableau's authority"
+    - "If Frame's Source Documents table lists a Lakeview dashboard export, invariance baselines were executed against the dashboard BEFORE the theme changed and their results recorded as the exact-match contract, and T-8xx theme conformance checks exist covering resolved colors, series palette, contrast, banned styles, and every hard-coded style listed in design-decisions"
 
 next_activity: build

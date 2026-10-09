@@ -37,6 +37,26 @@ SELECT ...
 ### T-903 — Empty-slice behavior
 [A filter combination with no data yields empty states, not errors]
 
+## Theme Conformance Checks
+
+[Restyle cycles only (Step Zero option 5) — delete this section otherwise.]
+
+### T-801 — Theme colors applied
+[Every widget's resolved canvas/background/font/accent equals the selected
+theme's hex values in `workflows/resources/themes/<id>.json`]
+
+### T-802 — Series palette matches
+[Chart series colors equal `visualizationColors`, in order]
+
+### T-803 — Contrast passes
+[Text-on-background contrast checked in the theme's primary mode]
+
+### T-804 — No banned styles
+[No hex or chart type from the theme's `banned` list appears]
+
+### T-805 — Hard-coded styling reconciled
+[Every entry in design-decisions' reconciliation table resolved as stated]
+
 ## Out of Scope
 
 - [Named exclusions with reasons — e.g., "pixel layout: covered by mockup approval"]

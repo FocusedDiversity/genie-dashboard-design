@@ -1,8 +1,8 @@
 # Generating a Widget Test Plan
 
-Write `docs/helix/03-test/widget-test-plan.md` from `template.md`, derived from
-the approved inventory and design-decisions. This happens BEFORE any Genie
-prompt is written — the Build entry gate depends on it.
+Write `dashboards/<slug>/docs/helix/03-test/widget-test-plan.md` from
+`template.md`, derived from the approved inventory and design-decisions. This
+happens BEFORE any Genie prompt is written — the Build entry gate depends on it.
 
 ## Process
 
@@ -40,3 +40,31 @@ prompt is written — the Build entry gate depends on it.
   design authority.
 - These baselines double as the Deploy verification script and the Iterate
   drift monitor — write them to be re-run, not run once.
+
+## Restyle cycles
+
+If the brief's Source Documents table lists a Lakeview dashboard export, this
+plan carries two families of checks and both are required — see
+`assets/restyle-cycle.md`.
+
+**Invariance (`T-1xx`…, the normal per-widget numbering)**: the baselines are
+run against the dashboard *as it is today*, before the theme changes, and the
+recorded results become the contract. Deploy re-runs the identical queries
+after the restyle and they must match exactly — no tolerance, because nothing
+about a color change can legitimately move a number. State the rule as "exact
+match vs. pre-restyle baseline" rather than a business tolerance.
+
+**Conformance (`T-8xx`)**: these check appearance, so they are inspection
+steps rather than SQL. Write one per property worth failing over:
+
+- every widget's resolved canvas/background/font/accent color equals the
+  selected theme's hex value in `workflows/resources/themes/<id>.json`
+- the chart series palette matches `visualizationColors` in order
+- text contrast passes in the theme's primary mode
+- no hex or chart type on the theme's `banned` list appears anywhere (themes
+  that declare one — see `house-style.json` — make this mechanical)
+- every hard-coded style flagged in design-decisions' reconciliation table is
+  resolved the way that table says it is
+
+Baselines for a restyle live beside the plan as `.sql` files when they're long
+enough to hurt readability; reference them by filename from the check.

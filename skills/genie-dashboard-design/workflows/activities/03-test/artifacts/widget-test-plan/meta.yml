@@ -16,7 +16,7 @@ description: |
   check against the live dashboard and records PASS/FAIL.
 
 output:
-  location: docs/helix/03-test/widget-test-plan.md
+  location: dashboards/<slug>/docs/helix/03-test/widget-test-plan.md
   format: markdown
   naming: widget-test-plan.md
 

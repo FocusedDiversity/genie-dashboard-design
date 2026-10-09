@@ -5,13 +5,37 @@
 
 ## Theme Selection
 
-- **Theme**: [theme id from `workflows/resources/themes/`, e.g. `wanderbricks`]
+- **Theme**: `[theme-id]` — the id of a file in `workflows/resources/themes/`,
+  e.g. `wanderbricks`. Keep the backticks; the gate looks for them.
 - **Why**: [audience/persona fit — cite the catalog's persona-fit reasoning,
   not just "stakeholder liked it"]
 - **Mode**: [light | dark | both — which is the primary review surface]
 - **Per-widget overrides**: [any widget with its own background/border, and
   why — e.g., "W-201 gets its own emphasis background per the theme's
   set-border-to-match-background rule"; or "none"]
+
+## Before / After Theme
+
+[Restyle cycles only (Step Zero option 5) — delete this section otherwise.]
+
+| Property | Before | After |
+|---|---|---|
+| canvasBackgroundColor | [hex, or "Lakeview default"] | [hex] |
+| widgetBackgroundColor | [hex] | [hex] |
+| widgetBorderColor | [hex] | [hex] |
+| fontColor | [hex] | [hex] |
+| selectionColor | [hex] | [hex] |
+| fontFamily | [name] | [name] |
+| visualizationColors | [hex list] | [hex list] |
+
+**Hard-coded styling reconciled**
+
+| Widget | What it hard-codes | Decision |
+|---|---|---|
+| W-### | [e.g., inline `color:#0B7FC4` in a text header] | [rewritten to the new accent / waived because …] |
+
+**Contrast & color-blindness**: [what was checked, in which mode, with what
+result — see `workflows/resources/themes/README.md`]
 
 ## Layout Choices
 

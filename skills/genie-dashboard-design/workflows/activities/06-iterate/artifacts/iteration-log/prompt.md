@@ -1,7 +1,7 @@
 # Maintaining an Iteration Log
 
-Create `docs/helix/06-iterate/iteration-log.md` from `template.md` at release;
-append to it for the life of the dashboard.
+Create `dashboards/<slug>/docs/helix/06-iterate/iteration-log.md` from
+`template.md` at release; append to it for the life of the dashboard.
 
 ## Rules
 

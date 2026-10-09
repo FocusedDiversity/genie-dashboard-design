@@ -1,8 +1,8 @@
 # Theme Catalog
 
-Three org-approved dashboard themes. Design activity picks one per dashboard
+Four org-approved dashboard themes. Design activity picks one per dashboard
 (see "Selecting a theme" below); Deploy imports the matching seed. Adding a
-theme is the same shape as these three — see "Adding a theme."
+theme is the same shape as these four — see "Adding a theme."
 
 Framework grounding:
 [Databricks — Design beautiful dashboards with AI/BI](https://www.databricks.com/blog/design-beautiful-dashboards-aibi).
@@ -19,6 +19,16 @@ entries, and keep red and green apart for red/green color-blindness.
 | `wanderbricks` | Wanderbricks | dark | Space Grotesk | Analysts, engineers, internal tools | Extracted from a Databricks AI/BI example dashboard |
 | `clinical-slate` | Clinical Slate | light | Arial | Healthcare, clinical, conservative executive | Extracted from an org export (Synaptiq Healthcare Analytics) |
 | `executive-minimal` | Executive Minimal | light | Arial | C-suite, board reporting, external-facing | Constructed from the Databricks 60-30-10 framework |
+| `house-style` | House Style | light | Arial | A template to fork for your organization's own brand theme | Constructed from the Databricks 60-30-10 framework as a starting point for org-specific themes |
+
+> `house-style` is a full catalog theme (`house-style.json` +
+> `seed.house-style.lvdash.json`) and deliberately neutral — it exists to be
+> copied. Beyond the standard `uiSettings` it carries the extra keys an org
+> brand guide usually needs (semantic status colors, category colors, table
+> styling, and a `banned` list of colors and chart types), with placeholder
+> values to replace. Fork it to `<your-org>.json`, keep that file out of a
+> shared repo if the palette is confidential, and record the id in
+> design-decisions like any other theme.
 
 ## Swatches
 
@@ -27,6 +37,7 @@ entries, and keep red and green apart for red/green color-blindness.
 | wanderbricks (dark) | `#1E343F` | `#08141A` | `#EBEBEB` | `#D3456B` | `#15AFDD` `#2375A8` `#52A870` `#C85070` `#C89930` |
 | clinical-slate (light) | `#EEF3F8` | `#FFFFFF` | `#2D3748` | `#C8956A` | `#8BA4BD` `#C8956A` `#6B8EAD` `#B8845A` `#2D3748` `#A3C4E0` `#E0B08A` `#4A6B8A` |
 | executive-minimal (light) | `#F4F5F7` | `#FFFFFF` | `#1B2430` | `#B8874B` | `#2C5C8A` `#6B7A90` `#8FAFC9` `#B8874B` `#4F6D5A` |
+| house-style (light) | `#F5F7FA` | `#FFFFFF` | `#2A3342` | `#3AA0D1` | `#2F7FA8` `#2E9E93` `#465063` `#D89A72` `#6E7480` `#8A7016` |
 
 ## Selecting a theme (Design activity)
 
@@ -47,6 +58,21 @@ A stakeholder may also request per-widget overrides (e.g., a highlighted KPI
 card with its own background) — the blog's guidance: set that widget's border
 color to match its own background to reduce clutter. Record overrides in
 design-decisions, not just in the mockup.
+
+## Restyling an existing dashboard
+
+When the cycle is a restyle (Step Zero option 5), this catalog is the whole
+point of the exercise. The dashboard's current `uiSettings.theme` is mined in
+Frame and recorded as the "before" state; the theme picked here is the
+"after". design-decisions carries the two side by side as a property-by-
+property diff, so the stakeholder approves a change rather than a description.
+
+Two things to check that a fresh build doesn't have to: styling hard-coded
+inside widgets (inline `color:` / `font-family:` in text headers, per-widget
+chart color overrides) does **not** move when the theme changes, so each one
+needs its own recorded decision; and a theme that declares a `banned` list —
+`house-style` does — makes the Test activity's conformance checks mechanical.
+See `assets/restyle-cycle.md`.
 
 ## Adding a theme
 

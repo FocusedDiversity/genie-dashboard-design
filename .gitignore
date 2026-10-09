@@ -25,3 +25,16 @@ node_modules/
 
 # Claude Code local state
 .claude/settings.local.json
+
+# Client-specific themes — fork house-style.json locally; never commit a real
+# brand palette to this repo. Keep the generic catalog themes tracked.
+skills/genie-dashboard-design/workflows/resources/themes/*.json
+!skills/genie-dashboard-design/workflows/resources/themes/wanderbricks.json
+!skills/genie-dashboard-design/workflows/resources/themes/clinical-slate.json
+!skills/genie-dashboard-design/workflows/resources/themes/executive-minimal.json
+!skills/genie-dashboard-design/workflows/resources/themes/house-style.json
+!skills/genie-dashboard-design/workflows/resources/themes/seed.wanderbricks.lvdash.json
+!skills/genie-dashboard-design/workflows/resources/themes/seed.clinical-slate.lvdash.json
+!skills/genie-dashboard-design/workflows/resources/themes/seed.executive-minimal.lvdash.json
+!skills/genie-dashboard-design/workflows/resources/themes/seed.house-style.lvdash.json
+
