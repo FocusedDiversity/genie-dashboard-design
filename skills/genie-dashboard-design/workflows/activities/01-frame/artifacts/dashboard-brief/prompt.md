@@ -24,6 +24,12 @@ version of this question again here. Act on that choice:
   document. The brief records the as-is dashboard and the restyle's scope — it
   is not a fresh requirements interview. `assets/restyle-cycle.md` governs what
   may change.
+- **New iteration on an existing HELIX dashboard** → follow
+  `assets/iteration-cycle.md`. The existing brief is the baseline: append a
+  "Cycle N Scope" section (request quoted, each change mapped to W-### ids,
+  out-of-scope list), add new source documents as **CN** rows, and inherit
+  personas, cadence, actions, theme, and standing preferences without asking
+  again. Record the inherited items as not asked.
 
 There is no upload widget in this environment, so be explicit about how to
 hand docs over, and accept any number of them (whatever the chosen option

@@ -72,6 +72,15 @@ sees, even in response to a one-line invocation like
 5. **Existing production dashboard — restyle only** — a Databricks dashboard
    already live, to be re-themed (colors, typography, chrome) without changing
    its metrics, queries, widgets, or layout.
+6. **New iteration on an existing HELIX dashboard** — the dashboard already
+   has a `dashboards/<slug>/docs/helix/` record from an earlier cycle; this
+   cycle adds, fixes, or changes widgets, pages, or definitions on it.
+
+Before asking, look for existing `dashboards/*/docs/helix/` folders. If the
+dashboard named in the invocation (or the only one in the repo) already has
+one, list option 6 first and mark it recommended. Stakeholders on a second or
+later cycle tend to answer this question in their own words ("just a new
+iteration on the existing dashboard") when option 6 is missing.
 
 The answer decides what Frame's Step Zero (dashboard-brief's "Step Zero:
 Existing Requirements Intake") does — it acts on the choice made here rather
@@ -90,6 +99,12 @@ than asking the open-ended version of this question again:
   `.lvdash.json` files, ask which one, and mine it into the brief and
   inventory. Then follow `assets/restyle-cycle.md`, which is the scope
   authority for all six activities in a restyle.
+- **6** → follow `assets/iteration-cycle.md`. Read the existing HELIX record
+  first: the iteration log's parking lot and Next Cycle note, and the last
+  stakeholder-inputs "prepare before the next cycle" section and standing
+  preferences. Then ask only about the new request. Every artifact gains a
+  "Cycle N" section; nothing from earlier cycles is rewritten. If part of the
+  request is a restyle, `assets/restyle-cycle.md` still governs that part.
 
 A stakeholder whose materials don't fit their stated choice (they picked
 "blank slate" but then mention a PRD) is not a problem — ingest what's
@@ -124,6 +139,12 @@ instead of invented, Design's theme choice becomes the deliverable, Test proves
 the numbers did not move, and Build documents the existing prompts unchanged.
 `assets/restyle-cycle.md` is the scope authority; every activity note below
 defers to it when the cycle is a restyle.
+
+**Iteration cycles run all six activities too.** Starting point 6 begins from
+the existing HELIX record rather than from scratch. Each artifact gains a
+"Cycle N" section, earlier cycles are never rewritten, and Test adds a
+regression diff against the previous release so that untouched widgets
+provably did not move. `assets/iteration-cycle.md` is the authority.
 
 ---
 

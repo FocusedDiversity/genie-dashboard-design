@@ -192,6 +192,25 @@ What makes it a *restyle* rather than a rebuild is the fence, and `restyle-cycle
 
 All six activities still run. Frame's inventory becomes an as-built census binding each `W-###` to the real widget id in the file; Design's theme choice becomes the deliverable, with a before/after palette table; Test carries two families of checks — **invariance** baselines run before the theme changes and re-run after, which must match *exactly*, plus **conformance** checks on colors, contrast, and banned styles; Build documents the existing prompts unchanged and records the target theme block; Deploy applies it to a side-by-side copy with a recorded rollback, and a single invariance failure blocks the gate.
 
+### Iterating on a dashboard that already has a HELIX record
+
+Step Zero option 6 is for the second and later cycles on the same dashboard. That is, `dashboards/<slug>/docs/helix/` already exists and the request adds, fixes, or changes widgets, pages, or definitions. When such a record exists, the workflow lists option 6 first and recommends it. `skills/genie-dashboard-design/assets/iteration-cycle.md` is its authority.
+
+**Start from the record.**
+- Before asking anything, the cycle reads the record: the iteration log's parking lot and Next Cycle note, the last stakeholder-inputs record's standing preferences and "prepare before the next cycle" notes, and the current release file.
+- Personas, theme, and earlier decisions are inherited and recorded as not asked.
+
+**Append, don't rewrite.**
+- Every artifact gains a "Cycle N" section; earlier cycles stay as written.
+- Widget ids are permanent.
+- Questions are numbered per cycle (CN Q1, Q2, …).
+
+**Test proves both sides.**
+- **Change checks**: baselines for the new or changed widgets, run before Build.
+- **Regression checks**: a structural diff of the build against the previous release, so that every untouched page, widget, and dataset provably did not move.
+
+**Deploy may surface a new request.** Live feedback becomes a Deploy fix round. A genuinely new request arriving at Deploy is put to the stakeholder: fold it into this cycle, or close and run it as the next one.
+
 ## Repository layout
 
 ```
@@ -208,6 +227,7 @@ skills/
     ├── assets/tableau-intake.md          Mining guide for a supplied Tableau workbook (.twb/.twbx)
     ├── assets/lakeview-intake.md         Mining guide for an existing dashboard (.lvdash.json)
     ├── assets/restyle-cycle.md           Scope authority for a restyle-only cycle (Step Zero option 5)
+    ├── assets/iteration-cycle.md         Rules for a new cycle on a dashboard with an existing HELIX record (Step Zero option 6)
     ├── assets/list_dashboard_structure.py Discovers .lvdash.json files; summarizes pages, widgets, datasets, theme
     ├── assets/list_workbook_structure.py Parses a .twb/.twbx's dashboards, worksheets, and calculated fields
     ├── assets/read_hyper_schema.py       Reads a packaged .hyper extract's real schema/grain (needs tableauhyperapi)
