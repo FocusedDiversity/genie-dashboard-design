@@ -121,8 +121,8 @@ gate what's allowed.
 | 02 | **Design** | `02-design/dashboard-mockup.html`, `02-design/design-decisions.md` | Is this what it should look like? |
 | 03 | **Test** | `03-test/widget-test-plan.md` (baselines **executed**) | Do we know what correct means? |
 | 04 | **Build** | `04-build/prompt-catalog.md` | Are the prompts written to spec? |
-| 05 | **Deploy** | `05-deploy/deployment-guide.md` (verification **recorded**) | Does the live dashboard pass its checks? |
-| 06 | **Iterate** | `06-iterate/iteration-log.md`, `06-iterate/stakeholder-inputs.md` | What did we learn; spiral again or close? |
+| 05 | **Deploy** | `05-deploy/deployment-guide.md` (verification **recorded**), then **Publish to Wiki** when configured | Does the live dashboard pass its checks? |
+| 06 | **Iterate** | `06-iterate/iteration-log.md`, `06-iterate/stakeholder-inputs.md`, then **Publish to Wiki** when configured | What did we learn; spiral again or close? |
 
 **Traceability spine**: every widget gets a `W-###` id in Frame. The mockup
 tags it (`data-widget-id`), Test verifies it (`T-###`), Build prompts it,
@@ -225,6 +225,20 @@ Activity-specific notes:
   profile or decide up front so the next cycle doesn't have to ask again.
   Overridden recommendations and their reasoning matter most here; they are
   how a standing preference gets discovered.
+
+**Publish to Wiki: the closing step of Deploy and of Iterate.** For every
+dashboard with a `docs/helix/wiki-publish.json`, the last thing Deploy does
+(after verification is recorded) and the last thing Iterate does (after the
+close is recorded) is: commit and push the HELIX record, then run
+`assets/publish_wiki.py --slug <slug>` (dry run first), and report the wiki
+commit and page link to the stakeholder. It copies only the documentation
+artifacts (one wiki subpage each, plus a generated overview on the parent
+page) through the wiki's git repo. Dashboard JSON, SQL, and source files are
+never copied. The repo stays the source of truth; wiki edits are overwritten
+on the next sync. Setup, rules, and troubleshooting: `assets/wiki-publish.md`.
+A dashboard without the config skips the step. When a team keeps an Azure
+DevOps wiki and the dashboard has no config yet, offer the one-time `--init`
+at the first Deploy gate.
 
 The optional HELIX **Discover** activity (validating whether the dashboard is
 worth building) precedes Frame when the opportunity itself is in question; use

@@ -33,5 +33,6 @@ exit_requirements:
     - "Every overridden recommendation records the stakeholder's reasoning; gate approvals are quoted verbatim"
     - "Next-cycle preparation section names the specific profiling queries and up-front decisions that would have prevented this cycle's round-tripping"
     - "Next cycle scoped or explicitly closed (Gate: 'Spiral again' or 'Done')"
+    - "Publish to Wiki (assets/wiki-publish.md): if dashboards/<slug>/docs/helix/wiki-publish.json exists, after the close was committed and pushed, assets/publish_wiki.py --slug <slug> ran and its result and the page link were reported to the stakeholder; the wiki commit is not written back into the record"
 
 next_activity: frame

@@ -33,5 +33,6 @@ exit_requirements:
     - "Failures triaged: re-prompted, moved to fallback views, or accepted with a recorded waiver"
     - "Permissions and sharing configured; refresh schedule set if required"
     - "Stakeholder confirmed the deployed dashboard matches the approved mockup"
+    - "Publish to Wiki (assets/wiki-publish.md): if dashboards/<slug>/docs/helix/wiki-publish.json exists, the HELIX record was committed and pushed after verification was recorded, then assets/publish_wiki.py --slug <slug> ran (dry run first), and its result (wiki commit or 'already up to date') and the page link were reported to the stakeholder"
 
 next_activity: iterate

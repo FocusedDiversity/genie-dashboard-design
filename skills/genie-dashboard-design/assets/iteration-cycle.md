@@ -77,11 +77,14 @@ Write the regression rule before Build; run it after.
 - The stakeholder usually imports. Compare against the previous release still live in the workspace.
 - Live feedback becomes "Deploy fix round K" sections, not a new cycle, unless the stakeholder chooses otherwise.
 - A **new** request arriving at Deploy is a sequencing question: fold it into this cycle, or close this one and run it as N+1. Ask; don't assume.
+- **Deploy in place when asked**: if the stakeholder asks the agent to overwrite the existing workspace dashboard (to keep its links and permissions), first back up the live draft (`lakeview get`) and diff it against the previous release. Live-only edits are a question, not something to overwrite silently. Then `lakeview update` with the draft's etag and re-publish with the same warehouse and embed-credentials settings.
+- **Last step: Publish to Wiki** when `docs/helix/wiki-publish.json` exists (`assets/wiki-publish.md`).
 
 **06 Iterate**:
 - Append "Cycle N" to the iteration log: change log, feedback, drift, and a **parking-lot status table** that marks what this cycle resolved, partly resolved, or made worse, then lists new items.
 - Append a "Cycle N" stakeholder-inputs record: the totals, every CN Q with the options offered, verbatim gates, overridden recommendations, standing preferences confirmed or newly found, and what to prepare before cycle N+1.
 - Update the header line listing each cycle's status.
+- **Last step: Publish to Wiki** after the close is committed and pushed, when `docs/helix/wiki-publish.json` exists (`assets/wiki-publish.md`).
 
 ## Lessons carried from earlier iterations
 

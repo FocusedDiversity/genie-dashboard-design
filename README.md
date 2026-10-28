@@ -211,6 +211,20 @@ Step Zero option 6 is for the second and later cycles on the same dashboard. Tha
 
 **Deploy may surface a new request.** Live feedback becomes a Deploy fix round. A genuinely new request arriving at Deploy is put to the stakeholder: fold it into this cycle, or close and run it as the next one.
 
+### Publishing the HELIX record to an Azure DevOps wiki
+
+The last step of Deploy (end of a build) and of Iterate (end of a cycle) is **Publish to Wiki**, for every dashboard that has a `docs/helix/wiki-publish.json`. `skills/genie-dashboard-design/assets/wiki-publish.md` is its authority.
+
+- **What is published**:
+  - The documentation artifacts only, one wiki subpage each (brief, widget inventory, design decisions, definitions, test plan, prompt catalog, deployment guide, iteration log, stakeholder inputs), plus a generated overview on the parent page.
+  - Dashboard JSON, SQL, spikes, and source files are never copied. Links to them point at the file in the repo.
+- **How**: `assets/publish_wiki.py` clones the project wiki's git repo (`<Project>.wiki`, branch `wikiMaster`) and pushes. Git credentials that work for the code repo are enough; the Wiki REST API is not used.
+- **The repo stays the source of truth**:
+  - Every page carries a "generated from the repo" banner.
+  - Each run rebuilds the pages, so wiki edits are overwritten.
+  - The script refuses uncommitted or unpushed HELIX changes.
+- **Setup, once per dashboard**: `python <skill>/assets/publish_wiki.py --slug <slug> --init --title "<Name>" --wiki-path <Parent/Page/Path> --dashboard-url <url>`. After that, `--slug <slug>` is all a run needs; the wiki and repo URLs come from `origin`, and the link branch is the current branch.
+
 ## Repository layout
 
 ```
@@ -228,6 +242,8 @@ skills/
     ├── assets/lakeview-intake.md         Mining guide for an existing dashboard (.lvdash.json)
     ├── assets/restyle-cycle.md           Scope authority for a restyle-only cycle (Step Zero option 5)
     ├── assets/iteration-cycle.md         Rules for a new cycle on a dashboard with an existing HELIX record (Step Zero option 6)
+    ├── assets/wiki-publish.md            The Publish to Wiki step (end of Deploy and Iterate): setup, rules, troubleshooting
+    ├── assets/publish_wiki.py            Publishes a dashboard's HELIX documentation to an Azure DevOps wiki via its git repo
     ├── assets/list_dashboard_structure.py Discovers .lvdash.json files; summarizes pages, widgets, datasets, theme
     ├── assets/list_workbook_structure.py Parses a .twb/.twbx's dashboards, worksheets, and calculated fields
     ├── assets/read_hyper_schema.py       Reads a packaged .hyper extract's real schema/grain (needs tableauhyperapi)
