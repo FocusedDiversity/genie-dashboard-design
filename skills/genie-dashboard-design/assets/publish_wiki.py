@@ -179,7 +179,8 @@ def settings(argv=None):
             sys.exit("--init needs --title and --wiki-path (the parent wiki page, e.g. Team-Space/Dashboards/My-Dashboard)")
         cfg = {"title": a.title, "wiki_path": a.wiki_path.strip("/"), "dashboard_url": a.dashboard_url or "", "include_mockup": False}
         cfg_path.write_text(json.dumps(cfg, indent=2) + "\n", encoding="utf-8", newline="\n")
-        sys.exit(f"wrote {cfg_path}; commit it, then run: python publish_wiki.py --slug {a.slug} --dry-run")
+        print(f"wrote {cfg_path}; commit it, then run: python publish_wiki.py --slug {a.slug} --dry-run")
+        sys.exit(0)
     cfg = json.loads(cfg_path.read_text(encoding="utf-8")) if cfg_path.exists() else {}
     for k in ("title", "wiki_path", "dashboard_url", "wiki_repo", "repo_web", "branch", "wiki_branch"):
         if getattr(a, k) is None and cfg.get(k):
@@ -262,12 +263,18 @@ def main():
         published.append("02-Design-Mockup")
 
     parent_md.write_text(overview(a, helix, sha, today, published, attached), encoding="utf-8", newline="\n")
+    parent_order = parent_md.parent / ".order"
+    listed = parent_order.read_text(encoding="utf-8").split() if parent_order.exists() else None
+    if listed is not None and parent_md.stem not in listed:
+        parent_order.write_text("\n".join(listed + [parent_md.stem]) + "\n", encoding="utf-8", newline="\n")
     managed = [stem for stem, _, _ in PAGES if stem in published]
     existing = (folder / ".order").read_text(encoding="utf-8").split() if (folder / ".order").exists() else []
     others = [s for s in existing if s not in managed and (folder / f"{s}.md").exists()]
     (folder / ".order").write_text("\n".join(managed + others) + "\n", encoding="utf-8", newline="\n")
 
     own = [parent_md, folder / ".order"] + [folder / f"{s}.md" for s in managed] + [work / a_.lstrip("/") for a_ in attached]
+    if parent_order.exists():
+        own.append(parent_order)
     run(["git", "add", "--"] + [p.relative_to(work).as_posix() for p in own], cwd=work)
     changes = run(["git", "diff", "--cached", "--name-status"], cwd=work)
     stray = [l for l in run(["git", "status", "--porcelain"], cwd=work).splitlines() if not l.startswith(("M ", "A ", "D ", "R "))]
